@@ -3,13 +3,11 @@ namespace Ticop_pharmatec.Ticop_pharmatec;
 using Microsoft.sales.Document;
 using Microsoft.Inventory.Item.Attribute;
 using Pharmatec.Pharmatec;
-using DefaultPublisher.SalesManagement;
 using Microsoft.Sales.Customer;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Item;
 using TOPETANCH.TOPETANCH;
-using Microsoft.Inventory.Ledger;
 using Microsoft.Sales.Setup;
 using Microsoft.Foundation.NoSeries;
 
@@ -62,6 +60,26 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
             end;
 
         }
+        modify("Campaign No.")
+        {
+            Visible = false;
+        }
+        modify("Responsibility Center")
+        {
+            Visible = false;
+        }
+        modify("Assigned User ID")
+        {
+            Visible = false;
+        }
+        modify("Opportunity No.")
+        {
+            Visible = false;
+        }
+        modify("Promised Delivery Date")
+        {
+            Visible = false;
+        }
         modify("Salesperson Code")
         {
             Importance = Promoted;
@@ -70,6 +88,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
         {
             Importance = Promoted;
         }
+
         modify(Status)
         {
             Importance = Additional;
@@ -81,6 +100,8 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
         modify("Requested Delivery Date")
         {
             Importance = Additional;
+            Visible = false;
+
         }
         modify("Sell-to Contact No.")
         {
@@ -89,6 +110,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
         modify("VAT Reporting Date")
         {
             Importance = Additional;
+            Visible = false;
         }
         modify("Sell-to Contact")
         {

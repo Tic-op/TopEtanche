@@ -64,28 +64,10 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 end;
 
             }
-            field("Preparation Order No."; Rec."Preparation Order No.")
-            {
-                ApplicationArea = all;
-            }
-            field("Barre Code"; Rec."Barre Code")
-            {
-                ApplicationArea = all;
-            }
+
 
         }
-        addafter(Quantity)
-        {
 
-            field("Quantity (Base)"; Rec."Quantity (Base)")
-            {
-                ApplicationArea = all;
-                DecimalPlaces = 0 : 3;
-                enabled = false;
-
-
-            }
-        }
         modify(Quantity)
         {
 
@@ -196,7 +178,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 //UpdateStockInfo();
                 LocationHasBin();
 
-                rec.Validate("Quantity", 0);
+                // rec.Validate("Quantity", 0);
 
                 begin
 
@@ -232,6 +214,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
 
         }
+
         moveafter("Location Code"; "Bin Code")
 
 

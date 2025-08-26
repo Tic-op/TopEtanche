@@ -11,17 +11,17 @@ tableextension 50096 "Item Ext" extends Item
 {
     fields
     {
-       
+
         field(50119; "Couverture demandée"; integer)
         {
             /// besoin Achat AM
             MinValue = 0;
         }
-      /*   field(50120; "lignes demandes prix"; integer)
-        {
-            FieldClass = FlowField;
-            CalcFormula = count("Purchase Line" where("Document Type" = const("Purchase Document Type"::Quote), "No." = field("No.")));
-        } */
+        /*   field(50120; "lignes demandes prix"; integer)
+          {
+              FieldClass = FlowField;
+              CalcFormula = count("Purchase Line" where("Document Type" = const("Purchase Document Type"::Quote), "No." = field("No.")));
+          } */
         field(50121; "Quantité à recommander"; decimal)
         {
             MinValue = -1;
@@ -61,7 +61,7 @@ tableextension 50096 "Item Ext" extends Item
 
     keys
     {
-       // key(KeyOrigin; "Item Origin") { }
+        // key(KeyOrigin; "Item Origin") { }
     }
     fieldgroups
     {
@@ -339,7 +339,7 @@ tableextension 50096 "Item Ext" extends Item
             itemrec.Reset();
             itemrec.setrange(Description, itemVide.Description);
             itemrec.setfilter("No.", '<>%1', itemVide."No.");
-           // itemrec.setfilter("Item Origin", '<>%1', '');
+            // itemrec.setfilter("Item Origin", '<>%1', '');
             if itemrec.FindFirst() then begin
                 // message(itemrec.GetFilters);
                 itm.get(itemVide."No.");

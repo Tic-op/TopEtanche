@@ -99,6 +99,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
                 ApplicationArea = all;
                 DecimalPlaces = 0 : 3;
                 enabled = false;
+                Visible = false;
 
 
             }
@@ -126,6 +127,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
             Visible = false;
             Enabled = false;
         }
+
 
 
         movebefore("Unit of Measure Code"; "Qty. to Ship")
