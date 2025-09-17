@@ -42,9 +42,9 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
 
             }
         }
-        addafter("External Document No.")
+        addbefore("VAT Bus. Posting Group")
         {
-            field("Customer Posting Group"; Rec."Customer Posting Group")
+            field("Gen. Bus. Posting Group"; Rec."Gen. Bus. Posting Group")
             {
                 ApplicationArea = all;
                 trigger OnValidate()
@@ -52,7 +52,7 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
                     CurrPage.update;
                 end;
             }
-            /*  field("VAT Bus. Posting Group"; Rec."VAT Bus. Posting Group")
+            /* field("VAT Bus. Posting Group"; Rec."VAT Bus. Posting Group")
              {
                  ApplicationArea = all;
              } */
@@ -80,6 +80,7 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
         {
             ApplicationArea = all;
             visible = true;
+            caption = 'magasin de livraison';
             trigger OnbeforeValidate()
             var
                 location: record Location;
@@ -116,6 +117,15 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
 
 
 
+        modify("Campaign No.") { visible = false; }
+        modify("Responsibility Center") { visible = false; }
+        modify("Assigned User ID") { visible = false; }
+        modify("Shortcut Dimension 1 Code") { visible = false; }
+        modify("Shortcut Dimension 2 Code") { visible = false; }
+        modify("Prices Including VAT")
+        {
+            visible = false;
+        }
 
 
     }

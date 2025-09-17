@@ -194,8 +194,10 @@ end
 
     end;
 procedure ExecuteEcoulement(Var Myitem : Record "My Item" temporary) 
-var begin 
-   Myitem."VMJ / Période" := CalculVMJ(Myitem,Myitem.datedebut, Myitem.datefin );
+var
+    begin
+        //  Myitem.SetLoadFields("VMJ / Période", "VMJ / Stock", datedebut, datefin, "Mode de calcul VMJ", "Qté à commander", Ecoulement);
+        Myitem."VMJ / Période" := CalculVMJ(Myitem,Myitem.datedebut, Myitem.datefin );
                      Myitem."VMJ / Stock" := CalculVMJEffective(Myitem,Myitem.datedebut, Myitem.datefin);//// Lenteur importante !!! 
                      Myitem.Ecoulement :=CalculEcoulement(Myitem,Myitem.datedebut, Myitem.datefin, Myitem."Mode de calcul VMJ");
                      Myitem."Qté à commander" := CalcRecommandation(Myitem,Myitem.datedebut, Myitem.datefin, Myitem."Mode de calcul VMJ");

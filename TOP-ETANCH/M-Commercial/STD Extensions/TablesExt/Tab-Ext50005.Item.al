@@ -3,7 +3,9 @@ namespace Pharmatec.Pharmatec;
 using Microsoft.Inventory.Item;
 using Microsoft.Foundation.Calendar;
 using Microsoft.Sales.Document;
+using PHARMATECCLOUD.PHARMATECCLOUD;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Purchases.Vendor;
 using Microsoft.Purchases.Document;
 using Microsoft.Foundation.Company;
 using Microsoft.Inventory.Location;
@@ -184,6 +186,8 @@ tableextension 50005 Itemext extends Item
             TableRelation = Location where(Type = filter('Dépot'));
 
         }
+        field(50019; "Vendor Name"; text[100])
+        { Caption = 'Nom fournisseur'; }
         /*   field(50119; "Couverture demandée"; integer)
 
           {
@@ -262,7 +266,7 @@ tableextension 50005 Itemext extends Item
             unité.get("No.", "Sales Unit of Measure");
 
         exit(unité."Qty. per Unit of Measure");
-        // Modify();
+        //Modify();
 
 
 
@@ -353,6 +357,7 @@ tableextension 50005 Itemext extends Item
         Item: Record Item;
         Location: Record Location;
         dispo: Decimal;
+        filtremagasin: text;
     begin
 
         if not Item.Get(ItemNo) then
@@ -377,14 +382,21 @@ tableextension 50005 Itemext extends Item
             end;
         end;
 
-        dispo := 0;
 
+        dispo := 0;
+        //ALL Locations
+        Location.Reset();
         if Location.FindFirst() then begin
             repeat
-                if Location.Type <> Location.Type::Tampon then begin
+                if (Location.Type <> Location.Type::Tampon) and (Location.Type <> Location.Type::Casse) and (NOT Location."Use As In-Transit") then begin
                     Item.SetFilter("Location Filter", Location.Code);
                     Item.CalcFields("Inventory", "Qty. to ship on order line");
+                    // message('Qty to ship %1 , Location Filter %2 ,Bin filter ; % 3', "Qty. to ship on order line", "Location Filter", "Bin Filter", "No.");
+                    //  message('Qty to ship %1', Item."Qty. to ship on order line");
                     dispo += Item."Inventory" - Item."Qty. to ship on order line";
+                    // message(' location filter %1 Quantity %2', Item."Location Filter", Item.Inventory - item."Qty. to ship on order line");
+                    filtremagasin := item.GetFilters();
+                    // message(filtremagasin + '     %1       %2     ', Item."Inventory" - Item."Qty. to ship on order line", dispo);
                 end;
             until Location.Next() = 0;
         end;

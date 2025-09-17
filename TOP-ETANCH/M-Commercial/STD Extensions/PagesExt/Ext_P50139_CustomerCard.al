@@ -97,6 +97,10 @@ pageextension 50139 CustomerCard extends "customer Card"
                 ApplicationArea = all;
             }
         }
+        modify("Prices Including VAT")
+        {
+            Visible = false;
+        }
     }
     actions
     {

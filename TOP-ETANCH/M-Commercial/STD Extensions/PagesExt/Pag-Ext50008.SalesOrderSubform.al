@@ -15,21 +15,18 @@ using Microsoft.Foundation.Navigate;
 pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 {
     layout
-
     {
         addafter(Description)
         {
             /*    field(StockGlobal; item.CalcStock(Rec."No.", '', ''))
-               {
+               {   
                    Caption = 'Stock Global';
                    DecimalPlaces = 0 : 0;
                    Editable = false;
                    Style = Strong;
                    ApplicationArea = all;
-
-
-
-               } */
+                }
+            */
             field("DisponibilitéGlobal"; item.CalcDisponibilité(Rec."No.", '', ''))
             {
                 Caption = 'Disponibilité Globale';
@@ -60,7 +57,8 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 var
                     dispo: Decimal;
                 begin
-                    PreparationTransfert();
+                    if rec."Location Code" <> '' then
+                        PreparationTransfert(Rec."Document Type", Rec."Document No.", rec."Line No.");
                 end;
 
             }
@@ -182,6 +180,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
                 begin
 
+
                     OrdrePrep.SetRange("Order No", rec."Document No.");
                     OrdrePrep.SetRange("Magasin", Rec."Location Code");
                     OrdrePrep.SetRange(Statut, OrdrePrep.Statut::"Créé");
@@ -204,6 +203,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
             ApplicationArea = all;
             // editable = not Lignecomptoir;
             Enabled = editBinBool; //and not Lignecomptoir;
+            visible = true;
             trigger OnafterValidate()
             begin
                 //ControlDisponibilité();
@@ -243,14 +243,17 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 var
                     dispatch: Report "Dispatch Sales Order Lines";
                     recSalesLine: Record "Sales Line";
+                    Itemdist: record "Item Distribution";
 
                 begin
 
-                    recSalesLine.SetRange("Document Type", rec."Document Type");
-                    recSalesLine.SetRange("Document no.", rec."Document no.");
-                    recSalesLine.SetRange("Line no.", rec."Line no.");
-                    dispatch.SetTableView(recSalesLine);
-                    dispatch.Run();
+                    Itemdist.deleteall();
+                    /* 
+                                        recSalesLine.SetRange("Document Type", rec."Document Type");
+                                        recSalesLine.SetRange("Document no.", rec."Document no.");
+                                        recSalesLine.SetRange("Line no.", rec."Line no.");
+                                        dispatch.SetTableView(recSalesLine);
+                                        dispatch.Run(); */
 
 
                 end;
@@ -276,7 +279,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                         message('Quantité article sur ligne vente doit être supérieure à 0')
 
                     else
-                        DistributionArticle()
+                        DistributionArticle(Rec."Document Type", Rec."Document No.", rec."Line No.")
                     // else
                     // Error('Un magasin est déja affecter à cette ligne');
                 end;
@@ -286,6 +289,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 Caption = 'Supprimer ligne résérvation';
                 ApplicationArea = All;
                 Image = Bin;
+                visible = false;
                 trigger OnAction()
                 var
                     SL: record "Sales Line";
@@ -370,21 +374,32 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
     end;
 
-    procedure PreparationTransfert()
+    procedure PreparationTransfert(Documenttype: enum "Sales Document Type"; documentno: Code[20]; Lineno: integer)
     Var
         itemdist: record "Item Distribution";
         location: record Location;
         BinC: record "Bin Content";
         dispo: decimal;
+        SalesL: record "Sales Line";
 
         DispPage: Page "itemdistribution";
         item: record item;
 
 
     begin
-        itemdist.DeleteAll();
+        SalesL.get(Documenttype, documentno, Lineno);
+        itemdist.SetRange("Source Doc type", Documenttype);
+        itemdist.setrange("Source Doc No.", documentno);
+        itemdist.setrange("Source Line No.", Lineno);
+        // itemdist.DeleteAll(); 
+        if itemdist.FindFirst() then
+            repeat
+                itemdist.delete();
+            until itemdist.next = 0;
+
 
         location.SetRange("Use As In-Transit", false);
+        location.SetFilter(Code, '<>%1', SalesL."Location Code");
 
         if location.findfirst() then
             repeat
@@ -394,17 +409,21 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
                     if BinC.FindFirst() then
                         repeat
-                            Dispo := item."CalcDisponibilité"(rec."No.", location.code, binc."Bin Code");
-                            if item."CalcDisponibilité"(rec."No.", location.code, binc."Bin Code") > 0 then begin
+                            Dispo := item."CalcDisponibilité"(SalesL."No.", location.code, binc."Bin Code");
+                            if item."CalcDisponibilité"(SalesL."No.", location.code, binc."Bin Code") > 0 then begin
                                 itemdist.INIT();
-                                itemdist.validate(Item, Rec."No.");
+                                itemdist.validate(Item, SalesL."No.");
                                 itemdist.validate("Location Code", location.code);
                                 itemdist."Bin Code" := binC."Bin Code";
 
                                 itemdist.Qty := dispo;
 
-                                item.get(rec."No.");
+                                item.get(SalesL."No.");
                                 itemdist."Qté Base Sortie" := item."CalcQuantitéBaseSortie"(location.Code);
+                                itemdist."Source Doc type" := SalesL."Document Type";
+
+                                itemdist."Source Doc No." := SalesL."Document No.";
+                                itemdist."Source Line No." := SalesL."Line No.";
                                 if itemdist.insert() then;
 
                             end
@@ -412,17 +431,21 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 end
                 else
 
-                    if item."CalcDisponibilité"(rec."No.", location.code, '') > 0 then begin
+                    if item."CalcDisponibilité"(SalesL."No.", location.code, '') > 0 then begin
                         //   Message('%1', location.Code);
                         itemdist.INIT();
-                        itemdist.Item := Rec."No.";
+                        itemdist.Item := SalesL."No.";
                         itemdist."Location Code" := location.code;
                         itemdist."Bin Code" := '';
 
-                        itemdist.Qty := item."CalcDisponibilité"(rec."No.", location.code, '');
+                        itemdist.Qty := item."CalcDisponibilité"(SalesL."No.", location.code, '');
 
-                        item.get(rec."No.");
+                        item.get(SalesL."No.");
                         itemdist."Qté Base Sortie" := item."CalcQuantitéBaseSortie"(location.Code);
+                        itemdist."Source Doc type" := SalesL."Document Type";
+
+                        itemdist."Source Doc No." := SalesL."Document No.";
+                        itemdist."Source Line No." := SalesL."Line No.";
 
                         if itemdist.insert() then;
 
@@ -430,9 +453,13 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
             until location.next() = 0;
 
 
-        DispPage.SetDoc(rec."Document Type", Rec."Document No.", Rec."Line No.", rec."Qty. to Ship");
+        DispPage.SetDoc(SalesL."Document Type", SalesL."Document No.", SalesL."Line No.", SalesL."Qty. to Ship");
         DispPage.initvalue(1);
-        DispPage.SetRecord(itemdist);
+        itemdist.reset;
+        itemdist.setrange("Source Doc type", SalesL."Document Type");
+        itemdist.SetRange("Source Doc No.", SalesL."Document No.");
+        itemdist.SetRange("Source Line No.", SalesL."Line No.");
+        DispPage.SetTableView(itemdist);
 
         DispPage.Run();
 
@@ -441,23 +468,34 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
 
 
-    procedure DistributionArticle()
+    procedure DistributionArticle(Documenttype: enum "Sales Document Type"; documentno: Code[20]; Lineno: integer)
     Var
         itemdist: record "Item Distribution";
+
         location: record Location;
         BinC: record "Bin Content";
         dispo: decimal;
 
         DispPage: Page "itemdistribution";
         item: record item;
+        SalesL: record "Sales Line";
 
 
     begin
-        itemdist.DeleteAll();
+        SalesL.get(Documenttype, documentno, Lineno);
+        itemdist.SetRange("Source Doc type", Documenttype);
+        itemdist.setrange("Source Doc No.", documentno);
+        itemdist.setrange("Source Line No.", Lineno);
+        //itemdist.DeleteAll(); 
+        if itemdist.FindFirst() then
+            repeat
+                itemdist.delete();
+            until itemdist.next = 0;
         location.SetRange("Use As In-Transit", false);
         //may be we ll add new filters
-        if rec."Location Code" <> '' then
-            location.setrange(Code, rec."Location Code");
+
+        if SalesL."Location Code" <> '' then
+            location.setrange(Code, SalesL."Location Code");
 
 
         if location.findfirst() then
@@ -468,8 +506,8 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
                     if BinC.FindFirst() then
                         repeat
-                            Dispo := item."CalcDisponibilité"(rec."No.", location.code, binc."Bin Code");
-                            if item."CalcDisponibilité"(rec."No.", location.code, binc."Bin Code") > 0 then begin
+                            Dispo := item."CalcDisponibilité"(SalesL."No.", location.code, binc."Bin Code");
+                            if item."CalcDisponibilité"(SalesL."No.", location.code, binc."Bin Code") > 0 then begin
                                 itemdist.INIT();
                                 itemdist.validate(Item, Rec."No.");
                                 itemdist.validate("Location Code", location.code);
@@ -477,8 +515,12 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
                                 itemdist.Qty := dispo;
 
-                                item.get(rec."No.");
+                                item.get(SalesL."No.");
                                 itemdist."Qté Base Sortie" := item."CalcQuantitéBaseSortie"(location.Code);
+                                itemdist."Source Doc type" := Documenttype;
+
+                                itemdist."Source Doc No." := documentno;
+                                itemdist."Source Line No." := Lineno;
                                 if itemdist.insert() then;
 
                             end
@@ -486,17 +528,23 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 end
                 else
 
-                    if item."CalcDisponibilité"(rec."No.", location.code, '') > 0 then begin
+                    if item."CalcDisponibilité"(SalesL."No.", location.code, '') > 0 then begin
 
                         itemdist.INIT();
-                        itemdist.Item := Rec."No.";
+                        //
+                        itemdist."Source Doc type" := Documenttype;
+                        itemdist."Source Doc No." := documentno;
+                        itemdist."Source Line No." := Lineno;
+                        //
+                        itemdist.Item := SalesL."No.";
                         itemdist."Location Code" := location.code;
                         itemdist."Bin Code" := '';
 
-                        itemdist.Qty := item."CalcDisponibilité"(rec."No.", location.code, '');
+                        itemdist.Qty := item."CalcDisponibilité"(SalesL."No.", location.code, '');
 
                         item.get(rec."No.");
                         itemdist."Qté Base Sortie" := item."CalcQuantitéBaseSortie"(location.Code);
+
 
                         if itemdist.insert() then;
 
@@ -505,9 +553,14 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
 
 
-        DispPage.SetDoc(rec."Document Type", Rec."Document No.", Rec."Line No.", rec."Qty. to Ship");
+        DispPage.SetDoc(Documenttype, documentno, Lineno, SalesL."Qty. to Ship");
         DispPage.initvalue(0);
-        DispPage.SetRecord(itemdist);
+        itemdist.reset;
+        itemdist.setrange("Source Doc type", Documenttype);
+        itemdist.SetRange("Source Doc No.", documentno);
+        itemdist.SetRange("Source Line No.", Lineno);
+        //itemdist.findset();
+        DispPage.SetTableView(itemdist);
         DispPage.Run();
 
 

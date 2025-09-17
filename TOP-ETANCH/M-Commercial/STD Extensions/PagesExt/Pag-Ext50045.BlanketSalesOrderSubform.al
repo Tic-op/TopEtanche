@@ -35,7 +35,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
             }
             field(Stock; item.CalcStock(Rec."No.", Rec."Location Code", Rec."Bin Code"))
             {
-                Caption = 'Stock/Mag';
+                Caption = 'Stock sur Mag';
                 DecimalPlaces = 0 : 0;
                 Editable = false;
                 Style = Strong;
@@ -46,7 +46,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
             }
             field("Disponibilité"; item.CalcDisponibilité(Rec."No.", Rec."Location Code", Rec."Bin Code"))
             {
-                Caption = 'Disponibilité/Mag';
+                Caption = 'Disponibilité sur Mag';
                 DecimalPlaces = 0 : 0;
                 Style = Favorable;
                 Editable = false;
@@ -122,10 +122,10 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
         modify("Location Code")
         {
-            /*  enabled = not Lignecomptoir;
-             visible = not Lignecomptoir; */
-            Visible = false;
-            Enabled = false;
+            enabled = not Lignecomptoir;
+            visible = not Lignecomptoir;
+            /*   Visible = false;
+              Enabled = false; */
         }
 
 
@@ -272,6 +272,9 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
 
     begin
+        itemdist.SetRange("Source Doc type", rec."Document Type");
+        itemdist.setrange("Source Doc No.", rec."No.");
+        itemdist.setrange("Source Line No.", rec."Line No.");
         itemdist.DeleteAll();
 
         location.SetRange("Use As In-Transit", false);
@@ -295,6 +298,10 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
                                 item.get(rec."No.");
                                 itemdist."Qté Base Sortie" := item."CalcQuantitéBaseSortie"(location.Code);
+                                itemdist."Source Doc type" := rec."Document Type";
+
+                                itemdist."Source Doc No." := rec."Document No.";
+                                itemdist."Source Line No." := rec."Line No.";
                                 if itemdist.insert() then;
 
                             end
@@ -313,6 +320,10 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
                         item.get(rec."No.");
                         itemdist."Qté Base Sortie" := item."CalcQuantitéBaseSortie"(location.Code);
+                        itemdist."Source Doc type" := rec."Document Type";
+
+                        itemdist."Source Doc No." := rec."Document No.";
+                        itemdist."Source Line No." := rec."Line No.";
 
                         if itemdist.insert() then;
 
@@ -322,7 +333,12 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
         DispPage.SetDoc(rec."Document Type", Rec."Document No.", Rec."Line No.", rec."Qty. to Ship");
         DispPage.initvalue(1);
-        DispPage.SetRecord(itemdist);
+
+        itemdist.reset;
+        itemdist.setrange("Source Doc type", rec."Document Type");
+        itemdist.SetRange("Source Doc No.", rec."Document No.");
+        itemdist.SetRange("Source Line No.", rec."Line No.");
+        DispPage.SetTableView(itemdist);
 
         DispPage.Run();
 

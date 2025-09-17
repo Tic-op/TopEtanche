@@ -290,6 +290,8 @@ page 50078 "Recommandation Achats"
                     rec.DeleteAll();
                     TextuserID := UserId();
 
+                    item.SetLoadFields("Search Description", "Vendor No.", "Item Category Code", "Manufacturer Code", "Qty. on Sales Order", "Qty. on Purch. Order", Inventory, "Couverture demandée", "Mode de calcul VMJ");
+
                     if FiltrerDescription <> '' then begin
                         item.SetCurrentKey("Search Description");
                         item.SetFilter("Search Description",'*'+FiltrerDescription+'*');
@@ -305,9 +307,10 @@ page 50078 "Recommandation Achats"
                     If FilterFabricant<>'' then begin 
                         item.setfilter("Manufacturer Code",FilterFabricant)
                     end ;
-        item. SetAutoCalcFields( "Qty. on Sales Order","Qty. on Purch. Order",Inventory);
 
-      
+                    item.SetAutoCalcFields("Qty. on Sales Order", "Qty. on Purch. Order", Inventory);
+
+
                     if item.FindSet() then begin 
                         TotalCount := Item.Count;
             CurrentCount := 0;

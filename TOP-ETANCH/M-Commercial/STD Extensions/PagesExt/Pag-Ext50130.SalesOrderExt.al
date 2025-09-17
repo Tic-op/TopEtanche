@@ -135,6 +135,8 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
         modify("Location Code")
         {
             Visible = true;
+            caption = 'magasin de livraison';
+
 
             ApplicationArea = all;
             trigger OnAfterValidate()

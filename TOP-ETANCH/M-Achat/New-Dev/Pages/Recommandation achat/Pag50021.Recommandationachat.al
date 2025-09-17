@@ -18,6 +18,7 @@ page 50121 "Recommandation Achat"
 
 
 
+
     layout
     {
         area(Content)

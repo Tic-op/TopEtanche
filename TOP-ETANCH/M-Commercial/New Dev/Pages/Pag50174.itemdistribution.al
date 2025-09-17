@@ -3,7 +3,7 @@ page 50174 "itemdistribution"
 {
     ApplicationArea = All;
     Caption = 'item distribution';
-    PageType = Worksheet;
+    PageType = Document;
     SourceTable = "Item Distribution";
     //SourceTableTemporary = true;
     DeleteAllowed = false;
@@ -103,6 +103,9 @@ page 50174 "itemdistribution"
                         itemdist: Record "Item Distribution";
                         itemrec: Record item;
                     begin
+                        itemdist.SetRange("Source Doc type", typeDocumentVente);
+                        itemdist.SetRange("Source Doc No.", doc);
+                        itemdist.SetRange("Source Line No.", Line);//
 
                         itemdist.CalcSums("Qty à transférer");
 
@@ -133,6 +136,9 @@ page 50174 "itemdistribution"
                         // calcQty();
 
                         //       "quantité affectée" += Rec."Qty to assign" - xRec."Qty to assign";
+                        itemdist.SetRange("Source Doc type", typeDocumentVente);
+                        itemdist.SetRange("Source Doc No.", doc);
+                        itemdist.SetRange("Source Line No.", Line);//
 
                         itemdist.CalcSums("Qty to assign");
                         //if rec."Qty to assign" <> xrec."Qty to assign" then
@@ -189,6 +195,8 @@ page 50174 "itemdistribution"
     }
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean
+    var
+        itemdist: record "Item Distribution";
     begin
         if not visibilitytransfer then begin
             if Rec.FindFirst() then
@@ -196,6 +204,19 @@ page 50174 "itemdistribution"
                     InsertInOrder();
                 until Rec.Next() = 0;
         end;
+
+        itemdist.setrange("Source Doc type", typeDocumentVente);
+        itemdist.setrange("Source Doc No.", Doc);
+        itemdist.SetRange("Source Line No.", line);
+        if itemdist.Findfirst() then
+            repeat
+                itemdist.Delete()
+            until itemdist.next = 0;
+
+
+
+
+
 
 
     end;
@@ -206,12 +227,12 @@ page 50174 "itemdistribution"
         Line := Line0;
         "quantité totale" := total;
         typeDocumentVente := type0;
-        if Rec.Findfirst() then
-            repeat
-                Rec."Source Doc No." := Doc0;
-                Rec."Source Line No." := Line0;
-                Rec.Modify();
-            until Rec.Next() = 0;
+        /*    if Rec.Findfirst() then
+               repeat
+                   Rec."Source Doc No." := Doc0;
+                   Rec."Source Line No." := Line0;
+                   Rec.Modify(); // Ech3matlek ya yasseer
+               until Rec.Next() = 0; */
     end;
 
 
@@ -243,6 +264,9 @@ page 50174 "itemdistribution"
                     SL.Modify();
                 until Rec.Next() = 0;
 
+            itemdist.SetRange("Source Doc type", typeDocumentVente);
+            itemdist.SetRange("Source Doc No.", doc);
+            itemdist.SetRange("Source Line No.", Line);//
             itemdist.CalcSums("Qty to assign");
             "quantité affectée" := itemdist."Qty to assign";
 
@@ -426,6 +450,22 @@ page 50174 "itemdistribution"
             exit(Location.Code)
 
     end;
+
+    /*  local procedure CalcQuantitéAffectée(): decimal
+     var
+         ItemDist: record "Item Distribution";
+         total: Decimal;
+     begin
+         total := 0;
+
+         if ItemDist.Findfirst() then
+             repeat
+                 total += ItemDist."Qty to assign";
+             until ItemDist.next = 0;
+
+         exit(total);
+
+     end; */
 
 
 
