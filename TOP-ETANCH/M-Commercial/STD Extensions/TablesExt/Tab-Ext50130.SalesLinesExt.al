@@ -163,6 +163,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
 
 
         }
+
         modify("Location Code")
         {
             trigger OnAfterValidate()
@@ -202,6 +203,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
 
 
     }
+
 
 
     /* trigger OnInsert()

@@ -114,6 +114,22 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
             end;
         }
+        modify("No.")
+        {
+            trigger OnDrillDown()
+            var
+                item: record Item;
+
+            begin
+                item.SetLoadFields("No.");
+                if item.get(rec."No.") then
+                    item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer No.", rec."VAT %");
+
+
+            end;
+
+
+        }
         modify("Qty. to Assemble to Order")
         {
 

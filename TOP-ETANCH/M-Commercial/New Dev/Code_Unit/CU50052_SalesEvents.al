@@ -691,4 +691,15 @@ codeunit 50052 SalesEvents
 
     end;
 
+    procedure ArchiveDevis(noDevis: text) //IS12092025
+    var
+        ArchiveManagement: Codeunit ArchiveManagement;
+        SalesHeader: Record "Sales Header";
+    begin
+
+        if SalesHeader.get(SalesHeader."Document Type"::Quote, noDevis) then
+            //Error('Devis introuvable');
+        ArchiveManagement.StoreSalesDocument(SalesHeader, false);
+    end;
+
 }

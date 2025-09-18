@@ -2,6 +2,9 @@ namespace Pharmatec.Pharmatec;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Foundation.Calendar;
+using Microsoft.Sales.Customer;
+using Top.Top;
+using Microsoft.Sales.History;
 using Microsoft.Sales.Document;
 using PHARMATECCLOUD.PHARMATECCLOUD;
 using Microsoft.Inventory.Ledger;
@@ -432,6 +435,103 @@ tableextension 50005 Itemext extends Item
 
 
         exit(0);
+
+    end;
+
+    Procedure GetLastSales(CustNo: Code[20]; CustName: text[100]; VAT_Rate: decimal)
+    var
+        SalesShipLine: record "Sales Shipment Line";
+        SalesLine: Record "Sales Line";
+        Hist: Record HistVenteArticle temporary;
+        Pagedétail: Page "Détail vente article";
+        Cust: record Customer;
+    begin
+        // insert into BL started 
+        /*   SalesShipLine.SetLoadFields("No.", "Quantity (Base)", "Unit Price", "Line Discount %", "VAT %", "VAT Base Amount", "Posting Date", "Order No.", "Order Line No.", "Sell-to Customer No.");
+          SalesShipLine.SetCurrentKey("Order No.", "Order Line No.", "Posting Date");
+          SalesShipLine.setrange("No.", "No.");
+          if SalesShipLine.FindLast() then begin
+              Hist.Init();
+              Hist."Item No" := "No.";
+              Hist."Document Type" := Hist."Document Type"::"Expédition";
+              Hist."Customer No" := '';
+              Hist."Customer Name" := '';
+              Hist."Document No" := SalesShipLine."Document No.";
+              Hist."Price HT" := SalesShipLine."Unit Price" * (1 - SalesShipLine."Line Discount %" * 100);
+              Hist."Price TTC" := SalesShipLine."Unit Price" * (1 - SalesShipLine."Line Discount %" * 100) * (1 + SalesShipLine."VAT %");
+              Hist.Remise := SalesShipLine."Line Discount %";
+              Hist."Date Document" := SalesShipLine."Posting Date";
+              Hist.Insert();
+          end;
+          SalesShipLine.reset();
+          SalesShipLine.setrange("No.", "No.");
+          SalesShipLine.setrange("Sell-to Customer No.", CustNo);
+          if SalesShipLine.findlast then begin
+              Hist.Init();
+              Hist."Item No" := "No.";
+              Hist."Document Type" := Hist."Document Type"::"Expédition";
+              Hist."Customer No" := CustNo;
+              Hist."Customer Name" := CustName;
+              Hist."Document No" := SalesShipLine."Document No.";
+              Hist."Price HT" := SalesShipLine."Unit Price" * (1 - SalesShipLine."Line Discount %" * 100);
+              Hist."Price TTC" := SalesShipLine."Unit Price" * (1 - SalesShipLine."Line Discount %" * 100) * (1 + SalesShipLine."VAT %");
+              Hist.Remise := SalesShipLine."Line Discount %";
+              Hist."Date Document" := SalesShipLine."Posting Date";
+              Hist.Insert();
+
+          end;
+          //insert BL ended 
+          //insert to Quote started 
+          SalesLine.SetLoadFields("No.", "Sell-to Customer No.", "Sell-to Customer Name", "VAT %", "Amount Including VAT", "Line Amount", "Line Discount %");
+          SalesLine.SetCurrentKey("Document Type", Type, "No.", "Variant Code", "Drop Shipment", "Location Code", "Shipment Date");
+          SalesLine.setrange("Document Type", "Sales Document Type"::Quote);
+          SalesLine.setrange("No.", "No.");
+          if SalesLine.FindLast() then begin
+              Hist.Init();
+              Hist."Item No" := "No.";
+              Hist."Document Type" := Hist."Document Type"::"Devis";
+              Hist."Customer No" := '';
+              Hist."Customer Name" := CustName;
+              Hist."Document No" := SalesLine."Document No.";
+              Hist."Price HT" := SalesLine."Line Amount";
+              Hist."Price TTC" := SalesLine."Amount Including VAT";
+              Hist.Remise := SalesLine."Line Discount %";
+              Hist."Date Document" := SalesLine."Shipment Date";
+              Hist.Insert();
+          end;
+          SalesLine.reset();
+          SalesLine.setrange("Document Type", "Sales Document Type"::Quote);
+          SalesLine.setrange("No.", "No.");
+          SalesLine.setrange("Sell-to Customer No.", CustNo);
+          if SalesLine.FindLast() then begin
+              Hist.Init();
+              Hist."Item No" := "No.";
+              Hist."Document Type" := Hist."Document Type"::"Devis";
+              Hist."Customer No" := CustNo;
+              Hist."Customer Name" := CustName;
+              Hist."Document No" := SalesLine."Document No.";
+              Hist."Price HT" := SalesLine."Line Amount";
+              Hist."Price TTC" := SalesLine."Amount Including VAT";
+              Hist.Remise := SalesLine."Line Discount %";
+              Hist."Date Document" := SalesLine."Shipment Date";
+              Hist.Insert();
+          end;
+   */
+        Cust.get(CustNo);
+
+        "Pagedétail".SetCustomer(Cust);
+        "Pagedétail".Setitem(Rec, VAT_Rate);
+        "Pagedétail".SetRecord(Rec);
+        "Pagedétail".Run();
+
+
+
+
+
+
+
+
+
 
     end;
 

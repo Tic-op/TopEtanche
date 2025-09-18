@@ -1,6 +1,7 @@
 namespace TopEtanch.TopEtanch;
 
 using Microsoft.Inventory.Location;
+using PHARMATECCLOUD.PHARMATECCLOUD;
 
 pageextension 50006 Location extends "Location Card"
 {
@@ -23,6 +24,10 @@ pageextension 50006 Location extends "Location Card"
                 ApplicationArea = all;
                 DecimalPlaces = 0 : 3;
 
+            }
+            field("Dépot associé"; Rec."Dépot associé")
+            {
+                Enabled = rec.Type = rec.type::"Point de vente";
             }
         }
     }

@@ -15,7 +15,7 @@ page 50078 "Recommandation Achats"
     InsertAllowed = false;
     DeleteAllowed = false;
     DelayedInsert = true;
-     SourceTableTemporary = true ;
+    SourceTableTemporary = true;
 
     layout
     {
