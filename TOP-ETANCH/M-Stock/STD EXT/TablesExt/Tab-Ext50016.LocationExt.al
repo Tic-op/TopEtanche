@@ -35,7 +35,7 @@ tableextension 50016 "Location Ext" extends Location
          } */
         field(50005; "Dépot associé"; Code[10])
         {
-            TableRelation = if (type = const("Point de vente")) Location.code where(type = const("Dépot"));
+            TableRelation = if (type = const("Point de vente")) Location where(type = const("Dépot"));
         }
 
     }

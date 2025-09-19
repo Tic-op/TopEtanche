@@ -389,7 +389,7 @@ page 50174 "itemdistribution"
                         QtyToTransfer := Rec."Qty à transférer"
                     else begin
                         if Rec."Qty à transférer" < stockmin."Stock min" then
-                            QtyToTransfer := stockmin."Stock min" - item."CalcDisponibilité"(rec.Item, SalesLine."Location Code", '');
+                            QtyToTransfer := stockmin."Stock min" - item."CalcDisponibilité"(SalesLine."Location Code", '');
 
                         //QtyToTransfer := Rec."Qty à transférer";
                     end;

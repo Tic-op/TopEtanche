@@ -201,6 +201,18 @@ tableextension 50005 Itemext extends Item
             FieldClass = FlowField;
             CalcFormula = count("Purchase Line" where("Document Type" = const("Purchase Document Type"::Quote), "No." = field("No.")));
         }
+        field(5012; "Qty on invoice"; Decimal) //IS12092025
+        {
+            Caption = 'Qté à facturer';
+            FieldClass = FlowField;
+            Editable = false;
+            CalcFormula = sum("Sales Line".Quantity where("Document Type" = const(Invoice),
+                                                                            Type = const(Item),
+                                                                            "No." = field("No."),
+                                                                            "Location Code" = field("Location Filter"),
+                                                                            "Bin Code" = field("Bin Filter"), "Shipment No." = const(''))
+                                                                           );
+        }
         modify("Base Unit of Measure")
         {
             trigger OnAfterValidate()
@@ -355,16 +367,14 @@ tableextension 50005 Itemext extends Item
     end;
 
 
-    procedure CalcDisponibilité(ItemNo: Code[25]; locationCode: Code[25]; binCode: Code[25]): Decimal
+    procedure CalcDisponibilité(locationCode: Code[25]; binCode: Code[25]): Decimal
     var
-        Item: Record Item;
         Location: Record Location;
         dispo: Decimal;
         filtremagasin: text;
     begin
 
-        if not Item.Get(ItemNo) then
-            exit(0);
+
 
         if locationCode <> '' then begin
             if not Location.Get(locationCode) then
@@ -373,32 +383,33 @@ tableextension 50005 Itemext extends Item
             /*     if Location.Type = Location.Type::Tampon then
                     exit(0); */
 
-            Item.SetFilter("Location Filter", locationCode);
+            SetFilter("Location Filter", locationCode);
 
             if binCode <> '' then begin
-                Item.SetFilter("Bin Filter", binCode);
-                Item.CalcFields("Qty. to ship on order line", "Inventory in Warehouse");
-                exit(Item."Inventory in Warehouse" - Item."Qty. to ship on order line");
-            end else begin
-                Item.CalcFields("Inventory", "Qty. to ship on order line");
-                exit(Item."Inventory" - Item."Qty. to ship on order line");
-            end;
+                SetFilter("Bin Filter", binCode);
+                CalcFields("Qty. to ship on order line", "Inventory in Warehouse");
+                exit("Inventory in Warehouse" - "Qty. to ship on order line");
+            end
+        end
+        else begin
+
+            rec.CalcFields("Inventory", "Qty. to ship on order line");
+            exit("Inventory" - "Qty. to ship on order line");
+
         end;
-
-
         dispo := 0;
         //ALL Locations
         Location.Reset();
         if Location.FindFirst() then begin
             repeat
                 if (Location.Type <> Location.Type::Tampon) and (Location.Type <> Location.Type::Casse) and (NOT Location."Use As In-Transit") then begin
-                    Item.SetFilter("Location Filter", Location.Code);
-                    Item.CalcFields("Inventory", "Qty. to ship on order line");
+                    rec.SetFilter("Location Filter", Location.Code);
+                    rec.CalcFields("Inventory", "Qty. to ship on order line");
                     // message('Qty to ship %1 , Location Filter %2 ,Bin filter ; % 3', "Qty. to ship on order line", "Location Filter", "Bin Filter", "No.");
                     //  message('Qty to ship %1', Item."Qty. to ship on order line");
-                    dispo += Item."Inventory" - Item."Qty. to ship on order line";
+                    dispo += "Inventory" - "Qty. to ship on order line";
                     // message(' location filter %1 Quantity %2', Item."Location Filter", Item.Inventory - item."Qty. to ship on order line");
-                    filtremagasin := item.GetFilters();
+                    filtremagasin := GetFilters();
                     // message(filtremagasin + '     %1       %2     ', Item."Inventory" - Item."Qty. to ship on order line", dispo);
                 end;
             until Location.Next() = 0;

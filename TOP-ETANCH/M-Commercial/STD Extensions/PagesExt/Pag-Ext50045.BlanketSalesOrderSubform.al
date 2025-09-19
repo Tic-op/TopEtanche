@@ -25,7 +25,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
 
              } */
-            field("DisponibilitéGlobal"; item.CalcDisponibilité(Rec."No.", '', ''))
+            field("DisponibilitéGlobal"; item.CalcDisponibilité('', ''))
             {
                 Caption = 'Disponibilité Globale';
                 DecimalPlaces = 0 : 0;
@@ -44,7 +44,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
 
             }
-            field("Disponibilité"; item.CalcDisponibilité(Rec."No.", Rec."Location Code", Rec."Bin Code"))
+            field("Disponibilité"; item.CalcDisponibilité(Rec."Location Code", Rec."Bin Code"))
             {
                 Caption = 'Disponibilité sur Mag';
                 DecimalPlaces = 0 : 0;
@@ -157,7 +157,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
     var
         item: Record Item;
     begin
-        "Disponibilité" := item.CalcDisponibilité(Rec."No.", Rec."Location Code", Rec."Bin Code");
+        "Disponibilité" := item.CalcDisponibilité(Rec."Location Code", Rec."Bin Code");
         GetLigneVentecomptoir();
     end;
 
@@ -287,8 +287,8 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
                     if BinC.FindFirst() then
                         repeat
-                            Dispo := item."CalcDisponibilité"(rec."No.", location.code, binc."Bin Code");
-                            if item."CalcDisponibilité"(rec."No.", location.code, binc."Bin Code") > 0 then begin
+                            Dispo := item."CalcDisponibilité"(location.code, binc."Bin Code");
+                            if item."CalcDisponibilité"(location.code, binc."Bin Code") > 0 then begin
                                 itemdist.INIT();
                                 itemdist.validate(Item, Rec."No.");
                                 itemdist.validate("Location Code", location.code);
@@ -309,14 +309,14 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
                 end
                 else
 
-                    if item."CalcDisponibilité"(rec."No.", location.code, '') > 0 then begin
+                    if item."CalcDisponibilité"(location.code, '') > 0 then begin
                         //   Message('%1', location.Code);
                         itemdist.INIT();
                         itemdist.Item := Rec."No.";
                         itemdist."Location Code" := location.code;
                         itemdist."Bin Code" := '';
 
-                        itemdist.Qty := item."CalcDisponibilité"(rec."No.", location.code, '');
+                        itemdist.Qty := item."CalcDisponibilité"(location.code, '');
 
                         item.get(rec."No.");
                         itemdist."Qté Base Sortie" := item."CalcQuantitéBaseSortie"(location.Code);

@@ -38,12 +38,12 @@ report 50003 "Extraire article"
                 if ItemStockMin.FindFirst() then begin
                     repeat
                         if Item.Get(ItemStockMin.Item) then begin
-                            DisponibiliteDest := "CalcDisponibilité"(ItemStockMin.Item, TransferHeader."Transfer-to Code", '');
+                            DisponibiliteDest := "CalcDisponibilité"(TransferHeader."Transfer-to Code", '');
                             StockMin := ItemStockMin."Stock min";
 
                             if DisponibiliteDest < StockMin then begin
                                 QtyToTransfer := StockMin - DisponibiliteDest;
-                                DispoMagasinSource := item."CalcDisponibilité"(ItemStockMin.Item, TransferHeader."Transfer-from Code", '');
+                                DispoMagasinSource := item."CalcDisponibilité"(TransferHeader."Transfer-from Code", '');
 
                                 if DispoMagasinSource <= QtyToTransfer then
                                     QtyToTransfer := DispoMagasinSource;

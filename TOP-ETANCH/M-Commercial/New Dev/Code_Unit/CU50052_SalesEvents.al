@@ -126,7 +126,7 @@ codeunit 50052 SalesEvents
 
         if SalesLine.FindFirst() then
             repeat
-                AvailableQty := item."CalcDisponibilité"(SalesLine."No.", SalesLine."Location Code", SalesLine."Bin Code");
+                AvailableQty := item."CalcDisponibilité"(SalesLine."Location Code", SalesLine."Bin Code");
                 if SalesLine."Qty. to Ship" > AvailableQty then
                     Error('Vous ne pouvez pas passer cette commande car l''article "%1" n''a pas suffisamment de disponibilité en stock.', SalesLine."No.");
 

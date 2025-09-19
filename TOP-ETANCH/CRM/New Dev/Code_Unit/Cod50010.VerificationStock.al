@@ -229,7 +229,7 @@ codeunit 50010 "VerificationStock"
         if Rec."Bin Code" <> '' then
             if Binc.get(rec."Location Code", rec."Bin Code", rec."Item No.") then begin
                 item.get(rec."Item No.");
-                BinC."Disponibilité" := item."CalcDisponibilité"(item."No.", rec."Location Code", rec."Bin Code");
+                BinC."Disponibilité" := item."CalcDisponibilité"(rec."Location Code", rec."Bin Code");
 
 
             end;

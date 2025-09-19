@@ -52,11 +52,6 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                         Error('Ce client est bloqué pour la raison suivante \%1 !', customer."Cause du blocage");
                 end;
 
-
-
-
-
-
             end;
 
         }
@@ -162,6 +157,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
 
 
 
+
         addafter("Shipping and Billing")
         {
             group(Autre)
@@ -209,6 +205,34 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
     }
     actions
     {
+        addbefore(Post)
+        {
+            action("Générer une facture") //IS 110925
+            {
+                Image = Invoice;
+                ApplicationArea = all;
+                Promoted = true;
+                PromotedCategory = Process;
+                Enabled = (Rec."Type de facturation" = Rec."Type de facturation"::"Contre remboursement");
+
+                trigger OnAction()
+                var
+                    InvoiceHeader: Record "Sales Header";
+                    SalesLine: Record "Sales Line";
+                begin
+                    SalesLine.SetRange("Document Type", Rec."Document Type");
+                    SalesLine.SetRange("Document No.", Rec."No.");
+
+                    if SalesLine.FindFirst() then
+                        repeat
+                            SalesLine.TestField("Location Code");
+                        until SalesLine.Next() = 0;
+
+                    InvoiceHeader := Rec.TransferToSalesInvoice();
+                    PAGE.Run(PAGE::"Sales Invoice", InvoiceHeader);
+                end;
+            }
+        }
 
         addfirst(processing)
         {
@@ -237,6 +261,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
 
 
             }
+
 
             action("affecter Lot")
             {

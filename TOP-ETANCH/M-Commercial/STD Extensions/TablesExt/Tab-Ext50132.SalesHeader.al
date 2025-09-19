@@ -6,6 +6,8 @@ using Microsoft.Finance.GeneralLedger.Setup;
 using System.Security.User;
 using PHARMATECCLOUD.PHARMATECCLOUD;
 using Microsoft.Inventory.Location;
+using Microsoft.Sales.Setup;
+using Microsoft.Foundation.NoSeries;
 using Microsoft.Sales.History;
 
 tableextension 50132 SalesHeader extends "Sales Header"
@@ -305,6 +307,59 @@ tableextension 50132 SalesHeader extends "Sales Header"
                     exit(true);
             until SaleL.next() = 0;
         exit(false);
+    end;
+
+    procedure TransferToSalesInvoice(): Record "Sales Header" // IS 11092025
+    var
+        NewInvoiceHeader: Record "Sales Header";
+        NewInvoiceLine: Record "Sales Line";
+        SL: Record "Sales Line";
+        LineNo: Integer;
+        seriesMgt: Codeunit "No. Series";
+        SalesSetup: record "Sales & Receivables Setup";
+    begin
+
+        SalesSetup.get();
+        NewInvoiceHeader.Init();
+        NewInvoiceHeader."Document Type" := NewInvoiceHeader."Document Type"::Invoice;
+        NewInvoiceHeader.Validate("Sell-to Customer No.", Rec."Sell-to Customer No.");
+        NewInvoiceHeader.Validate("Bill-to Customer No.", Rec."Bill-to Customer No.");
+        NewInvoiceHeader.Validate("Currency Code", Rec."Currency Code");
+        NewInvoiceHeader.Validate("Payment Terms Code", Rec."Payment Terms Code");
+        NewInvoiceHeader.Validate("Posting Date", Today);
+        NewInvoiceHeader.Validate("Document Date", Today);
+        NewInvoiceHeader."Posting No." := seriesMgt.GetNextNo(SalesSetup."Posted Invoice Nos.");
+        NewInvoiceHeader.Insert(true);
+
+        SL.SetRange("Document Type", Rec."Document Type");
+        SL.SetRange("Document No.", Rec."No.");
+
+        if SL.FindFirst() then begin
+            LineNo := 10000;
+            repeat
+                NewInvoiceLine.Init();
+                NewInvoiceLine."Document Type" := NewInvoiceHeader."Document Type";
+                NewInvoiceLine."Document No." := NewInvoiceHeader."No.";
+                NewInvoiceLine."Line No." := LineNo;
+                NewInvoiceLine.Validate("Type", SL."Type");
+                NewInvoiceLine.Validate("No.", SL."No.");
+                NewInvoiceLine.Validate("Quantity", SL."Qty. to Ship");
+                NewInvoiceLine.Validate("Location Code", SL."Location Code");
+                NewInvoiceLine.Validate("Unit of Measure Code", SL."Unit of Measure Code");
+                NewInvoiceLine.Validate("Unit Price", SL."Unit Price");
+                NewInvoiceLine.Insert(true);
+                LineNo += 10000;
+            until SL.Next() = 0;
+        end;
+
+        exit(NewInvoiceHeader);
+    end;
+
+    trigger OnDelete()
+
+    begin
+        if ("Document Type" = "Document Type"::invoice) and ("Posting No." <> '') then
+            Error('Vous ne pouvez pas supprimer ce document');
     end;
 
     var

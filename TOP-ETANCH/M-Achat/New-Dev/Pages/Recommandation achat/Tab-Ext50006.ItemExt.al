@@ -310,21 +310,21 @@ tableextension 50096 "Item Ext" extends Item
 
     end;
 
-    procedure CalcDisponibilité(locationCode: Code[25]; binCode: Code[25]): Decimal
-    begin
-        if locationCode <> '' then begin
-            Rec.SetFilter("Location Filter", locationCode);
+    /*     procedure CalcDisponibilité(locationCode: Code[25]; binCode: Code[25]): Decimal
+        begin
+            if locationCode <> '' then begin
+                Rec.SetFilter("Location Filter", locationCode);
 
-            if binCode <> '' then begin
-                Rec.SetFilter("Bin Filter", binCode);
-                Rec.CalcFields("Qty. to ship on order line", "Inventory in Warehouse");
-                exit(Rec."Inventory in Warehouse" - Rec."Qty. to ship on order line");
+                if binCode <> '' then begin
+                    Rec.SetFilter("Bin Filter", binCode);
+                    Rec.CalcFields("Qty. to ship on order line", "Inventory in Warehouse");
+                    exit(Rec."Inventory in Warehouse" - Rec."Qty. to ship on order line");
+                end;
             end;
-        end;
 
-        Rec.CalcFields("Inventory", "Qty. to ship on order line");
-        exit(Rec."Inventory" - Rec."Qty. to ship on order line");
-    end;
+            Rec.CalcFields("Inventory", "Qty. to ship on order line");
+            exit(Rec."Inventory" - Rec."Qty. to ship on order line");
+        end; */
 
     procedure LierOrigine()
     var

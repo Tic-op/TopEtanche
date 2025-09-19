@@ -446,6 +446,15 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
 
     end;
 
+    procedure GetDisponibilite(): Decimal
+    var
+        Item: Record Item;
+    begin
+        if Item.Get("No.") then
+            exit(Item.CalcDisponibilité("Location Code", "Bin Code"));
+    end;
+
+
 
     // end;
 

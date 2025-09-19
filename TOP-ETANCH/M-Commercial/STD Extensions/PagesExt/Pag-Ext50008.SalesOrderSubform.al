@@ -27,7 +27,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                    ApplicationArea = all;
                 }
             */
-            field("DisponibilitéGlobal"; item.CalcDisponibilité(Rec."No.", '', ''))
+            field("DisponibilitéGlobal"; rec.GetDisponibilite())
             {
                 Caption = 'Disponibilité Globale';
                 DecimalPlaces = 0 : 0;
@@ -45,7 +45,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
 
             }
-            field(Disponibilité; item.CalcDisponibilité(Rec."No.", Rec."Location Code", Rec."Bin Code"))
+            field(Disponibilité; rec.GetDisponibilite())
             {
                 DecimalPlaces = 0 : 0;
                 Style = Favorable;
@@ -327,7 +327,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                     cu.DeleteReservationEntry(Rec);
                     Binc.findfirst();
                     repeat
-                        Binc."Disponibilité" := item."CalcDisponibilité"(Binc."Item No.", Binc."Location Code", Binc."Bin Code");
+                        Binc."Disponibilité" := item."CalcDisponibilité"(Binc."Location Code", Binc."Bin Code");
                         Binc.modify();
 
                     until Binc.next = 0;
@@ -425,8 +425,8 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
                     if BinC.FindFirst() then
                         repeat
-                            Dispo := item."CalcDisponibilité"(SalesL."No.", location.code, binc."Bin Code");
-                            if item."CalcDisponibilité"(SalesL."No.", location.code, binc."Bin Code") > 0 then begin
+                            Dispo := item."CalcDisponibilité"(location.code, binc."Bin Code");
+                            if item."CalcDisponibilité"(location.code, binc."Bin Code") > 0 then begin
                                 itemdist.INIT();
                                 itemdist.validate(Item, SalesL."No.");
                                 itemdist.validate("Location Code", location.code);
@@ -447,14 +447,14 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 end
                 else
 
-                    if item."CalcDisponibilité"(SalesL."No.", location.code, '') > 0 then begin
+                    if item."CalcDisponibilité"(location.code, '') > 0 then begin
                         //   Message('%1', location.Code);
                         itemdist.INIT();
                         itemdist.Item := SalesL."No.";
                         itemdist."Location Code" := location.code;
                         itemdist."Bin Code" := '';
 
-                        itemdist.Qty := item."CalcDisponibilité"(SalesL."No.", location.code, '');
+                        itemdist.Qty := item."CalcDisponibilité"(location.code, '');
 
                         item.get(SalesL."No.");
                         itemdist."Qté Base Sortie" := item."CalcQuantitéBaseSortie"(location.Code);
@@ -522,8 +522,8 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
                     if BinC.FindFirst() then
                         repeat
-                            Dispo := item."CalcDisponibilité"(SalesL."No.", location.code, binc."Bin Code");
-                            if item."CalcDisponibilité"(SalesL."No.", location.code, binc."Bin Code") > 0 then begin
+                            Dispo := item."CalcDisponibilité"(location.code, binc."Bin Code");
+                            if item."CalcDisponibilité"(location.code, binc."Bin Code") > 0 then begin
                                 itemdist.INIT();
                                 itemdist.validate(Item, Rec."No.");
                                 itemdist.validate("Location Code", location.code);
@@ -544,7 +544,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 end
                 else
 
-                    if item."CalcDisponibilité"(SalesL."No.", location.code, '') > 0 then begin
+                    if item."CalcDisponibilité"(location.code, '') > 0 then begin
 
                         itemdist.INIT();
                         //
@@ -556,7 +556,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                         itemdist."Location Code" := location.code;
                         itemdist."Bin Code" := '';
 
-                        itemdist.Qty := item."CalcDisponibilité"(SalesL."No.", location.code, '');
+                        itemdist.Qty := item."CalcDisponibilité"(location.code, '');
 
                         item.get(rec."No.");
                         itemdist."Qté Base Sortie" := item."CalcQuantitéBaseSortie"(location.Code);
@@ -629,8 +629,8 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
         QuantitéDispo: decimal;
     begin
         if (rec.type = "Sales Line Type"::item) and (rec."Document Type" = "Sales Document Type"::Order) then begin
-            QuantitéDispo := item.CalcDisponibilité(Rec."No.", Rec."Location Code", Rec."Bin Code");
-            If rec."Quantity (Base)" > (item.CalcDisponibilité(Rec."No.", Rec."Location Code", Rec."Bin Code") + xRec."Quantity (Base)") then;
+            QuantitéDispo := item.CalcDisponibilité(Rec."Location Code", Rec."Bin Code");
+            If rec."Quantity (Base)" > (item.CalcDisponibilité(Rec."Location Code", Rec."Bin Code") + xRec."Quantity (Base)") then;
             Error('La quantité disponible dans ce magasin est inférieure à la quantité (base) saisie');
         end;
 

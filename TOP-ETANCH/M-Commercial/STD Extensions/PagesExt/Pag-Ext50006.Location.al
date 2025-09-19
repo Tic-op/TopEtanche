@@ -28,6 +28,8 @@ pageextension 50006 Location extends "Location Card"
             field("Dépot associé"; Rec."Dépot associé")
             {
                 Enabled = rec.Type = rec.type::"Point de vente";
+                ApplicationArea = all;
+
             }
         }
     }

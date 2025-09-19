@@ -9,7 +9,7 @@ page 50028 LocationPart
     Caption = 'LocationPart';
     PageType = ListPart;
     SourceTable = Location;
-    
+
     layout
     {
         area(Content)
@@ -20,24 +20,27 @@ page 50028 LocationPart
                 {
                     ToolTip = 'Specifies a location code for the warehouse or distribution center where your items are handled and stored before being sold.';
                 }
-                field(Stock; item.CalcStock(item."No.",rec.Code,'')) 
-                { DecimalPlaces = 0:3 ;
+                field(Stock; item.CalcStock(item."No.", rec.Code, ''))
+                {
+                    DecimalPlaces = 0 : 3;
                 }
-                field(Disponibilité ; item."CalcDisponibilité"(item."No.",rec.Code,'')){
-                    DecimalPlaces = 0:3 ;
-                 }
-                
+                field(Disponibilité; item."CalcDisponibilité"(rec.Code, ''))
+                {
+                    DecimalPlaces = 0 : 3;
+                }
+
             }
         }
     }
-    Procedure SetItem(item0 : record item ) var 
+    Procedure SetItem(item0: record item)
+    var
 
-    begin 
+    begin
 
-        item := item0 ;
+        item := item0;
     end;
 
-    Var 
-    item : Record Item ;
+    Var
+        item: Record Item;
 
 }

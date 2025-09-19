@@ -63,7 +63,7 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
 
                     TransferHeader.get(rec."Document No.");
                     Binc.SetCurrentKey("Disponibilité");
-                    if item."CalcDisponibilité"(rec."Item No.", TransferHeader."Transfer-from Code", '') < rec."Quantity (Base)" then
+                    if item."CalcDisponibilité"(TransferHeader."Transfer-from Code", '') < rec."Quantity (Base)" then
                         message('La quantité saisie %1 n''est pas disponible dans le magasin %2', rec."Quantity (Base)", TransferHeader."Transfer-from Code")
                     else begin
                         Binc.setrange("Location Code", TransferHeader."Transfer-from Code");
