@@ -133,6 +133,35 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
     {
         addbefore("O&rder")
         {
+            action("Générer une facture") //IS 110925
+            {
+                Image = Invoice;
+                ApplicationArea = all;
+                Promoted = true;
+                PromotedCategory = Process;
+                // visible = false;
+                Enabled = (Rec."Type de facturation" = Rec."Type de facturation"::"Contre remboursement");
+
+                trigger OnAction()
+                var
+                    InvoiceHeader: Record "Sales Header";
+                    SalesLine: Record "Sales Line";
+                    Cu: codeunit SalesEvents;
+                begin
+
+                    Cu.CheckConditions(Rec);
+                    SalesLine.SetRange("Document Type", Rec."Document Type");
+                    SalesLine.SetRange("Document No.", Rec."No.");
+
+                    if SalesLine.FindFirst() then
+                        repeat
+                            SalesLine.TestField("Location Code");
+                        until SalesLine.Next() = 0;
+
+                    InvoiceHeader := Rec.TransferToSalesInvoice();
+                    PAGE.Run(PAGE::"Sales Invoice", InvoiceHeader);
+                end;
+            }
 
             action("Facturer les expéditions")
             {

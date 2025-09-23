@@ -317,6 +317,7 @@ tableextension 50132 SalesHeader extends "Sales Header"
         LineNo: Integer;
         seriesMgt: Codeunit "No. Series";
         SalesSetup: record "Sales & Receivables Setup";
+        Salesevent: codeunit SalesEvents;
     begin
 
         SalesSetup.get();
@@ -328,7 +329,8 @@ tableextension 50132 SalesHeader extends "Sales Header"
         NewInvoiceHeader.Validate("Payment Terms Code", Rec."Payment Terms Code");
         NewInvoiceHeader.Validate("Posting Date", Today);
         NewInvoiceHeader.Validate("Document Date", Today);
-        NewInvoiceHeader."Posting No." := seriesMgt.GetNextNo(SalesSetup."Posted Invoice Nos.");
+        // NewInvoiceHeader."Posting No." := seriesMgt.GetNextNo(SalesSetup."Posted Invoice Nos.");
+        Salesevent.affecterSoucheInvoice(NewInvoiceHeader);
         NewInvoiceHeader.Insert(true);
 
         SL.SetRange("Document Type", Rec."Document Type");

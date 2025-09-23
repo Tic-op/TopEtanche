@@ -2,10 +2,11 @@ namespace BSPCloud.BSPCloud;
 
 using Microsoft.Inventory.Item;
 using BCSPAREPARTS.BCSPAREPARTS;
+using Microsoft.Purchases.Document;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Inventory.Item.Catalog;
 
-page 50078 "Recommandation Achats"
+page 50178 "Recommandation Achats"
 {
     ApplicationArea = All;
     Caption = 'Recommandation Achats';
@@ -35,12 +36,13 @@ page 50078 "Recommandation Achats"
 
                 field("date fin"; "date fin")
                 {
-                     ApplicationArea = all;
+                    ApplicationArea = all;
                     ShowMandatory = true;
 
                 }
             }
-            group(Filtres)
+           
+             group(Filtres)
             {
                 field(Fournisseur; Fournisseur)
                 {
@@ -68,10 +70,7 @@ page 50078 "Recommandation Achats"
                     ApplicationArea = all;
                     TableRelation = Manufacturer ;
                      ShowMandatory = true ;
-                }
-
-
-            }
+                } }
             group("Option")
             {
 
@@ -81,32 +80,34 @@ page 50078 "Recommandation Achats"
                     Caption = 'Base de calcul recommandation achat';
                     ShowMandatory = true;
                     trigger OnValidate()
-                    var recmyitem: record "My Item" temporary ;
-                    PlanMGT : Codeunit "Planning managment" ;
+                    var
+                        recmyitem: record "My Item" temporary;
+                        PlanMGT: Codeunit "Planning managment";
                     begin
                         /*  if BoolCalcul then
                              BoolCalcul := false; */
                         // CurrPage.update();
-                       // CurrPage.GetRecord(recmyitem);
-                      // Pagerecord.Copy(Rec);
-                      /*  Message('%1',Pagerecord.Count);
-                        if Pagerecord.Findset() then 
-                        repeat 
-                        Pagerecord.validate("Mode de calcul VMJ",Methode_calculVMJ);
-                        Pagerecord.Modify(false);
-                        until Pagerecord.next=0 ;
-                        
- */                 // updateMethodeCalcul();
-//rec.ModifyAll("Mode de calcul VMJ",Methode_calculVMJ,true);
-                       // CurrPage.SetRecord(Pagerecord);
+                        // CurrPage.GetRecord(recmyitem);
+                        // Pagerecord.Copy(Rec);
+                        /*  Message('%1',Pagerecord.Count);
+                          if Pagerecord.Findset() then 
+                          repeat 
+                          Pagerecord.validate("Mode de calcul VMJ",Methode_calculVMJ);
+                          Pagerecord.Modify(false);
+                          until Pagerecord.next=0 ;
+
+   */                 // updateMethodeCalcul();
+                      //rec.ModifyAll("Mode de calcul VMJ",Methode_calculVMJ,true);
+                      // CurrPage.SetRecord(Pagerecord);
                       /*  rec.Validate("Mode de calcul VMJ",Methode_calculVMJ);
                        rec.modify(false); */
-                        if rec.Findset()then 
-                    repeat 
-                     PlanMGT.updateMethodeCalcul(Rec,Methode_calculVMJ);
-                     until Rec.next=0 ;
+                        if rec.Findset() then
+                            repeat
+                                PlanMGT.updateMethodeCalcul(Rec, Methode_calculVMJ);
+                            until Rec.next = 0;
                         //CurrPage.update; */
-                      
+                        if rec.FindFirst() then;
+
                     end;
                 }
                 field(OptionsAchat; OptionsAchat)
@@ -116,8 +117,8 @@ page 50078 "Recommandation Achats"
 
                 }
 
-
             }
+            
             repeater(General)
             {
                 Caption = 'General';
@@ -127,6 +128,7 @@ page 50078 "Recommandation Achats"
                 {
                     ToolTip = 'Specifies the item numbers that are displayed in the My Item Cue on the Role Center.';
                     Editable = false;
+
                 }
                 field(Description; Rec.Description)
                 {
@@ -140,13 +142,13 @@ page 50078 "Recommandation Achats"
                 field(Stock; Rec."Quantité en stock")
                 {
                     ToolTip = 'Specifies the inventory quantities of my items.';
-                    DecimalPlaces = 0:3 ;
+                    DecimalPlaces = 0 : 3;
                 }
-               /*  field("Item Origin"; Rec."Item Origin")
-                {
-                    ToolTip = 'Specifies the value of the Origine parent field.', Comment = '%';
-                    editable = false;
-                } */
+                /*  field("Item Origin"; Rec."Item Origin")
+                 {
+                     ToolTip = 'Specifies the value of the Origine parent field.', Comment = '%';
+                     editable = false;
+                 } */
                 field("Mode de calcul VMJ"; Rec."Mode de calcul VMJ")
                 {
                     ToolTip = 'Specifies the value of the Mode de calcul VMJ field.', Comment = '%';
@@ -175,12 +177,12 @@ page 50078 "Recommandation Achats"
                 field(Ecoulement; Rec.Ecoulement)
                 {
                     ToolTip = 'Specifies the value of the Écoulement field.', Comment = '%';
-                    DecimalPlaces = 0:3 ;
+                    DecimalPlaces = 0 : 3;
                 }
                 field("Couverture demandée"; Rec."Couverture demandée")
                 {
                     ToolTip = 'Specifies the value of the Couverture field.', Comment = '%';
-                    DecimalPlaces = 0:3 ;
+                    DecimalPlaces = 0 : 3;
                     trigger OnValidate()
                     var
                     begin
@@ -192,22 +194,30 @@ page 50078 "Recommandation Achats"
                 field("Qté sur commande vente"; Rec."Qté sur commande vente")
                 {
                     ToolTip = 'Specifies the value of the Qté sur commande vente field.', Comment = '%';
-                    DecimalPlaces = 0:3 ;
+                    DecimalPlaces = 0 : 3;
                 }
                 field("Qté sur commande achat"; Rec."Qté sur commande achat")
                 {
                     ToolTip = 'Specifies the value of the Qté sur commande achat field.', Comment = '%';
-                    DecimalPlaces = 0:3 ;
+                    DecimalPlaces = 0 : 3;
+                }
+                field("lignes demandes prix"; rec."lignes demandes prix")
+                {
+
                 }
                 field("Qté à commander"; Rec."Qté à commander")
                 {
                     ToolTip = 'Specifies the value of the Qté à commander field.', Comment = '%';
-                    DecimalPlaces = 0:3 ;
+                    DecimalPlaces = 0 : 3;
                 }
                 field("Qté à confirmer"; Rec."Qté à confirmer")
                 {
                     ToolTip = 'Specifies the value of the Qté à confirmer field.', Comment = '%';
-                    DecimalPlaces = 0:3 ;
+                    DecimalPlaces = 0 : 3;
+                    trigger OnValidate()
+                    begin
+                        CurrPage.Update();
+                    end;
                 }
                 field("Dérnier prix"; Rec."Dérnier prix")
                 {
@@ -231,10 +241,10 @@ page 50078 "Recommandation Achats"
 
 
                 }
-                field(Montant; Rec."Unit Price" * rec."Qté à confirmer")
+                field(Montant; Rec."Dérnier prix" * rec."Qté à confirmer")
                 {
                     ToolTip = 'Specifies the value of the Montant field.', Comment = '%';
-                    DecimalPlaces = 0:3 ;
+                    DecimalPlaces = 0 : 3;
                 }
             }
             /*   part(ItemOrigin; "Item Part") {
@@ -247,7 +257,7 @@ page 50078 "Recommandation Achats"
 
         }
 
-    }
+    } 
     actions
     {
 
@@ -257,66 +267,80 @@ page 50078 "Recommandation Achats"
             action("Calculer articles")
             {
                 ApplicationArea = all;
+                Visible = true;
                 trigger OnAction()
                 var
-                     item: record item;
+                    item: record item;
                     itemCategory: record "Item Category";
                     TextuserID: text;
                     Dialog: Dialog;
-        TotalCount: Integer;
-        CurrentCount: Integer;
-        ProgressBar: Text[101];
-        ProgressPct: Integer;
-        ProgressBlocks: Integer;
-         PlanMNG : codeunit "Planning managment";
-         Myitem : record "My Item" temporary ;
+                    TotalCount: Integer;
+                    CurrentCount: Integer;
+                    ProgressBar: Text;
+                    ProgressPct: Integer;
+                    ProgressBlocks: Integer;
+                    PlanMNG: codeunit "Planning managment";
+                    Myitem: record "My Item" temporary;
                 begin
 
                     if not rec.IsEmpty then
-                        if not Confirm('Cette action supprimera les données déjà calculées. Voulez-vous continuer ?') then 
-                        exit ;
+                        if not Confirm('Cette action supprimera les données déjà calculées. Voulez-vous continuer ?') then
+                            exit;
 
 
                     if ("date début" = 0D) or ("date fin" = 0D) or ("date début" > "date fin") then
                         error('Erreur au niveau des dates !!!');
 
-                    if Methode_calculVMJ = Methode_calculVMJ::" " then 
-                    error('veuillez spécifier la méthode de calcul des ventes moyennes');
+                    if Methode_calculVMJ = Methode_calculVMJ::" " then
+                        error('veuillez spécifier la méthode de calcul des ventes moyennes');
 
 
-                  if    FilterFabricant+Fournisseur+FiltrerDescription+Item_Category = '' then 
-                  Error('Vous devez au moins sélectionner un filtre ... Fabricant,Fournisseur,Description ou Categorie');
-                     
+                    if (FilterFabricant + Fournisseur + FiltrerDescription + Item_Category + FilterMarque + FilterOrigine = '') and (DateDerniereSortie = 0D) then
+                        Error('Vous devez au moins sélectionner un filtre ... Fabricant,Fournisseur,Description ou Categorie');
+
                     rec.DeleteAll();
                     TextuserID := UserId();
-
                     item.SetLoadFields("Search Description", "Vendor No.", "Item Category Code", "Manufacturer Code", "Qty. on Sales Order", "Qty. on Purch. Order", Inventory, "Couverture demandée", "Mode de calcul VMJ");
 
+
+                    if DateDerniereSortie <> 0D then begin // Derniere Sortie
+                        PlanMNG.getItemNoFilterFromDerniereDateSortie(DateDerniereSortie);
+                        Item.SetCurrentKey("No.");
+                        item.SetFilter("No.", PlanMNG.getItemNoFilterFromDerniereDateSortie(DateDerniereSortie));
+
+                    end;
                     if FiltrerDescription <> '' then begin
                         item.SetCurrentKey("Search Description");
-                        item.SetFilter("Search Description",'*'+FiltrerDescription+'*');
+                        item.SetFilter("Search Description", FiltrerDescription);
                     end;
                     if Fournisseur <> '' then begin
-                    item.SetCurrentKey("Vendor No.");
-                    item.setrange("Vendor No.", Fournisseur);
+                        item.SetCurrentKey("Vendor No.");
+                        item.setrange("Vendor No.", Fournisseur);
                     end;
                     if Item_Category <> '' then begin
-                     //   item.SetCurrentKey(key) //key to be added in Item table extention
+                        //   item.SetCurrentKey(key) //key to be added in Item table extention
                         item.setrange("Item Category Code", Item_Category);
-                        end;
-                    If FilterFabricant<>'' then begin 
-                        item.setfilter("Manufacturer Code",FilterFabricant)
-                    end ;
+                    end;
+                    If FilterFabricant <> '' then begin
+                        item.setfilter("Manufacturer Code", FilterFabricant)
+                    end;
+                 /*    If FilterMarque <> '' then begin
+                        item.setrange(Marque, FilterMarque);
+                    end;
+                    If FilterOrigine <> '' then begin
+                        item.setrange("Item Origin", FilterOrigine);
+                    end; */
 
-                    item.SetAutoCalcFields("Qty. on Sales Order", "Qty. on Purch. Order", Inventory);
+
+                    item.SetAutoCalcFields("Qty. on Sales Order", "Qty. on Purch. Order", Inventory, "lignes demandes prix");
 
 
-                    if item.FindSet() then begin 
+                    if item.FindSet() then begin
                         TotalCount := Item.Count;
-            CurrentCount := 0;
+                        CurrentCount := 0;
 
-            // Ouvre une fenêtre avec une "barre" simulée
-            Dialog.Open('Traitement en cours : \n#1#####################');
+                        // Ouvre une fenêtre avec une "barre" simulée
+                        Dialog.Open('Traitement en cours : \n#1#####################');
                         repeat
                             rec.init();
                             rec."User ID" := TextuserID;
@@ -330,28 +354,29 @@ page 50078 "Recommandation Achats"
                             rec."datedebut" := "date début";
                             rec."datefin" := "date fin";
 
-                             rec."Qté sur commande achat" := Item."Qty. on Purch. Order" ;
-                             rec."Qté sur commande vente":= Item."Qty. on Sales Order" ;
-                             rec."Quantité en stock":=item.Inventory ; // 180825
-                             rec."Stock prévisionnel" := Item.Inventory + rec."Qté sur commande achat" -  rec."Qté sur commande vente" ;
-                        
-                              if rec.insert(true) then ; 
-                               CurrentCount += 1;
-                ProgressPct := Round(CurrentCount * 100 / TotalCount) DIV 1;
-                ProgressBlocks := ProgressPct div 2; // 50 blocs max pour simuler
+                            rec."Qté sur commande achat" := Item."Qty. on Purch. Order";
+                            rec."Qté sur commande vente" := Item."Qty. on Sales Order";
+                            rec."lignes demandes prix" := item."lignes demandes prix";
+                            rec."Quantité en stock" := item.Inventory; // 180825
+                            rec."Stock prévisionnel" := Item.Inventory + rec."Qté sur commande achat" - rec."Qté sur commande vente";
 
-                // Construction de la "barre"
-                ProgressBar := StringOfChar('|', ProgressBlocks) + StringOfChar('.', 50 - ProgressBlocks);
-                ProgressBar := ProgressBar + ' ' + Format(ProgressPct) + '%';
+                            if rec.insert(true) then;
+                            CurrentCount += 1;
+                            ProgressPct := Round(CurrentCount * 100 / TotalCount) DIV 1;
+                            ProgressBlocks := ProgressPct div 2; // 50 blocs max pour simuler
 
-                Dialog.Update(1, ProgressBar);
-           
- 
-          
-                              
-                         until item.next = 0;
-                           Dialog.Close();
-                    end ;
+                            // Construction de la "barre"
+                            ProgressBar := StringOfChar('|', ProgressBlocks) + StringOfChar('.', 50 - ProgressBlocks);
+                            ProgressBar := ProgressBar + ' ' + Format(ProgressPct) + '%';
+
+                            Dialog.Update(1, ProgressBar);
+
+
+
+
+                        until item.next = 0;
+                        Dialog.Close();
+                    end;
 
                     /* rec.reset(); 
                     rec.FindFirst() ; 
@@ -364,75 +389,160 @@ page 50078 "Recommandation Achats"
                                until rec.next =0 ;
                     */
 
-              //    CurrPage.Update();
-                  Message('Importation terminée');
+                    //    CurrPage.Update();
+                    Message('Importation terminée');
+                    if Rec.FindFirst() then;
                 end;
 
             }
             action("Calculer Ecoulement & recommandation")
             {
                 ApplicationArea = all;
+                Visible = true;
                 trigger OnAction()
                 var
-                
+
                 // PlanMNG : codeunit "Planning managment";
                 begin
-                   
-                   /*  rec.FindFirst();
-                  
-                    repeat
-                   
-                     PlanMNG.Execute(rec);
-                    until rec.next = 0; */
+
+                    /*  rec.FindFirst();
+
+                     repeat
+
+                      PlanMNG.Execute(rec);
+                     until rec.next = 0; */
                     CalcEcoulementProgress();
-                   
+
                     Message('Traitement terminé');
+                    if Rec.FindFirst() then CurrPage.Update();
                 end;
 
             }
             Action("Copier les quantitées")
             {
                 ApplicationArea = all;
+                Visible = true;
                 trigger OnAction()
                 var
-                   // rec: Record "My Item" temporary ;
+                // rec: Record "My Item" temporary ;
                 begin
                     //rec.setrange("User ID", UserId);
                     //rec.setfilter("Qté à commander",'>%1',0);
-                   if rec.Findset()then 
-                    repeat
-                        rec."Qté à confirmer" := rec."Qté à commander";
-                        rec.Modify();
-                    until rec.next = 0 
-                    else error('il n''y a rien à copier');
+                    if rec.Findset() then
+                        repeat
+                            rec."Qté à confirmer" := rec."Qté à commander";
+                            rec.Modify();
+                        until rec.next = 0
+                    else
+                        error('il n''y a rien à copier');
 
 
+                    if Rec.FindFirst() then;
+                end;
+            }
+            action("Créer document d'achat")
+            {
+                ApplicationArea = All;
+                Image = Create;
 
+                Visible = true;
+                trigger OnAction()
+                var
+                    PurchHeader: Record "Purchase Header";
+                    PurchLine: Record "Purchase Line";
+                    Item: Record Item;
+                    Type: Enum "Purchase Document Type";
+                    LineNo: Integer;
+                    QuantitéRecommandée: Decimal;
+                    ADesLignes: Boolean;
+                begin
+
+
+                    if Fournisseur = '' then error('Veuillez choisir le un fournisseur');
+
+                    case OptionsAchat of
+                        OptionsAchat::"Demande de prix":
+                            Type := Type::Quote;
+                        OptionsAchat::"Commande achat":
+                            Type := Type::Order;
+                    end;
+
+                    ADesLignes := false;
+                    LineNo := 10000;
+
+                    //  if Item.FindFirst() then
+                    rec.setfilter("Qté à confirmer", '> %1', 0);
+                    if rec.FindFirst() then
+                        repeat
+                            // Item.CalcFields("lignes demandes prix");
+
+                            if (Rec."lignes demandes prix" = 0) or (OptionsAchat = OptionsAchat::"Commande achat") then begin
+                                // QuantitéRecommandée := rec.CalcRecommandation("date début", "date fin", Methode_calculVMJ);
+                                if rec."Qté à confirmer" > 0 then begin
+                                    if not ADesLignes then begin
+                                        PurchHeader.Init();
+                                        PurchHeader."Document Type" := Type;
+                                        PurchHeader.Insert(true);
+                                        PurchHeader.Validate("Buy-from Vendor No.", Fournisseur);
+                                        PurchHeader.Modify(true);
+                                        ADesLignes := true;
+                                    end;
+
+                                    PurchLine.Init();
+                                    PurchLine."Document Type" := Type;
+                                    PurchLine."Document No." := PurchHeader."No.";
+                                    PurchLine."Line No." := LineNo;
+                                    PurchLine.Validate(Type, PurchLine.Type::Item);
+                                    PurchLine.Validate("No.", rec."Item No.");
+                                    PurchLine.Validate(Quantity, rec."Qté à confirmer");
+                                    PurchLine.Insert(true);
+                                    LineNo += 10000;
+                                end;
+                            end;
+                        until rec.Next() = 0;
+
+                    if ADesLignes then begin
+                        Message('Document %1 %2 créé avec succès.', PurchHeader."Document Type", PurchHeader."No.");
+
+                        case Type of
+                            Type::Quote:
+                                Page.Run(Page::"Purchase Quote", PurchHeader);
+                            Type::Order:
+                                Page.Run(Page::"Purchase Order", PurchHeader);
+                        end;
+                    end else
+                        Message('Aucune ligne trouvée');
+
+                    if Rec.FindFirst() then;
                 end;
             }
 
+
+
         }
     }
-    trigger OnOpenPage() begin
-        Methode_calculVMJ := Methode_calculVMJ::"VMJ stock disponible" ;
+    trigger OnOpenPage()
+    begin
+        Methode_calculVMJ := Methode_calculVMJ::"VMJ stock disponible";
 
     end;
+
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     var
-        
+
     begin
-       if not Confirm('Cette action supprimera les données déjà calculées. Voulez-vous continuer ?',false) then 
-        Error('Fermeture annulée...');
+        if not Confirm('Cette action supprimera les données déjà calculées. Voulez-vous continuer ?', false) then
+            Error('Fermeture annulée...');
 
         rec.DeleteAll();
 
     end;
-   /*  trigger OnModifyRecord(): Boolean
-    var begin 
-        if xRec."Mode de calcul VMJ"<> rec."Mode de calcul VMJ" then 
-        rec.validate("Mode de calcul VMJ",Methode_calculVMJ) ;
+    /*  trigger OnModifyRecord(): Boolean
+     var begin 
+         if xRec."Mode de calcul VMJ"<> rec."Mode de calcul VMJ" then 
+         rec.validate("Mode de calcul VMJ",Methode_calculVMJ) ;
 
-    end; */
+     end; */
     local procedure CalcEcoulementProgress()
 
 
@@ -441,16 +551,16 @@ page 50078 "Recommandation Achats"
         Dialog: Dialog;
         TotalCount: Integer;
         CurrentCount: Integer;
-        ProgressBar: Text[101];
+        ProgressBar: Text;
         ProgressPct: Integer;
         ProgressBlocks: Integer;
-         PlanMNG : codeunit "Planning managment";
+        PlanMNG: codeunit "Planning managment";
     begin
 
-       // Initialiser();
+        // Initialiser();
 
-      /*   rec.SetAutoCalcFields(Inventory);
-        Rec.SetFilter(Inventory, '>0'); */
+        /*   rec.SetAutoCalcFields(Inventory);
+          Rec.SetFilter(Inventory, '>0'); */
 
 
         if Rec.FindSet then begin
@@ -461,10 +571,10 @@ page 50078 "Recommandation Achats"
             Dialog.Open('Traitement en cours :\n#1#####################');
 
             repeat
-                
-                     PlanMNG.ExecuteEcoulement(rec);
 
- 
+                PlanMNG.ExecuteEcoulement(rec);
+
+
                 CurrentCount += 1;
                 ProgressPct := Round(CurrentCount * 100 / TotalCount) DIV 1;
                 ProgressBlocks := ProgressPct div 2; // 50 blocs max pour simuler
@@ -476,12 +586,13 @@ page 50078 "Recommandation Achats"
                 Dialog.Update(1, ProgressBar);
             until Rec.Next() = 0;
 
- 
+
             Dialog.Close();
- 
+
         end;
     end;
-     local procedure StringOfChar(Char: Char; Count: Integer): Text
+
+    local procedure StringOfChar(Char: Char; Count: Integer): Text
     var
         Result: Text;
         i: Integer;
@@ -490,19 +601,22 @@ page 50078 "Recommandation Achats"
             Result += Format(Char);
         exit(Result);
     end;
-    local procedure updateMethodeCalcul() begin  if Rec.FindSet then 
-          repeat
-          rec.Validate("Mode de calcul VMJ",Methode_calculVMJ);
-  until Rec.Next() = 0;
- end;
 
-   
+    local procedure updateMethodeCalcul()
+    begin
+        if Rec.FindSet then
+            repeat
+                rec.Validate("Mode de calcul VMJ", Methode_calculVMJ);
+            until Rec.Next() = 0;
+    end;
+
+
 
     var
-        OptionsAchat: Option "Demande de prix","Commande cadre achat","Commande achat";
-       FilterFabricant, Fournisseur,FiltrerDescription,Item_Category: code[50];
-     
+        OptionsAchat: Option "Demande de prix","Commande achat";
+        FilterFabricant, Fournisseur, FiltrerDescription, Item_Category, FilterMarque, FilterOrigine : code[50];
+
         Methode_calculVMJ: option " ","VMJ stock disponible","VMJ sur période";
-       "date fin",  "date début": Date;
-       Pagerecord : record "My Item" temporary ;
- }
+        "date fin", "date début", DateDerniereSortie : Date;
+        Pagerecord: record "My Item" temporary;
+}

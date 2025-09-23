@@ -246,7 +246,7 @@ page 50174 "itemdistribution"
         SLToTestLocationExist: Record "Sales Line";
 
     begin
-        SlToDelete.Get(SlToDelete."Document Type"::Order, doc, Line);
+        SlToDelete.Get(typeDocumentVente, doc, Line);
         SL.Init();
         SL := SlToDelete;
 

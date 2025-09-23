@@ -194,10 +194,8 @@ end
 
     end;
 procedure ExecuteEcoulement(Var Myitem : Record "My Item" temporary) 
-var
-    begin
-        //  Myitem.SetLoadFields("VMJ / Période", "VMJ / Stock", datedebut, datefin, "Mode de calcul VMJ", "Qté à commander", Ecoulement);
-        Myitem."VMJ / Période" := CalculVMJ(Myitem,Myitem.datedebut, Myitem.datefin );
+var begin 
+   Myitem."VMJ / Période" := CalculVMJ(Myitem,Myitem.datedebut, Myitem.datefin );
                      Myitem."VMJ / Stock" := CalculVMJEffective(Myitem,Myitem.datedebut, Myitem.datefin);//// Lenteur importante !!! 
                      Myitem.Ecoulement :=CalculEcoulement(Myitem,Myitem.datedebut, Myitem.datefin, Myitem."Mode de calcul VMJ");
                      Myitem."Qté à commander" := CalcRecommandation(Myitem,Myitem.datedebut, Myitem.datefin, Myitem."Mode de calcul VMJ");
@@ -208,8 +206,44 @@ end;
    procedure updateMethodeCalcul(Var Myitem : Record "My Item" temporary; Methode_calculVMJ: option " ","VMJ stock disponible","VMJ sur période")
   begin 
   Myitem.Validate("Mode de calcul VMJ",Methode_calculVMJ);
-//  Myitem.modify();
- end; 
+        //  Myitem.modify();
+    end;
 
-    
+    procedure getItemNoFilterFromDerniereDateSortie(DerniereDateSortie: Date): Text
+    var
+        ILE, ILE1 : record "Item Ledger Entry";
+        FiltreItemNO: text;
+
+    begin
+        FiltreItemNO := '';
+        ILE.SetCurrentKey("Item No.", "Posting Date");
+        ILE.setrange("Posting Date", DerniereDateSortie);
+        ILE.setrange("Entry Type", "Item Ledger Entry Type"::Sale);
+        ILE.setrange(Positive, false);
+        ILE.findfirst();
+        repeat
+            //ILE1.reset;
+
+            ILE1.SetCurrentKey("Item No.", "Posting Date");
+            ILE1.SetRange("Item No.", ILE."Item No.");
+            ILE1.setrange("Entry Type", "Item Ledger Entry Type"::Sale);
+            ILE1.setrange(Positive, false);
+            ILE1.FindLast();
+            if ILE1."Posting Date" = DerniereDateSortie then begin
+                if FiltreItemNO = '' then
+                    FiltreItemNO := ILE1."Item No."
+                else
+                    FiltreItemNO := FiltreItemNO + '|' + ILE1."Item No.";
+            end
+
+
+
+        until ILE.next = 0;
+        //  Message(FiltreItemNO);
+        Exit(FiltreItemNO);
+
+
+    end;
+
+
 }

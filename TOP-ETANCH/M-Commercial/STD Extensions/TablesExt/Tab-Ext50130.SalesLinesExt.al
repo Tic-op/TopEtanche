@@ -21,21 +21,21 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
 
     fields
     {
-        modify(Quantity)
-        {
-            trigger OnAfterValidate()
-            var
-                salesordersub: page "Sales Order Subform";
+        /*  modify(Quantity)
+         {
+             trigger OnAfterValidate()
+             var
+                 salesordersub: page "Sales Order Subform";
 
-            begin
-                if "Document Type" = "Document Type"::Quote Then
-                    "Qté initial opp. " := Quantity;
-                CheckQuantiy("Quantity (Base)");
-                if "Document Type" = "Document Type"::"Blanket Order" then
-                    salesordersub.ControlDisponibilité();
+             begin
+                 if "Document Type" = "Document Type"::Quote Then
+                     "Qté initial opp. " := Quantity;
+                 CheckQuantiy("Quantity (Base)");
+                 if "Document Type" = "Document Type"::"Blanket Order" then
+                     salesordersub.ControlDisponibilité();
 
-            end;
-        }
+             end;
+         } */
 
         modify("Qty. to Ship")
         {
@@ -446,12 +446,16 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
 
     end;
 
-    procedure GetDisponibilite(): Decimal
+    procedure GetDisponibilite(Total: boolean): Decimal
     var
         Item: Record Item;
     begin
-        if Item.Get("No.") then
-            exit(Item.CalcDisponibilité("Location Code", "Bin Code"));
+        if Item.Get("No.") then begin
+            if total then
+                exit(Item.CalcDisponibilité('', ''))
+            else
+                exit(Item.CalcDisponibilité("Location Code", "Bin Code"));
+        end
     end;
 
 

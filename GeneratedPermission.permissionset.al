@@ -94,7 +94,7 @@ permissionset 50000 GeneratedPermission
         page "PurchasePlanning List" = X,
         page ReceptionEntries = X,
         page Reclassement = X,
-        page "Recommandation Achat" = X,
+
         page "Recommandation Achats" = X,
         page salesLine = X,
         page ScanCode = X,

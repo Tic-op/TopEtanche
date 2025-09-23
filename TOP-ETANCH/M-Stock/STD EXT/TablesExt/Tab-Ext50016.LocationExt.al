@@ -14,6 +14,16 @@ tableextension 50016 "Location Ext" extends Location
 
             OptionMembers = "Dépot","Point de vente","Tampon","Casse";
             Caption = 'Type magasin';
+            trigger OnValidate()
+            begin
+                if xrec.type <> rec.type then begin
+
+
+                    if type <> type::"Point de vente" then
+                        "Dépot associé" := '';
+                end
+
+            end;
         }
         field(50002; "Valeur Stock"; Decimal)
         {

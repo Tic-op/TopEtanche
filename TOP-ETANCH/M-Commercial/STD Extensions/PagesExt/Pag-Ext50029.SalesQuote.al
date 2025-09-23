@@ -7,17 +7,9 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
 {
     actions //IS12092025
     {
-        modify(Print)
-        {
-            trigger OnAfterAction()
-            var
-                SE: Codeunit SalesEvents;
-            begin
-                SE.ArchiveDevis(rec."No.");
-            end;
-        }
+
         modify(MakeInvoice)
-        {
+        {   
             trigger OnAfterAction()
             var
                 SE: Codeunit SalesEvents;
@@ -26,7 +18,8 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
             end;
         }
         modify(MakeOrder)
-        {
+        {       Caption= 'générer expédition vente';
+        
             trigger OnAfterAction()
             var
                 SE: Codeunit SalesEvents;
@@ -34,6 +27,7 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
                 SE.ArchiveDevis(rec."No.");
             end;
         }
+       
 
         addlast(Processing)
         {
@@ -45,7 +39,6 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
                 Image = CreateWhseLoc;
                 Promoted = true;
                 PromotedCategory = Process;
-
                 trigger OnAction()
                 var
                     CVCMAKER: Codeunit SalesBlanketOrderFromQuote;
@@ -53,6 +46,8 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
                     if not Confirm('Voulez-vous créer une commande vente cadre?') then
                         exit;
                     CVCMAKER.StartCreationBlanOrder(Rec."No.");
+                    //Get & Open the Sales B.O
+
                 end;
             }
         }

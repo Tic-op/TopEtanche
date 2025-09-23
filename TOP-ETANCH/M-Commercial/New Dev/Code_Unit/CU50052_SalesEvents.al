@@ -106,7 +106,81 @@ codeunit 50052 SalesEvents
         //SalesOrderHeader.validate("Location Code", BlanketOrderSalesHeader."Location Code");
     end;
 
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Invoice", OnBeforeOnRun, '', false, false)]
+    Procedure CheckConditionsbeforeQuotetoinvoice(var SalesHeader: Record "Sales Header")
+    var
+    begin
+        CheckConditions(SalesHeader);
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order", OnBeforeOnRun, '', false, false)]
+
+    Procedure CheckConditionsbeforeQuotetoOrder(var SalesHeader: Record "Sales Header")
+    var
+    begin
+        CheckConditions(SalesHeader);
+    end;
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Order", OnBeforeInsertSalesOrderHeader, '', false, false)]
+    procedure AffecterSoucheBLFromQuote(var SalesOrderHeader: Record "Sales Header")
+    var
+    begin
+        AffecterSoucheBL(SalesOrderHeader);
+
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Invoice", OnBeforeInsertSalesInvoiceHeader, '', false, false)]
+    Procedure affecterSoucheInvoice(var SalesInvoiceHeader: Record "Sales Header")
+    var
+        seriesMgt: Codeunit "No. Series";
+        SalesSetup: record "Sales & Receivables Setup";
+    begin
+        SalesSetup.get();
+        SalesInvoiceHeader."No." := seriesMgt.GetNextNo(SalesSetup."Posted Invoice Nos.");
+        SalesInvoiceHeader."Posting No." := SalesInvoiceHeader."No.";
+
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Blanket Sales Order to Order", OnBeforeRun, '', false, false)]
+    Procedure CheckConditions(var SalesHeader: Record "Sales Header")
+    var
+    begin
+        CheckBlocageClient(SalesHeader);
+        ControlVentecomptoir(SalesHeader);
+        CheckSuspension(SalesHeader);
+        CheckDispo(SalesHeader);
+        CheckCustomerCredit(SalesHeader);
+
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Blanket Sales Order to Order", OnBeforeCreateSalesHeader, '', false, false)]
+    Procedure AffecterSoucheBL(var OrderSalesHeader: Record "Sales Header")
+    var
+        seriesMgt: Codeunit "No. Series";
+        SalesSetup: record "Sales & Receivables Setup";
+    begin
+        SalesSetup.get();
+        OrderSalesHeader."No." := seriesMgt.GetNextNo(SalesSetup."Posted Shipment Nos.");
+        OrderSalesHeader."Shipping No." := OrderSalesHeader."No.";
+
+    end;
+
+    procedure CheckCustomerCredit(var SalesHeader: Record "Sales Header")
+    var
+        Cust: record Customer;
+    begin
+        Cust.SetLoadFields("No.");
+        Cust.get(SalesHeader."Sell-to Customer No.");
+        SalesHeader.CalcFields("Amount Including VAT");
+        if (SalesHeader."Amount Including VAT" + SalesHeader."Stamp Amount") > cust.CalcRestant() then Error('Montant supérieur aux solde client');
+
+
+
+    end;
+
+
     procedure CheckDispo(var SalesHeader: Record "Sales Header")
     var
         SalesLine: Record "Sales Line";
@@ -114,9 +188,6 @@ codeunit 50052 SalesEvents
         item: Record Item;
 
     begin
-        CheckBlocageClient(SalesHeader);
-        ControlVentecomptoir(SalesHeader);
-        CheckSuspension(SalesHeader);
 
 
 
@@ -126,7 +197,8 @@ codeunit 50052 SalesEvents
 
         if SalesLine.FindFirst() then
             repeat
-                AvailableQty := item."CalcDisponibilité"(SalesLine."Location Code", SalesLine."Bin Code");
+                // if item.get(SalesLine."No.") then
+                AvailableQty := SalesLine.GetDisponibilite(false);
                 if SalesLine."Qty. to Ship" > AvailableQty then
                     Error('Vous ne pouvez pas passer cette commande car l''article "%1" n''a pas suffisamment de disponibilité en stock.', SalesLine."No.");
 

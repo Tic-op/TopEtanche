@@ -27,7 +27,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                    ApplicationArea = all;
                 }
             */
-            field("DisponibilitéGlobal"; rec.GetDisponibilite())
+            field("DisponibilitéGlobal"; rec.GetDisponibilite(true))
             {
                 Caption = 'Disponibilité Globale';
                 DecimalPlaces = 0 : 0;
@@ -45,12 +45,13 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
 
             }
-            field(Disponibilité; rec.GetDisponibilite())
+            field(Disponibilité; rec.GetDisponibilite(false))
             {
                 DecimalPlaces = 0 : 0;
                 Style = Favorable;
                 Editable = false;
                 ApplicationArea = all;
+                Enabled = rec."Location Code" <> '';
 
 
                 trigger OnDrillDown()
@@ -83,17 +84,15 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
             end;
 
-            trigger OnBeforeValidate()
-            begin
-                //OldQty := xRec."Qty. to Ship";
-                // ControlDisponibilité();
-            end;
 
-            trigger OnAfterValidate()
-            begin
-                //if OldQty <> 0 THEN
-                // rec.validate("Qty. to Ship", OldQty);
 
+            trigger OnafterValidate()
+            var
+            begin
+                if rec."Location Code" = '' then begin
+                    if rec.GetDisponibilite(true) < 0 then error('Quantité non disponible..')
+                end
+                else if rec.GetDisponibilite(false) < 0 then error('Quantité non disponible..')
             end;
         }
 
@@ -124,8 +123,6 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 item.SetLoadFields("No.");
                 if item.get(rec."No.") then
                     item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer No.", rec."VAT %");
-
-
             end;
 
 
@@ -413,6 +410,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 itemdist.delete();
             until itemdist.next = 0;
 
+        if not item.Get(SalesL."No.") then exit; //AM190925
 
         location.SetRange("Use As In-Transit", false);
         location.SetFilter(Code, '<>%1', SalesL."Location Code");
@@ -499,6 +497,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
     begin
         SalesL.get(Documenttype, documentno, Lineno);
+        if not Item.get(SalesL."No.") then exit; // AM 190925
         itemdist.SetRange("Source Doc type", Documenttype);
         itemdist.setrange("Source Doc No.", documentno);
         itemdist.setrange("Source Line No.", Lineno);
@@ -624,17 +623,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
         venteComptoir := true;
     end; */
 
-    Procedure ControlDisponibilité()
-    var
-        QuantitéDispo: decimal;
-    begin
-        if (rec.type = "Sales Line Type"::item) and (rec."Document Type" = "Sales Document Type"::Order) then begin
-            QuantitéDispo := item.CalcDisponibilité(Rec."Location Code", Rec."Bin Code");
-            If rec."Quantity (Base)" > (item.CalcDisponibilité(Rec."Location Code", Rec."Bin Code") + xRec."Quantity (Base)") then;
-            Error('La quantité disponible dans ce magasin est inférieure à la quantité (base) saisie');
-        end;
 
-    end;
 
 
 

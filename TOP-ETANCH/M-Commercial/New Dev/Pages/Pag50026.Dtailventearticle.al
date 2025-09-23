@@ -27,6 +27,10 @@ page 50026 "Détail vente article"
                 field(CalcVAT; round(Rec."Unit Price" * (1 + VAT_Rate / 100))) { Editable = false; }
                 field("Sur Cmde Vente"; Rec."Qty. on Sales Order") { }
                 field("Sur Cmde Achat"; Rec."Qty. on Purch. Order") { }
+                Field("Sur facture Vente"; rec."Qty on invoice")
+                {
+
+                }
                 
             }
             Grid(HIST)

@@ -7,6 +7,7 @@ using Microsoft.Utilities;
 
 codeunit 50005 SalesBlanketOrderFromQuote
 {
+
     procedure StartCreationBlanOrder(QuoteNo: Code[20])
 
     var
@@ -31,9 +32,7 @@ codeunit 50005 SalesBlanketOrderFromQuote
         Rec.Delete();
         SalesQuoteLine.SetRange("Document Type", SalesQuoteLine."Document Type"::Quote);
         SalesQuoteLine.SetRange("Document No.", QuoteNo);
-
         SalesQuoteLine.DeleteAll();
-
     end;
 
     local procedure CreateSalesHeader(SalesHeader: Record "Sales Header"; PrepmtPercent: Decimal): Code[25]
@@ -119,18 +118,6 @@ codeunit 50005 SalesBlanketOrderFromQuote
         IsHandled: Boolean;
         SalesSetup: Record "Sales & Receivables Setup";
     begin
-        /*  IsHandled := false;
-         if IsHandled then
-             exit; */
-
-        SalesSetup.get;
-        case SalesSetup."Archive Quotes" of
-            SalesSetup."Archive Quotes"::Always:
-                ArchiveManagement.ArchiveSalesDocument(SalesHeader);
-            SalesSetup."Archive Quotes"::Question:
-                ArchiveManagement.ArchiveSalesDocument(SalesHeader);
-        end;
+        ArchiveManagement.StoreSalesDocument(SalesHeader, false);
     end;
-
-
 }

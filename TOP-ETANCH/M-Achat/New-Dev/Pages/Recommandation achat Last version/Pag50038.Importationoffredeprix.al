@@ -63,6 +63,7 @@ page 50040 "Importation offre de prix"
             action(Valider)
             {
                 Image = PostDocument;
+                Visible = true;
                 trigger OnAction()
                 var
                     offrePrix: record "Offre de prix ";
@@ -73,8 +74,8 @@ page 50040 "Importation offre de prix"
                             offrePrix.init();
                             offrePrix.validate("Vendor No.", rec."Vendor No.");
                             offrePrix.validate("Item No.", rec."item No.");
-                           //offrePrix."Item No." := rec."item No." ;
-                           Message('%1',rec."item No.");
+                            //offrePrix."Item No." := rec."item No." ;
+                            // Message('%1',rec."item No.");
                             offrePrix.Price := rec.price;
                             offrePrix.Date := Date;
                             offrePrix.insert();

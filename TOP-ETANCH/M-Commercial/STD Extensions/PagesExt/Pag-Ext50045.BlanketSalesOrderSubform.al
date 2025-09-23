@@ -25,7 +25,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
 
              } */
-            field("DisponibilitéGlobal"; item.CalcDisponibilité('', ''))
+            field("DisponibilitéGlobal"; rec.GetDisponibilite(true))
             {
                 Caption = 'Disponibilité Globale';
                 DecimalPlaces = 0 : 0;
@@ -44,13 +44,14 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
 
             }
-            field("Disponibilité"; item.CalcDisponibilité(Rec."Location Code", Rec."Bin Code"))
+            field("Disponibilité"; rec.GetDisponibilite(false))
             {
                 Caption = 'Disponibilité sur Mag';
                 DecimalPlaces = 0 : 0;
                 Style = Favorable;
                 Editable = false;
                 ApplicationArea = all;
+                Enabled = rec."Location Code" <> '';
                 trigger OnDrillDown()
                 var
                     dispo: Decimal;
@@ -135,6 +136,20 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
         {
             enabled = not Lignecomptoir;
         }
+        modify("No.")
+        {
+            trigger OnDrillDown()
+            var
+                item: record Item;
+
+            begin
+                item.SetLoadFields("No.");
+                if item.get(rec."No.") then
+                    item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer No.", rec."VAT %");
+            end;
+
+
+        }
 
 
     }
@@ -157,7 +172,8 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
     var
         item: Record Item;
     begin
-        "Disponibilité" := item.CalcDisponibilité(Rec."Location Code", Rec."Bin Code");
+        if item.get(rec."No.") then
+            "Disponibilité" := item.CalcDisponibilité(Rec."Location Code", Rec."Bin Code");
         GetLigneVentecomptoir();
     end;
 
@@ -278,6 +294,8 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
         itemdist.DeleteAll();
 
         location.SetRange("Use As In-Transit", false);
+
+        if not item.get(rec."No.") then exit; // AM190925
 
         if location.findfirst() then
             repeat

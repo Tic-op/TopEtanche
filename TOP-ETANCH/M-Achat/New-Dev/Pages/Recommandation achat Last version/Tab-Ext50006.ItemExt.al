@@ -7,7 +7,7 @@ using Microsoft.Purchases.Document;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Inventory.Location;
 
-tableextension 50096 "Item Ext" extends Item
+tableextension 50096 "Item Ext RA" extends Item
 {
     fields
     {
@@ -17,11 +17,11 @@ tableextension 50096 "Item Ext" extends Item
             /// besoin Achat AM
             MinValue = 0;
         }
-        /*   field(50120; "lignes demandes prix"; integer)
-          {
-              FieldClass = FlowField;
-              CalcFormula = count("Purchase Line" where("Document Type" = const("Purchase Document Type"::Quote), "No." = field("No.")));
-          } */
+        field(50120; "lignes demandes prix"; integer)
+        {
+            FieldClass = FlowField;
+            CalcFormula = count("Purchase Line" where("Document Type" = const("Purchase Document Type"::Quote), "No." = field("No.")));
+        }
         field(50121; "Quantité à recommander"; decimal)
         {
             MinValue = -1;
@@ -310,46 +310,46 @@ tableextension 50096 "Item Ext" extends Item
 
     end;
 
-    /*     procedure CalcDisponibilité(locationCode: Code[25]; binCode: Code[25]): Decimal
-        begin
-            if locationCode <> '' then begin
-                Rec.SetFilter("Location Filter", locationCode);
+    /*  procedure CalcDisponibilité(locationCode: Code[25]; binCode: Code[25]): Decimal
+     begin
+         if locationCode <> '' then begin
+             Rec.SetFilter("Location Filter", locationCode);
 
-                if binCode <> '' then begin
-                    Rec.SetFilter("Bin Filter", binCode);
-                    Rec.CalcFields("Qty. to ship on order line", "Inventory in Warehouse");
-                    exit(Rec."Inventory in Warehouse" - Rec."Qty. to ship on order line");
-                end;
-            end;
+             if binCode <> '' then begin
+                 Rec.SetFilter("Bin Filter", binCode);
+                 Rec.CalcFields("Qty. to ship on order line", "Inventory in Warehouse");
+                 exit(Rec."Inventory in Warehouse" - Rec."Qty. to ship on order line");
+             end;
+         end;
 
-            Rec.CalcFields("Inventory", "Qty. to ship on order line");
-            exit(Rec."Inventory" - Rec."Qty. to ship on order line");
-        end; */
+         Rec.CalcFields("Inventory", "Qty. to ship on order line");
+         exit(Rec."Inventory" - Rec."Qty. to ship on order line");
+     end; */
 
-    procedure LierOrigine()
-    var
+    /*  procedure LierOrigine()
+     var
 
-        itemrec, itm : record item;
-        itemVide: Record item;
-    Begin
+         itemrec, itm : record item;
+         itemVide: Record item;
+     Begin
 
-        //itemVide.SetRange("Item Origin", '');
-        itemVide.FindFirst();
-        repeat
-            itemrec.Reset();
-            itemrec.setrange(Description, itemVide.Description);
-            itemrec.setfilter("No.", '<>%1', itemVide."No.");
-            // itemrec.setfilter("Item Origin", '<>%1', '');
-            if itemrec.FindFirst() then begin
-                // message(itemrec.GetFilters);
-                itm.get(itemVide."No.");
-                // Message(Itm."No.");
-                //itm."Item Origin" := itemrec."Item Origin";
-                itm.Modify();
+         //itemVide.SetRange("Item Origin", '');
+         itemVide.FindFirst();
+         repeat
+             itemrec.Reset();
+             itemrec.setrange(Description, itemVide.Description);
+             itemrec.setfilter("No.", '<>%1', itemVide."No.");
+             // itemrec.setfilter("Item Origin", '<>%1', '');
+             if itemrec.FindFirst() then begin
+                 // message(itemrec.GetFilters);
+                 itm.get(itemVide."No.");
+                 // Message(Itm."No.");
+                 //itm."Item Origin" := itemrec."Item Origin";
+                 itm.Modify();
 
-            end;
-        until itemVide.next = 0;
-    end;
+             end;
+         until itemVide.next = 0;
+     end; */
 
 
 

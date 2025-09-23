@@ -199,6 +199,7 @@ report 50100 DevisReport
             var
                 SalesP: Record "Salesperson/Purchaser";
                 item: Record Item;
+                SE: Codeunit SalesEvents;
             begin
                 companyInf.get;
                 companyInf.CalcFields(Picture);
@@ -218,15 +219,10 @@ report 50100 DevisReport
 
                 if "Sell-to Customer Name 2" = '' then
                     "Sell-to Customer Name 2" := "Sell-to Customer Name";
-                /* 
-                                if "VAT Registration No2" = '' then
-                                    "VAT Registration No2" := "VAT Registration No."; */
 
-
-
-
-
-
+                "No. Printed" += 1;
+                Modify();
+                SE.ArchiveDevis("No.");
 
             end;
 

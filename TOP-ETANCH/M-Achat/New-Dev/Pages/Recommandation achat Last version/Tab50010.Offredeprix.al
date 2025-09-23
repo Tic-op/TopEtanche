@@ -28,20 +28,20 @@ table 50012 "Offre de prix "
         field(3; "Item No."; Code[20])
         {
             Caption = 'Item No.';
-            TableRelation = item; 
-            ValidateTableRelation = false ;
+            TableRelation = item;
+            ValidateTableRelation = false;
             trigger OnValidate()
             var
-                itemrec : Record item;
+                itemrec: Record item;
             begin
                 itemrec.get("Item No.");
                 "item description" := itemrec.Description;
-            end; 
+            end;
         }
         field(4; "item description"; text[100])
         {
             Caption = 'item description';
-           
+
         }
         field(5; "Date"; Date)
         {
@@ -50,7 +50,7 @@ table 50012 "Offre de prix "
         field(6; Price; decimal)
         {
             Caption = 'Price';
-            DecimalPlaces = 0:3 ;
+            DecimalPlaces = 0 : 3;
         }
     }
     keys

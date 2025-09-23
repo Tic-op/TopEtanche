@@ -65,9 +65,9 @@ page 50027 HistVenteArticleSubform
         SalesShipLine: record "Sales Shipment Line";
         SalesLineArchive: Record "Sales Line Archive" ;
         SalesInvoiceLine : record "Sales Invoice Line" ;
-       //rec: Record HistVenteArticle temporary;
-        Pagedétail: Page "Détail vente article";
-      // Cust: record Customer;
+    //rec: Record HistVenteArticle temporary;
+    // Pagedétail: Page "Détail vente article";
+    // Cust: record Customer;
 
     begin
         rec.DeleteAll(); 
@@ -162,7 +162,7 @@ page 50027 HistVenteArticleSubform
               rec."Price TTC" := SalesInvoiceLine."Unit Price"*(1-SalesInvoiceLine."Line Discount %"/100)*(1+SalesInvoiceLine."VAT %"/100);
               rec.Remise := SalesInvoiceLine."Line Discount %";
               rec."Date Document" := SalesInvoiceLine."Posting Date";
-              rec.Insert();
+            rec.Insert();
           end;
     end;
  

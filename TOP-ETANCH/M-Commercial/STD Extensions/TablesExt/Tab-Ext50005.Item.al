@@ -196,12 +196,12 @@ tableextension 50005 Itemext extends Item
           {
               /// besoin Achat AM
           } */
-        field(50120; "lignes demandes prix"; integer)
-        {
-            FieldClass = FlowField;
-            CalcFormula = count("Purchase Line" where("Document Type" = const("Purchase Document Type"::Quote), "No." = field("No.")));
-        }
-        field(5012; "Qty on invoice"; Decimal) //IS12092025
+        /*    field(50120; "lignes demandes prix"; integer)
+           {
+               FieldClass = FlowField;
+               CalcFormula = count("Purchase Line" where("Document Type" = const("Purchase Document Type"::Quote), "No." = field("No.")));
+           } */
+        field(50200; "Qty on invoice"; Decimal) //IS12092025
         {
             Caption = 'Qté à facturer';
             FieldClass = FlowField;
@@ -212,6 +212,8 @@ tableextension 50005 Itemext extends Item
                                                                             "Location Code" = field("Location Filter"),
                                                                             "Bin Code" = field("Bin Filter"), "Shipment No." = const(''))
                                                                            );
+
+            DecimalPlaces = 0 : 3;
         }
         modify("Base Unit of Measure")
         {
@@ -372,6 +374,8 @@ tableextension 50005 Itemext extends Item
         Location: Record Location;
         dispo: Decimal;
         filtremagasin: text;
+        SL: record "Sales Line";
+        SLFAct: Record "Sales Line";
     begin
 
 
@@ -387,35 +391,57 @@ tableextension 50005 Itemext extends Item
 
             if binCode <> '' then begin
                 SetFilter("Bin Filter", binCode);
-                CalcFields("Qty. to ship on order line", "Inventory in Warehouse");
-                exit("Inventory in Warehouse" - "Qty. to ship on order line");
+                CalcFields("Qty. to ship on order line", "Inventory in Warehouse", "Qty on invoice");
+                exit("Inventory in Warehouse" - "Qty. to ship on order line" - "Qty on invoice");
             end
+
+            else begin
+
+                CalcFields("Inventory", "Qty. to ship on order line", "Qty on invoice");
+                exit("Inventory" - "Qty. to ship on order line" - "Qty on invoice");
+
+            end;
         end
         else begin
-
-            rec.CalcFields("Inventory", "Qty. to ship on order line");
-            exit("Inventory" - "Qty. to ship on order line");
-
-        end;
-        dispo := 0;
+            dispo := 0;
         //ALL Locations
         Location.Reset();
         if Location.FindFirst() then begin
             repeat
                 if (Location.Type <> Location.Type::Tampon) and (Location.Type <> Location.Type::Casse) and (NOT Location."Use As In-Transit") then begin
-                    rec.SetFilter("Location Filter", Location.Code);
-                    rec.CalcFields("Inventory", "Qty. to ship on order line");
+                    SetFilter("Location Filter", Location.Code);
+                    CalcFields("Inventory", "Qty. to ship on order line", "Qty on invoice");
                     // message('Qty to ship %1 , Location Filter %2 ,Bin filter ; % 3', "Qty. to ship on order line", "Location Filter", "Bin Filter", "No.");
                     //  message('Qty to ship %1', Item."Qty. to ship on order line");
-                    dispo += "Inventory" - "Qty. to ship on order line";
-                    // message(' location filter %1 Quantity %2', Item."Location Filter", Item.Inventory - item."Qty. to ship on order line");
+                    dispo += "Inventory" - "Qty. to ship on order line" - "Qty on invoice";
+
+                    // message(' location filter %1 Quantity %2', "Location Filter", Inventory - "Qty. to ship on order line");
+
                     filtremagasin := GetFilters();
                     // message(filtremagasin + '     %1       %2     ', Item."Inventory" - Item."Qty. to ship on order line", dispo);
                 end;
             until Location.Next() = 0;
-        end;
+            end;
+            begin
+                SL.setrange("Document Type", "Sales Document Type"::Order);
+                SL.setrange(Type, "Sales Line Type"::item);
+                SL.setrange("Location Code", '');
+                SL.setrange("No.", "No.");
+                SL.SetFilter("Qty. to Ship (Base)", '>%1', 0);
+                Sl.CalcSums("Qty. to Ship (Base)");
 
-        exit(dispo);
+                SLFAct.setrange("Document Type", "Sales Document Type"::Invoice);
+                SLFAct.setrange(Type, "Sales Line Type"::Item);
+                SLFAct.setrange("Location Code", '');
+                SLFAct.SetRange("No.", "No.");
+                SLFAct.setfilter("Quantity (Base)", '>%1', 0);
+                SLFAct.CalcSums("Quantity (Base)");
+
+
+            end;
+
+            exit(dispo - SL."Qty. to Ship (Base)" - SLFAct."Quantity (Base)");
+        end;
     end;
 
 

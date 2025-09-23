@@ -28,7 +28,9 @@ table 50003 "Ordre de preparation"
             Editable = false;
             Caption = 'N° document';
 
-            TableRelation = "Sales Header" where("No." = field("Order No"), "Document Type" = const(Order));
+            TableRelation = if ("document type" = const(Commande)) "Sales Header" where("Document Type" = const("Sales Document Type"::Order)) else
+            if ("document type" = const(Transfert)) "Transfer Header" else
+            if ("document type" = const(Facture)) "Sales Header" where("Document Type" = const("Sales Document Type"::Invoice));
 
 
 
@@ -59,7 +61,7 @@ table 50003 "Ordre de preparation"
         {
             Caption = 'Type document';
             Editable = false;
-            OptionMembers = "Commande","Transfert";
+            OptionMembers = "Commande","Transfert","Facture";
 
         }
     }

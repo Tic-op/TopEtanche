@@ -213,6 +213,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                 ApplicationArea = all;
                 Promoted = true;
                 PromotedCategory = Process;
+                visible = false;
                 Enabled = (Rec."Type de facturation" = Rec."Type de facturation"::"Contre remboursement");
 
                 trigger OnAction()
@@ -334,7 +335,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                 PromotedOnly = true;
                 ApplicationArea = All;
 
-                Caption = 'Génerer bon de Préparation';
+                Caption = 'Générer bon de préparation';
 
                 trigger OnAction()
                 var
