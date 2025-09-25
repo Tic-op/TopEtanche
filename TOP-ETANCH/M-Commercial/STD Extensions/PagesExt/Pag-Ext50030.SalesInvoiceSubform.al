@@ -167,7 +167,7 @@ pageextension 50047 "Sales Invoice Subform" extends "Sales Invoice Subform"
 
             trigger OnBeforeValidate()
             begin
-                // ControlDisponibilité();
+                // CurrPage.Update();
             end;
 
             trigger OnAfterValidate()
@@ -216,6 +216,7 @@ pageextension 50047 "Sales Invoice Subform" extends "Sales Invoice Subform"
 
         }
 
+
         moveafter("Location Code"; "Bin Code")
 
 
@@ -226,41 +227,7 @@ pageextension 50047 "Sales Invoice Subform" extends "Sales Invoice Subform"
 
         addlast(processing)
         {
-            action("Dispatch Sales Line")
-            {
-                Caption = 'Dispatch';
-                ApplicationArea = All;
-                Image = Bin;
-                Enabled = (rec."Quantity Shipped" = 0) and not Lignecomptoir;
 
-                /* trigger OnAction()
-
-                begin
-                    Qtyrestante := rec."Qty. to Ship (Base)";
-                    Qtyrestante := rec.SalesLineDispatcherBin('MTEST', Qtyrestante);
-                end; */
-
-                trigger OnAction()
-                var
-                    dispatch: Report "Dispatch Sales Order Lines";
-                    recSalesLine: Record "Sales Line";
-                    Itemdist: record "Item Distribution";
-
-                begin
-
-                    Itemdist.deleteall();
-                    /* 
-                                        recSalesLine.SetRange("Document Type", rec."Document Type");
-                                        recSalesLine.SetRange("Document no.", rec."Document no.");
-                                        recSalesLine.SetRange("Line no.", rec."Line no.");
-                                        dispatch.SetTableView(recSalesLine);
-                                        dispatch.Run(); */
-
-
-                end;
-
-
-            }
             action("Distribution Article")
             {
                 Caption = 'Distribution Article';
@@ -285,52 +252,7 @@ pageextension 50047 "Sales Invoice Subform" extends "Sales Invoice Subform"
                     // Error('Un magasin est déja affecter à cette ligne');
                 end;
             }
-            action("delete all")
-            {
-                Caption = 'Supprimer ligne résérvation';
-                ApplicationArea = All;
-                Image = Bin;
-                visible = false;
-                trigger OnAction()
-                var
-                    SL: record "Sales Line";
-                    RE: record "Reservation Entry";
-                    inv: Record "Inventroy Line";
-                    ship: record "Sales Shipment Line";
-                    wh: record "Warehouse Entry";
-                    Cu: Codeunit SalesEvents;
-                    item: record item;
-                    cuv: Codeunit VerificationStock;
-                    OP: Record "Ordre de preparation";
-                    Binc: Record "Bin Content";
 
-                begin
-                    /* Sl.SetRange("Document No.", rec."Document No.");
-                    Sl.DeleteAll(true); */
-                    // RE.DeleteAll(true);
-                    //inv.DeleteAll();
-                    cu.DeleteReservationEntry(Rec);
-                    Binc.findfirst();
-                    repeat
-                        Binc."Disponibilité" := item."CalcDisponibilité"(Binc."Location Code", Binc."Bin Code");
-                        Binc.modify();
-
-                    until Binc.next = 0;
-                    /*     item.findfirst();
-                        repeat
-                            if item."Unité de Dépot" = '' then
-                                item."Unité de Dépot" := item."Base Unit of Measure";
-                            item.Modify();
-
-                        until item.next = 0; */
-
-                    //Cuv.FusionLigneCommande(rec."Document Type", rec."Document No.");
-                    /*  OP.SetFilter("document type", '');
-                     OP.ModifyAll("document type", 'Commande');
-  */
-
-                end;
-            }
 
         }
     }

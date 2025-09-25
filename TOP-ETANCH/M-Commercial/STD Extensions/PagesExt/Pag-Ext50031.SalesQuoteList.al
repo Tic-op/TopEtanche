@@ -36,13 +36,23 @@ pageextension 50031 "Sales Quote List" extends "Sales Quotes"
                 Image = CreateWhseLoc;
                 Promoted = true;
                 PromotedCategory = Process;
+                Enabled = QuoteActionsEnabled;
                 trigger OnAction()
                 var
                     CVCMAKER: Codeunit SalesBlanketOrderFromQuote;
+                    BlanketorderNo: code[20];
+                    SH: record "Sales Header";
+                    BlanketPage: page "Blanket Sales Order";
                 begin
                     if not Confirm('Voulez-vous créer une commande vente cadre?') then
                         exit;
-                    CVCMAKER.StartCreationBlanOrder(Rec."No.");
+                    BlanketorderNo := CVCMAKER.StartCreationSalesBlanOrder(Rec."No.");
+                    if SH.get("Sales Document Type"::"Blanket Order", BlanketorderNo) then
+                        if Confirm('Voulez vous ouvrir la commande cadre crée ?', true) then begin
+                            BlanketPage.SetRecord(SH);
+                            BlanketPage.Run();
+
+                        end;
                     //Get & Open the Sales B.O
 
                 end;

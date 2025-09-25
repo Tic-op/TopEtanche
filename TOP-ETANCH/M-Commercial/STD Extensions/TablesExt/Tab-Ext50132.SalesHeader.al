@@ -165,8 +165,8 @@ tableextension 50132 SalesHeader extends "Sales Header"
                             if (CustomerRec."Cause du blocage" <> CustomerRec."Cause du blocage"::"Non bloqué") then
                                 error('Client bloqué à cause du %1', CustomerRec."Cause du blocage");
                         // END AM 090125
-                        if ("Document Type" = "Document Type"::"Blanket Order") or ("Document Type" = "Document Type"::Invoice) then
-                            "Type de facturation" := CustomerRec."Type de facturation";// IS
+                        //if ("Document Type" = "Document Type"::"Blanket Order") or ("Document Type" = "Document Type"::Invoice) then
+                        "Type de facturation" := CustomerRec."Type de facturation";// IS
                     end;
 
 
@@ -347,6 +347,7 @@ tableextension 50132 SalesHeader extends "Sales Header"
                 NewInvoiceLine.Validate("No.", SL."No.");
                 NewInvoiceLine.Validate("Quantity", SL."Qty. to Ship");
                 NewInvoiceLine.Validate("Location Code", SL."Location Code");
+                NewInvoiceLine.validate("Bin Code", SL."Bin Code");
                 NewInvoiceLine.Validate("Unit of Measure Code", SL."Unit of Measure Code");
                 NewInvoiceLine.Validate("Unit Price", SL."Unit Price");
                 NewInvoiceLine.Insert(true);

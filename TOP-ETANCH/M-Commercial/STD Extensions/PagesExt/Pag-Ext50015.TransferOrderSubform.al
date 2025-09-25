@@ -9,6 +9,18 @@ using PHARMATEC.PHARMATEC;
 
 pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
 {
+    layout
+    {
+        modify("Transfer-To Bin Code")
+        {
+            Visible = true;
+        }
+        modify("Transfer-from Bin Code")
+        {
+            Visible = true;
+        }
+
+    }
     actions
     {
         addlast(processing)

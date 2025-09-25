@@ -179,7 +179,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
             trigger OnBeforeValidate()
             begin
-                // ControlDisponibilité();
+                //  CurrPage.Update();
             end;
 
             trigger OnAfterValidate()
@@ -257,6 +257,8 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                     dispatch: Report "Dispatch Sales Order Lines";
                     recSalesLine: Record "Sales Line";
                     Itemdist: record "Item Distribution";
+                    SH: record "Sales Header";
+                    SL: record "Sales Line";
 
                 begin
 
@@ -267,8 +269,14 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                                         recSalesLine.SetRange("Line no.", rec."Line no.");
                                         dispatch.SetTableView(recSalesLine);
                                         dispatch.Run(); */
-
-
+                    Sh.FindFirst();
+                    repeat
+                        SL.Reset();
+                        SL.setrange("Document Type", sh."Document Type");
+                        SL.SetRange("Document No.", sh."No.");
+                        if SL.Findset() then
+                            SL.ModifyAll("Shipping No.", sh."Shipping No.");
+                    until Sh.Next() = 0;
                 end;
 
 

@@ -117,17 +117,17 @@ tableextension 50140 CustomerExtension extends Customer
     begin
 
 
-        Blocked := Blocked::" "; //Initialiser la valeur pour se baser sur le blocage spécifique
-                                 //Modify();
+        /*  Blocked := Blocked::" "; //Initialiser la valeur pour se baser sur le blocage spécifique
+                                  //Modify();
 
-        if (Blocked <> Blocked::" ") and ("Cause du blocage" = "Cause du blocage"::"Non bloqué") then begin
-            "Cause du blocage" := "Cause du blocage"::Autres;
-            //  Modify();
-        end;
+         if (Blocked <> Blocked::" ") and ("Cause du blocage" = "Cause du blocage"::"Non bloqué") then begin
+             "Cause du blocage" := "Cause du blocage"::Autres;
+             //  Modify();
+         end;
 
-        if rec."Credit Limit (LCY)" <= 0 then
-            exit(99999999);
-
+         if rec."Credit Limit (LCY)" <= 0 then
+             exit(99999999);
+  */
 
 
 
@@ -135,11 +135,12 @@ tableextension 50140 CustomerExtension extends Customer
         CalcFields("Balance (LCY)", "Outstanding Orders (LCY)", "Shipped Not Invoiced (LCY)");
         restant := rec."Credit Limit (LCY)" - (rec."Balance (LCY)" + rec."Outstanding Orders (LCY)" + rec."Shipped Not Invoiced (LCY)" - rec."Return Not Invoiced");//+ rec.Encours_Financier()); à définir urgent
 
-
-        if (restant <= 0) and (("Cause du blocage" = "Cause du blocage"::"Autres") OR ("Cause du blocage" = "Cause du blocage"::"Non bloqué")) then begin
-            "Cause du blocage" := "Cause du blocage"::"Dépassement du plafond";
-            //Modify();
-        end;
+        /* 
+                if (restant <= 0) and (("Cause du blocage" = "Cause du blocage"::"Autres") OR ("Cause du blocage" = "Cause du blocage"::"Non bloqué")) then begin
+                    "Cause du blocage" := "Cause du blocage"::"Dépassement du plafond"; */
+        //Modify();
+        // end;
+        //  Message('calcrestant() %1', restant);
 
     end;
 

@@ -94,12 +94,22 @@ permissionset 50000 GeneratedPermission
         page "PurchasePlanning List" = X,
         page ReceptionEntries = X,
         page Reclassement = X,
-
         page "Recommandation Achats" = X,
         page salesLine = X,
         page ScanCode = X,
         page "Stock min d'un article par mag" = X,
         page "Type Attribut" = X,
         page "Valeur Stock" = X,
-        page "XXXX Yasser" = X;
+        page "XXXX Yasser" = X,
+        tabledata HistVenteArticle = RIMD,
+        table HistVenteArticle = X,
+        report DevisReport = X,
+        codeunit SalesBlanketOrderFromQuote = X,
+        page "Détail vente article" = X,
+        page HistVenteArticleSubform = X,
+        page LocationPart = X,
+        page PriceListSubform = X,
+        tabledata "Ligne préparation" = RIMD,
+        table "Ligne préparation" = X,
+        report "BonPréparation" = X;
 }

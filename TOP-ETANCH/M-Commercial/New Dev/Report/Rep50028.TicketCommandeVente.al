@@ -40,7 +40,7 @@ report 50028 TicketCommandeVente
 
 
 
-                    SL.SetRange("Document Type", "Document Type"::Order);
+                    SL.SetRange("Document Type", "Sales Header"."Document Type");
                     SL.SetRange("Document No.", "Sales Header"."No.");
 
                     SL.SetFilter("Qty. to Ship", '<>%1', 0);

@@ -8,7 +8,7 @@ using Microsoft.Utilities;
 codeunit 50005 SalesBlanketOrderFromQuote
 {
 
-    procedure StartCreationBlanOrder(QuoteNo: Code[20])
+    procedure StartCreationSalesBlanOrder(QuoteNo: Code[20]): Code[25]
 
     var
         customer: Record Customer;
@@ -33,6 +33,7 @@ codeunit 50005 SalesBlanketOrderFromQuote
         SalesQuoteLine.SetRange("Document Type", SalesQuoteLine."Document Type"::Quote);
         SalesQuoteLine.SetRange("Document No.", QuoteNo);
         SalesQuoteLine.DeleteAll();
+        Exit(BlOrderNo);
     end;
 
     local procedure CreateSalesHeader(SalesHeader: Record "Sales Header"; PrepmtPercent: Decimal): Code[25]

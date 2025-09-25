@@ -131,6 +131,12 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
     }
     actions
     {
+        modify(MakeOrder)
+        {
+
+            Enabled = rec."Type de facturation" <> rec."Type de facturation"::"Contre remboursement";
+
+        }
         addbefore("O&rder")
         {
             action("Générer une facture") //IS 110925

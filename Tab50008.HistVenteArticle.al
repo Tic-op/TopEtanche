@@ -13,19 +13,23 @@ table 50008 HistVenteArticle
         field(4; "Document Type"; Option)
         {
             Caption = 'Type document';
-            OptionMembers = "", "Expédition","Facture","Devis";
+            OptionMembers = "","Expédition","Facture","Devis","Facture validée","Commande Pré-BL";
         }
         field(5; "Document No"; Code[20])
         {
             Caption = 'No document';
-            TableRelation = if ("Document Type" = const(Expédition)) "Sales Shipment Header"."No." where ("No."= field("Document No")) else 
-            if ("Document Type" = const(Facture)) "Sales Invoice Header"."No." where ("No."=field("Document No")) else 
-            if ("Document Type" = const(Devis)) "Sales Header Archive" where ("Document Type"= const("Sales Document Type"::Quote),"No."= field("Document No")); 
+            TableRelation = if ("Document Type" = const(Expédition)) "Sales Shipment Header"."No." where("No." = field("Document No")) else
+            if ("Document Type" = const("Facture validée")) "Sales Invoice Header"."No." where("No." = field("Document No")) else
+            if ("Document Type" = const(Devis)) "Sales Header Archive" where("Document Type" = const("Sales Document Type"::Quote), "No." = field("Document No"))
+            else if ("Document Type" = const(Facture)) "Sales Header" where("Document Type" = const("Sales Document Type"::invoice), "No." = field("Document No"))
+            else if ("Document Type" = const("Commande Pré-BL")) "Sales Header" where("Document Type" = const("Sales Document Type"::Order), "No." = field("Document No"), "Shipping No." = filter(<> ''));
             ValidateTableRelation = false ;}
 
         field(2; "Customer No"; Code[20])
         {
             Caption = 'No client';
+            TableRelation = Customer;
+
         }
         field(3; "Customer Name"; Text[100])
         {
@@ -60,4 +64,17 @@ table 50008 HistVenteArticle
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    var
+        cust: Record customer;
+    begin
+        if "Customer Name" = '' then begin
+
+            Cust.SetLoadFields("No.", Name);
+            Cust.get("Customer No");
+            "Customer Name" := cust.Name;
+        end
+
+    end;
+
 }

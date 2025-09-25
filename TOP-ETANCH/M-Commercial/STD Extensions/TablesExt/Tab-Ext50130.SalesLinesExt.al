@@ -163,6 +163,10 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
 
 
         }
+        field(50013; "Shipping No."; code[20])
+        {
+            Editable = false;
+        }
 
         modify("Location Code")
         {
@@ -202,6 +206,12 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
         }
 
 
+
+    }
+    keys
+    {
+        key(keydate; "Planned Shipment Date") { }
+
     }
 
 
@@ -234,7 +244,8 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
                 SalesH.TestField("Location Code");
                 validate("Location Code", SalesH."Location Code");
                 validate("Qty. to Ship", Quantity);
-            end
+            end;
+        "Shipping No." := SalesH."Shipping No.";
     end;
 
     /* trigger OnBeforeInsert()

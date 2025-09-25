@@ -3,6 +3,7 @@ using Microsoft.Inventory.Item;
 using Microsoft.Sales.Customer;
 using Microsoft.Sales.Archive;
 using Microsoft.Sales.Document;
+using Ticop_pharmatec.Ticop_pharmatec;
 using Microsoft.Sales.history;
 
 page 50027 HistVenteArticleSubform
@@ -26,6 +27,10 @@ page 50027 HistVenteArticleSubform
                 field("Customer No"; Rec."Customer No")
                 {
                     ToolTip = 'Specifies the value of the No client field.', Comment = '%';
+                }
+                field("Customer Name"; Rec."Customer Name")
+                {
+
                 }
                
                 field("Document Type"; Rec."Document Type")
@@ -52,7 +57,8 @@ page 50027 HistVenteArticleSubform
                 {
                     ToolTip = 'Specifies the value of the Prix TTC field.', Comment = '%';
                 }
-             
+
+
             }
         }
     }
@@ -60,14 +66,17 @@ page 50027 HistVenteArticleSubform
      InsertValues(true) ;
 
     end;
-    local procedure InsertValues(UniqCustomer : Boolean)
+
+    procedure InsertValues(UniqCustomer: Boolean)
        var
         SalesShipLine: record "Sales Shipment Line";
         SalesLineArchive: Record "Sales Line Archive" ;
         SalesInvoiceLine : record "Sales Invoice Line" ;
-    //rec: Record HistVenteArticle temporary;
-    // Pagedétail: Page "Détail vente article";
-    // Cust: record Customer;
+           InvoiceLine: record "Sales Line";
+           PréBLLine: record "Sales Line";
+           //rec: Record HistVenteArticle temporary;
+           // Pagedétail: Page "Détail vente article";
+           Cust: record Customer;
 
     begin
         rec.DeleteAll(); 
@@ -88,14 +97,15 @@ page 50027 HistVenteArticleSubform
               rec.Init();
               rec."Item No" := Item."No.";
               rec."Document Type" := rec."Document Type"::"Expédition";
-              rec."Customer No" := Customer."No.";
-              rec."Customer Name" := Customer.Name;
+            rec."Customer No" := SalesShipLine."Sell-to Customer No.";
+            Cust.get(SalesShipLine."Sell-to Customer No.");
+            rec."Customer Name" := Cust.Name;
               rec."Document No" := SalesShipLine."Document No.";
               rec."Price HT" := SalesShipLine."Unit Price" * (1 - SalesShipLine."Line Discount %"/ 100);
               rec."Price TTC" := ROUND(SalesShipLine."Unit Price" * (1 - SalesShipLine."Line Discount %" /100) * (1 + SalesShipLine."VAT %"/100));
               rec.Remise := SalesShipLine."Line Discount %";
               rec."Date Document" := SalesShipLine."Posting Date";
-              rec.Insert();
+            rec.Insert(true);
           end;
           //insert BL ended 
 
@@ -115,33 +125,34 @@ page 50027 HistVenteArticleSubform
               rec.Init();
               rec."Item No" := item."No.";
               rec."Document Type" := rec."Document Type"::"Devis";
-              rec."Customer No" :=Customer."No.";
-              rec."Customer Name" := Customer.Name;
+            rec."Customer No" := SalesLineArchive."Sell-to Customer No.";
+            Cust.get(SalesLineArchive."Sell-to Customer No.");
+            rec."Customer Name" := Cust.Name;
               rec."Document No" := SalesLineArchive."Document No.";
               rec."Price HT" := SalesLineArchive."Unit Price" * (1 - SalesLineArchive."Line Discount %"/100);
               rec."Price TTC" := SalesLineArchive."Unit Price"*(1-SalesLineArchive."Line Discount %"/100)*(1+SalesLineArchive."VAT %"/100);
               rec.Remise := SalesLineArchive."Line Discount %";
               rec."Date Document" := SalesLineArchive."Shipment Date";
-              rec.Insert();
+            rec.Insert(true);
           end;
-         /*  SalesLineArchive.reset();
-          SalesLineArchive.setrange("Document Type", "Sales Document Type"::Quote);
-          SalesLineArchive.setrange("No.", item."No.");
-          SalesLineArchive.setrange("Sell-to Customer No.", Customer."No.");
-          if SalesLineArchive.FindLast() then begin
-              rec.Init();
-              rec."Item No" := item."No.";
-              rec."Document Type" := rec."Document Type"::"Devis";
-              rec."Customer No" := Customer."No.";
-              rec."Customer Name" := Customer.Name;
-              rec."Document No" := SalesLineArchive."Document No.";
-              rec."Price HT" := SalesLineArchive."Line Amount";
-              rec."Price TTC" := SalesLineArchive."Amount Including VAT";
-              rec.Remise := SalesLineArchive."Line Discount %";
-              rec."Date Document" := SalesLineArchive."Shipment Date";
-              rec.Insert();
-          end;  */
-            SalesInvoiceLine.SetLoadFields("No.", "Sell-to Customer No.", "VAT %", "Amount Including VAT", "Line Amount", "Line Discount %");
+        /*  SalesLineArchive.reset();
+         SalesLineArchive.setrange("Document Type", "Sales Document Type"::Quote);
+         SalesLineArchive.setrange("No.", item."No.");
+         SalesLineArchive.setrange("Sell-to Customer No.", Customer."No.");
+         if SalesLineArchive.FindLast() then begin
+             rec.Init();
+             rec."Item No" := item."No.";
+             rec."Document Type" := rec."Document Type"::"Devis";
+             rec."Customer No" := Customer."No.";
+             rec."Customer Name" := Customer.Name;
+             rec."Document No" := SalesLineArchive."Document No.";
+             rec."Price HT" := SalesLineArchive."Line Amount";
+             rec."Price TTC" := SalesLineArchive."Amount Including VAT";
+             rec.Remise := SalesLineArchive."Line Discount %";
+             rec."Date Document" := SalesLineArchive."Shipment Date";
+             rec.Insert();
+         end;  */
+        SalesInvoiceLine.SetLoadFields("No.", "Sell-to Customer No.", "VAT %", "Amount Including VAT", "Line Amount", "Line Discount %", "Posting Date", "Sell-to Customer Name");
          // SalesLineArchive.SetCurrentKey("Document Type", Type, "No.", "Variant Code", "Drop Shipment", "Location Code", "Shipment Date");
           if UniqCustomer then begin
             SalesInvoiceLine.SetCurrentKey("Sell-to Customer No.")  ;
@@ -154,18 +165,92 @@ page 50027 HistVenteArticleSubform
           if SalesInvoiceLine.FindLast() then begin
               rec.Init();
               rec."Item No" := item."No.";
-              rec."Document Type" := rec."Document Type"::Facture;
-              rec."Customer No" :=Customer."No.";
-              rec."Customer Name" := Customer.Name;
-              rec."Document No" := SalesInvoiceLine."Document No.";
-              rec."Price HT" := SalesInvoiceLine."Unit Price" * (1 - SalesInvoiceLine."Line Discount %"/100);
-              rec."Price TTC" := SalesInvoiceLine."Unit Price"*(1-SalesInvoiceLine."Line Discount %"/100)*(1+SalesInvoiceLine."VAT %"/100);
-              rec.Remise := SalesInvoiceLine."Line Discount %";
-              rec."Date Document" := SalesInvoiceLine."Posting Date";
-            rec.Insert();
-          end;
+            rec."Document Type" := rec."Document Type"::"Facture validée";
+            rec."Customer No" := SalesInvoiceLine."Sell-to Customer No.";
+            rec."Customer Name" := SalesInvoiceLine."Sell-to Customer Name";
+            rec."Document No" := SalesInvoiceLine."Document No.";
+            rec."Price HT" := SalesInvoiceLine."Unit Price" * (1 - SalesInvoiceLine."Line Discount %" / 100);
+            rec."Price TTC" := SalesInvoiceLine."Unit Price" * (1 - SalesInvoiceLine."Line Discount %" / 100) * (1 + SalesInvoiceLine."VAT %" / 100);
+            rec.Remise := SalesInvoiceLine."Line Discount %";
+            rec."Date Document" := SalesInvoiceLine."Posting Date";
+            rec.Insert(true);
+        end;
+        // debut préBL 
+        PréBLLine.SetLoadFields("No.", "Planned Shipment Date", "Sell-to Customer No.", "Sell-to Customer Name", "VAT %", "Amount Including VAT", "Posting Date", "Line Amount", "Line Discount %");
+        // SalesLineArchive.SetCurrentKey("Document Type", Type, "No.", "Variant Code", "Drop Shipment", "Location Code", "Shipment Date");
+        if UniqCustomer then begin
+            PréBLLine.SetCurrentKey("Sell-to Customer No.");
+
+            PréBLLine.setrange("Sell-to Customer No.", Customer."No.");
+        end;
+        PréBLLine.SetCurrentKey("Document Type", "Document No.", "Line No.");
+        // SalesInvoiceLine.setrange("Document Type", "Sales Document Type"::Quote);
+        "PréBLLine".setrange("Document Type", "Sales Document Type"::Order);
+
+        PréBLLine.setrange("No.", item."No.");
+        "PréBLLine".SetFilter("Shipping No.", '<> %1', '');
+
+        if PréBLLine.FindLast() then begin
+            rec.Init();
+            rec."Document Type" := rec."Document Type"::"Commande Pré-BL";
+            rec."Item No" := item."No.";
+
+            rec."Customer No" := PréBLLine."Sell-to Customer No.";
+            rec."Customer Name" := PréBLLine."Sell-to Customer Name";
+            rec."Document No" := PréBLLine."Document No.";
+            rec."Price HT" := PréBLLine."Unit Price" * (1 - PréBLLine."Line Discount %" / 100);
+            rec."Price TTC" := PréBLLine."Unit Price" * (1 - PréBLLine."Line Discount %" / 100) * (1 + PréBLLine."VAT %" / 100);
+            rec.Remise := PréBLLine."Line Discount %";
+            rec."Date Document" := PréBLLine."Planned Shipment Date";
+            rec.Insert(true);
+        end;
+        //debut facture 
+        InvoiceLine.SetLoadFields("No.", "Sell-to Customer No.", "VAT %", "Amount Including VAT", "Line Amount", "Line Discount %", "Sell-to Customer Name", "Planned Shipment Date");
+        // SalesLineArchive.SetCurrentKey("Document Type", Type, "No.", "Variant Code", "Drop Shipment", "Location Code", "Shipment Date");
+        if UniqCustomer then begin
+            InvoiceLine.SetCurrentKey("Sell-to Customer No.");
+
+            InvoiceLine.setrange("Sell-to Customer No.", Customer."No.");
+        end;
+        InvoiceLine.SetCurrentKey("Document Type", "Document No.", "Line No.");
+        // SalesInvoiceLine.setrange("Document Type", "Sales Document Type"::Quote);
+        InvoiceLine.setrange("Document Type", "Sales Document Type"::Invoice);
+
+        InvoiceLine.setrange("No.", item."No.");
+        if InvoiceLine.FindLast() then begin
+            rec.Init();
+            rec."Item No" := item."No.";
+            rec."Document Type" := rec."Document Type"::Facture;
+            rec."Customer No" := InvoiceLine."Sell-to Customer No.";
+            rec."Customer Name" := InvoiceLine."Sell-to Customer Name";
+
+            rec."Document No" := InvoiceLine."Document No.";
+            rec."Price HT" := InvoiceLine."Unit Price" * (1 - InvoiceLine."Line Discount %" / 100);
+            rec."Price TTC" := InvoiceLine."Unit Price" * (1 - InvoiceLine."Line Discount %" / 100) * (1 + InvoiceLine."VAT %" / 100);
+            rec.Remise := InvoiceLine."Line Discount %";
+            rec."Date Document" := InvoiceLine."Planned Shipment Date";
+            rec.Insert(true);
+        end;
+
+
+
     end;
- 
+
+
+    /*   trigger OnAfterGetRecord()
+      var
+          cust: Record customer;
+      begin
+          if rec."Customer Name" = '' then begin
+
+              Cust.SetLoadFields("No.", Name);
+              Cust.get(rec."Customer No");
+              rec."Customer Name" := cust.Name;
+          end
+
+
+      end; */
+
     procedure SetCustomer(Cust0 : Record Customer)
     begin 
 
@@ -177,5 +262,6 @@ page 50027 HistVenteArticleSubform
     end;
     var Item : record Item;
         Customer : Record Customer ;
+
 
 }

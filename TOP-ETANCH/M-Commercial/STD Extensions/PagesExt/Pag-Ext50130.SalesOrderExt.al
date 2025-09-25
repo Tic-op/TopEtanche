@@ -13,7 +13,7 @@ using Microsoft.Foundation.NoSeries;
 
 pageextension 50130 ExtSalesOrder extends "Sales Order"
 {
-
+    InsertAllowed = false;
     layout
     {
         addafter("Posting Date")
@@ -167,11 +167,11 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                 field("Payment Method Code "; Rec."Payment Method Code") { ApplicationArea = all; }
                 field("Type de facturation"; rec."Type de facturation")
                 {
-                    Visible = false;
+                    Visible = rec."Blanket Order No." = '';
                     Caption = 'Type de facturation';
                     ApplicationArea = all;
                     Importance = Promoted;
-                    Enabled = false;
+                    Enabled = rec."Blanket Order No." = '';
                 }
                 field("Mode de livraison"; Rec."Mode de livraison")
                 {

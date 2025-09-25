@@ -24,11 +24,25 @@ page 50026 "Détail vente article"
                 Caption = 'General';
               Field(Inventory;Rec.Inventory){}
               field("Unit Price";Rec."Unit Price"){}
-                field(CalcVAT; round(Rec."Unit Price" * (1 + VAT_Rate / 100))) { Editable = false; }
+                field(CalcVAT; round(Rec."Unit Price" * (1 + VAT_Rate / 100)))
+                {
+                    Editable = false;
+                    Caption = 'Prix TTC';
+                }
                 field("Sur Cmde Vente"; Rec."Qty. on Sales Order") { }
                 field("Sur Cmde Achat"; Rec."Qty. on Purch. Order") { }
                 Field("Sur facture Vente"; rec."Qty on invoice")
                 {
+
+                }
+                field(Tout_les_Client; Tout_les_Client)
+                {
+                    Caption = 'Tout les clients';
+                    trigger OnValidate()
+                    begin
+                        CurrPage.Historique.Page.InsertValues(not Tout_les_Client);
+                        //CurrPage.Historique.page.Update();
+                    end;
 
                 }
                 
@@ -36,29 +50,32 @@ page 50026 "Détail vente article"
             Grid(HIST)
             {
 
+
+                part(Disponibilité; LocationPart)
+                {
+                    ApplicationArea = basic, suite;
+                    editable = false;
+                    caption = 'Disponibilité par magasin';
+                }
                 part(Historique; HistVenteArticleSubform)
                 {
                     ApplicationArea = Basic, Suite;
                     Editable = false;
                     SubPageLink = "Item No" = field("No.");
                     UpdatePropagation = Both;
+                    Caption = 'Historique';
 
-                }
-                part(Disponibilité; LocationPart)
-                {
-                    ApplicationArea = basic, suite;
-                    editable = false;
                 }
 
             }
-            group("Liste des prix")
-            {
-                Part(Prices; PriceListSubform)
+
+            Part(Prices; PriceListSubform)
                 {
                     SubPageLink = "Product No." = field("no.");
-                    // SubPageView = where("Price Includes VAT" = const(false));
+                // SubPageView = where("Price Includes VAT" = const(false));
+                Caption = 'Liste des prix';
                 }
-            }
+
             /*      Grid(LocationPart)
                   {
                       part(Disponibilité; LocationPart)
@@ -108,5 +125,6 @@ page 50026 "Détail vente article"
         Customer: Record Customer;
         item: record item;
         VAT_Rate: Decimal;
+        Tout_les_Client: Boolean;
 
 }

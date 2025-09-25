@@ -48,6 +48,10 @@ codeunit 50052 SalesEvents
 
 
                         // Error('Le montant total doit dépasser le seuil facturation Client');
+
+                        SalesHeader.CalcFields("Amount Including VAT");
+                        if SalesHeader."Amount Including VAT" + SalesHeader."Stamp Amount" < customer.Seuil then
+                            Error('Le montant total doit dépasser le seuil facturation Client');
                     end;
                 end;
 
@@ -61,7 +65,7 @@ codeunit 50052 SalesEvents
                         InvSalesLine.setrange("Document Type", InvSalesLine."Document Type"::Invoice);
                         InvSalesLine.SetRange("Document No.", SalesHeader."No.");
                         InvSalesLine.setrange(Type, InvSalesLine.Type::Item);
-                        /*  if InvSalesLine.FindFirst() then
+                        if InvSalesLine.FindFirst() then
                              repeat begin
  
                                  // message('%1', InvSalesLine."Blanket Order No.");
@@ -77,7 +81,7 @@ codeunit 50052 SalesEvents
                                      error('La commande n''est pas totalement livrée');
  
                              end;
-                             until InvSalesLine.next = 0; */
+                            until InvSalesLine.next = 0;
                     end;
                 end;
         end;
@@ -131,7 +135,7 @@ codeunit 50052 SalesEvents
 
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Invoice", OnBeforeInsertSalesInvoiceHeader, '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Invoice", OnCreateSalesInvoiceHeaderOnBeforeSalesInvoiceHeaderInsert, '', false, false)]
     Procedure affecterSoucheInvoice(var SalesInvoiceHeader: Record "Sales Header")
     var
         seriesMgt: Codeunit "No. Series";
@@ -140,7 +144,6 @@ codeunit 50052 SalesEvents
         SalesSetup.get();
         SalesInvoiceHeader."No." := seriesMgt.GetNextNo(SalesSetup."Posted Invoice Nos.");
         SalesInvoiceHeader."Posting No." := SalesInvoiceHeader."No.";
-
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Blanket Sales Order to Order", OnBeforeRun, '', false, false)]
@@ -171,7 +174,8 @@ codeunit 50052 SalesEvents
     var
         Cust: record Customer;
     begin
-        Cust.SetLoadFields("No.");
+        //  message('Check customer Credit');
+        // Cust.SetLoadFields("No."); Cust.calcrestant ne fonctionne plus je pense qu'il faut importer tout les champs que calcrestant() utilise car la procedure s'execute au niveu du record pas la table
         Cust.get(SalesHeader."Sell-to Customer No.");
         SalesHeader.CalcFields("Amount Including VAT");
         if (SalesHeader."Amount Including VAT" + SalesHeader."Stamp Amount") > cust.CalcRestant() then Error('Montant supérieur aux solde client');
@@ -236,6 +240,16 @@ codeunit 50052 SalesEvents
     end;
 
     [EventSubscriber(ObjectType::Codeunit, codeunit::"sales-post", OnBeforePostSalesDoc, '', false, false)]
+    Procedure ONbeforePost(var SalesHeader: Record "Sales Header")
+    var
+    begin
+        CheckBlocage(SalesHeader);
+        CheckApprobation(SalesHeader);
+        ControlSource(SalesHeader);//Momentary
+        StampEvent(SalesHeader);
+
+
+    end;
     procedure CheckBlocage(var SalesHeader: Record "Sales Header")
     var
         Customer: record Customer;
@@ -291,7 +305,27 @@ codeunit 50052 SalesEvents
 
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", OnBeforePostInvoice, '', false, false)]
+    Procedure ControlFacturation(var SalesHeader: Record "Sales Header")
+    var
+    begin
+        MinimumAfacturer(SalesHeader);
 
+
+    end;
+
+    Procedure ControlSource(var SalesHeader: Record "Sales Header")
+    var
+    begin
+
+        if (SalesHeader."Blanket Order No." = '') and (SalesHeader."Quote No." = '') then begin
+
+            //Peut être le traitement = f(Typefacturation) 
+            Error('ce document n''a pas été issu ni d''un devis ni d''une commande cadre , veuillez respecter le process vente défini.');
+
+        end
+
+
+    end;
     procedure MinimumAfacturer(var SalesHeader: Record "Sales Header")
     var
         Customer: Record Customer;
