@@ -35,8 +35,8 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
 
         }
         modify(MakeOrder)
-        {       Caption= 'générer expédition vente';
-            Enabled = rec."Type de facturation" <> rec."Type de facturation"::"Contre remboursement";
+        {     //  Caption= 'générer expédition vente';
+            Enabled = rec."Type de facturation" <> rec."Type de facturation"::"Contre remboursement"; //AM à faire
 
 
             trigger OnAfterAction()

@@ -345,7 +345,7 @@ tableextension 50132 SalesHeader extends "Sales Header"
                 NewInvoiceLine."Line No." := LineNo;
                 NewInvoiceLine.Validate("Type", SL."Type");
                 NewInvoiceLine.Validate("No.", SL."No.");
-                NewInvoiceLine.Validate("Quantity", SL."Qty. to Ship");
+                NewInvoiceLine.Validate("Quantity", SL."Qty. to Ship");//à faire //AM 290925
                 NewInvoiceLine.Validate("Location Code", SL."Location Code");
                 NewInvoiceLine.validate("Bin Code", SL."Bin Code");
                 NewInvoiceLine.Validate("Unit of Measure Code", SL."Unit of Measure Code");

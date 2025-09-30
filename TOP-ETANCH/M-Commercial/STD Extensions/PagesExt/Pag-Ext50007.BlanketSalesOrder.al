@@ -5,6 +5,7 @@ using Microsoft.Sales.Customer;
 using PHARMATECCLOUD.PHARMATECCLOUD;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Item;
+using Microsoft.Sales.Setup;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Sales.History;
 
@@ -147,6 +148,7 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
                 PromotedCategory = Process;
                 // visible = false;
                 Enabled = (Rec."Type de facturation" = Rec."Type de facturation"::"Contre remboursement");
+                visible = PréFactureAutorisée; // AM290925
 
                 trigger OnAction()
                 var
@@ -286,14 +288,15 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
     trigger OnAfterGetRecord()
     var
         CustomerPostingGroup: record "Customer Posting Group";
+        salessetup: record "Sales & Receivables Setup";
 
     begin
         PartiallyShipped := rec.PartiallyShipped();
         venteSuspension := false;
         if CustomerPostingGroup.get(rec."Customer Posting Group") then
             venteSuspension := CustomerPostingGroup.Suspension;
-
-
+        salessetup.get();
+        PréFactureAutorisée := salessetup."Utiliser Pré-Facture"; //AM 290925 ;
 
     end;
 
@@ -305,6 +308,7 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
         customer: Record Customer;
         booleenabled: Boolean;
         PartiallyShipped: Boolean;
+        PréFactureAutorisée: Boolean;
 
 
 

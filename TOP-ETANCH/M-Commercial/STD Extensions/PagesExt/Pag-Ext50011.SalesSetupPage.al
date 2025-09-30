@@ -13,6 +13,19 @@ pageextension 50011 SalesSetupPage extends "Sales & Receivables Setup"
                 ApplicationArea = all;
             }
         }
+        addlast("Background Posting")
+        {
+
+            field("Utiliser Pré-BL"; Rec."Utiliser Pré-BL")
+            {
+                ApplicationArea = all;
+
+            }
+            field("Utiliser Pré-Facture"; Rec."Utiliser Pré-Facture")
+            {
+                ApplicationArea = all;
+            }
+        }
     }
 
 }

@@ -17,7 +17,8 @@ pageextension 50031 "Sales Quote List" extends "Sales Quotes"
             end;
         }
         modify(MakeOrder)
-        {       Caption= 'générer expédition vente';
+        {
+            // Caption = 'générer expédition vente'; // AM à faire
             trigger OnAfterAction()
             var
                 SE: Codeunit SalesEvents;

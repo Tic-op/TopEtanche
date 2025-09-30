@@ -188,7 +188,7 @@ page 50027 HistVenteArticleSubform
         "PréBLLine".setrange("Document Type", "Sales Document Type"::Order);
 
         PréBLLine.setrange("No.", item."No.");
-        "PréBLLine".SetFilter("Shipping No.", '<> %1', '');
+        // "PréBLLine".SetFilter("Shipping No.", '<> %1', '');  Check Sales setup "Utiliser Pré-BL"  //AM 290925
 
         if PréBLLine.FindLast() then begin
             rec.Init();

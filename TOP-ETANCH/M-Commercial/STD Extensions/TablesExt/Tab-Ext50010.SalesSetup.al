@@ -13,5 +13,17 @@ tableextension 50010 SalesSetup extends "Sales & Receivables Setup"
             DataClassification = ToBeClassified;
             TableRelation = "No. Series";
         }
+        field(50001; "Utiliser Pré-BL"; Boolean)
+        {
+            Caption = 'Utiliser Pré-BL';
+            DataClassification = ToBeClassified;
+
+        }
+        field(50002; "Utiliser Pré-Facture"; Boolean)
+        {
+            Caption = 'Utiliser Pré-Facture';
+            DataClassification = ToBeClassified;
+
+        }
     }
 }

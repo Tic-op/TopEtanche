@@ -142,6 +142,7 @@ codeunit 50052 SalesEvents
         SalesSetup: record "Sales & Receivables Setup";
     begin
         SalesSetup.get();
+        if not SalesSetup."Utiliser Pré-Facture" then exit;
         SalesInvoiceHeader."No." := seriesMgt.GetNextNo(SalesSetup."Posted Invoice Nos.");
         SalesInvoiceHeader."Posting No." := SalesInvoiceHeader."No.";
     end;
@@ -165,6 +166,7 @@ codeunit 50052 SalesEvents
         SalesSetup: record "Sales & Receivables Setup";
     begin
         SalesSetup.get();
+        if not SalesSetup."Utiliser Pré-BL" then exit;
         OrderSalesHeader."No." := seriesMgt.GetNextNo(SalesSetup."Posted Shipment Nos.");
         OrderSalesHeader."Shipping No." := OrderSalesHeader."No.";
 
