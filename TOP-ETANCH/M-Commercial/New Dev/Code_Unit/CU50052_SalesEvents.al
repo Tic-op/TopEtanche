@@ -706,7 +706,7 @@ codeunit 50052 SalesEvents
 
                     RecLSalesLine1.VALIDATE("No.", GLSetup."compte timbre fiscal");
                     RecLSalesLine1.VALIDATE("Sell-to Customer No.", rec."Sell-to Customer No.");
-                    RecLSalesLine1.VALIDATE("Location Code", rec."Location Code");
+                    //RecLSalesLine1.VALIDATE("Location Code", rec."Location Code");
                     RecLSalesLine1.Description := 'Timbre Fiscal Loi 93/53';
                     RecLSalesLine1.VALIDATE(Quantity, 1);
 

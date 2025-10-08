@@ -8,7 +8,8 @@ pageextension 50031 "Sales Quote List" extends "Sales Quotes"
     {
 
         modify(MakeInvoice)
-        {   
+        {
+            enabled = rec."Type de facturation" = rec."Type de facturation"::"Contre remboursement";
             trigger OnAfterAction()
             var
                 SE: Codeunit SalesEvents;
@@ -19,6 +20,7 @@ pageextension 50031 "Sales Quote List" extends "Sales Quotes"
         modify(MakeOrder)
         {
             // Caption = 'générer expédition vente'; // AM à faire
+            enabled = rec."Type de facturation" <> rec."Type de facturation"::"Contre remboursement";
             trigger OnAfterAction()
             var
                 SE: Codeunit SalesEvents;
@@ -37,7 +39,7 @@ pageextension 50031 "Sales Quote List" extends "Sales Quotes"
                 Image = CreateWhseLoc;
                 Promoted = true;
                 PromotedCategory = Process;
-                Enabled = QuoteActionsEnabled;
+                Enabled = QuoteActionsEnabled and (rec."Type de facturation" <> rec."Type de facturation"::"Contre remboursement");
                 trigger OnAction()
                 var
                     CVCMAKER: Codeunit SalesBlanketOrderFromQuote;

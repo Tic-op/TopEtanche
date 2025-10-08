@@ -1,5 +1,6 @@
 namespace TopEtanch.TopEtanch;
 using Microsoft.Sales.Document;
+using Top.Top;
 
 page 50005 "Bon de preparation"
 {
@@ -65,19 +66,26 @@ page 50005 "Bon de preparation"
 
 
             }
-            part(LigneCommande; "Lignes Commande")
+            Part(Lignepréparation; "Lignes préparations Subform")
             {
-                Editable = false;
-                SubPageLink = "Document No." = field("Order No"), "Location Code" = field(Magasin);
-                Visible = LigneCommande;
+                SubPageLink = "Document No." = field(No);
+
 
             }
-            part(LigneTransfert; "Lignes transfert")
-            {
-                Editable = false;
-                SubPageLink = "Document No." = field("Order No"), "Transfer-from Code" = field(Magasin);
-                Visible = LigneTransfert;
-            }
+
+            /*             part(LigneCommande; "Lignes Commande")
+                        {
+                            Editable = false;
+                            SubPageLink = "Document No." = field("Order No"), "Location Code" = field(Magasin);
+                            Visible = LigneCommande;
+
+                        }
+                        part(LigneTransfert; "Lignes transfert")
+                        {
+                            Editable = false;
+                            SubPageLink = "Document No." = field("Order No"), "Transfer-from Code" = field(Magasin);
+                            Visible = LigneTransfert;
+                        } */
 
         }
     }

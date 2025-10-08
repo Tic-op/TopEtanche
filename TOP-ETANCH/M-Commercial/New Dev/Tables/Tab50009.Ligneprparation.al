@@ -47,7 +47,7 @@ table 50009 "Ligne préparation"
     }
     keys
     {
-        key(PK; "Document No.")
+        key(PK; "Document No.", "Source type.", "Source No.", "Source line No.")
         {
             Clustered = true;
         }

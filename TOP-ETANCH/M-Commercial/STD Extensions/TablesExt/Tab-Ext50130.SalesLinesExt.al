@@ -177,8 +177,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
             begin
 
                 OrdrePrep.SetRange("Order No", "Document No.");
-                OrdrePrep.SetRange(Statut, OrdrePrep.Statut::"Créé");
-
+                //OrdrePrep.SetRange(Statut, OrdrePrep.Statut::"Créé"); ??? Nosense 
                 if OrdrePrep.FindFirst() then
                     Error('Impossible de modifier le magasin, veuillez supprimer le bon préparation existant');
 

@@ -71,7 +71,7 @@ table 50003 "Ordre de preparation"
         {
             Clustered = true;
         }
-        key(PK2; "Order No")
+        key(PK2; "document type", "Order No")
         {
 
         }
@@ -81,12 +81,18 @@ table 50003 "Ordre de preparation"
     var
         SalesSetup: Record "Sales & Receivables Setup";
         CuSeries: Codeunit "No. Series";
+        PrépEvent: codeunit "PréparationEvent";
 
     begin
         SalesSetup.Get();
         "No" := CuSeries.GetNextNo(SalesSetup."Bon de prepation No");
 
 
+        //  PrépEvent."InitialiserLignesPréparation"(No); Doesn't work because the Record is not inserted yet into the database So the procedure who use Get() wouldn't find the record 
+        //I  used an integration event on the database on afterinsert // AM 
+
+
     end;
+
 
 }

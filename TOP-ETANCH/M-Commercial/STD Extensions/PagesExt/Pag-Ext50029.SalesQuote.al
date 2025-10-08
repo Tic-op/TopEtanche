@@ -58,6 +58,7 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
                 Image = CreateWhseLoc;
                 Promoted = true;
                 PromotedCategory = Process;
+                enabled = rec."Type de facturation" <> rec."Type de facturation"::"Contre remboursement";
                 trigger OnAction()
                 var
                     CVCMAKER: Codeunit SalesBlanketOrderFromQuote;

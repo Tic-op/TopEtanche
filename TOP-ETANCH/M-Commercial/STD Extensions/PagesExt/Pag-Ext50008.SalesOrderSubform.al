@@ -122,7 +122,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
             begin
                 item.SetLoadFields("No.");
                 if item.get(rec."No.") then
-                    item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer No.", rec."VAT %");
+                    item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer Name", rec."VAT %");
             end;
 
 
