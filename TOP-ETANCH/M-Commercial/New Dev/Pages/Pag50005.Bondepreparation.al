@@ -10,6 +10,7 @@ page 50005 "Bon de preparation"
     SourceTable = "Ordre de preparation";
 
 
+
     layout
     {
         area(Content)
@@ -17,6 +18,7 @@ page 50005 "Bon de preparation"
             group(General)
             {
                 Caption = 'General';
+                Enabled = (Rec.Statut = REc.Statut::"Créé") or (rec.Statut = rec.Statut::"En cours");
 
                 field(No; Rec.No)
                 {
@@ -63,12 +65,17 @@ page 50005 "Bon de preparation"
                 {
                     ApplicationArea = all;
                 }
-
+                field(Printed; Rec.Printed)
+                {
+                    ApplicationArea = all;
+                    Caption = 'Nombre d''impression';
+                }
 
             }
             Part(Lignepréparation; "Lignes préparations Subform")
             {
                 SubPageLink = "Document No." = field(No);
+
 
 
             }
@@ -87,6 +94,42 @@ page 50005 "Bon de preparation"
                             Visible = LigneTransfert;
                         } */
 
+        }
+
+    }
+    actions
+    {
+
+        area(Processing)
+        {
+            action("Imprimer les tickets")
+            {
+                ApplicationArea = all;
+                Promoted = true;
+                PromotedCategory = Process;
+                enabled = (rec.Statut = rec.Statut::"Créé") or (rec.Statut = rec.Statut::"En cours");
+                trigger OnAction()
+                var
+                    OrdrePrep: Record "Ordre de preparation";
+                begin
+                    OrdrePrep.setrange(No, rec.No);
+                    IF rec.printed > 0 then begin
+                        IF CONFIRM('Bon de préparation est déja imprimé.Voulez vous le ré-imprimer ?', true) then begin
+                            report.RunModal(50016, true, true, OrdrePrep);
+                        end else
+                            ;
+                    end
+                    else
+                        report.RunModal(50016, true, true, OrdrePrep);
+
+
+
+
+
+
+
+                end;
+            }
         }
     }
     var

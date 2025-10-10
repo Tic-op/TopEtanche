@@ -140,16 +140,17 @@ layout {
                 PromotedOnly = true;
                 ApplicationArea = All;
                 Image = PrintVoucher ;
+                 visible = false; //AM useless
 
-                Caption = 'Imprimer Tickets'; 
+                 Caption = 'Imprimer Tickets';
                 trigger OnAction() 
                 var 
                 SalesInvoiceH : record "Sales Header" ;
 
                 
                 begin
-                    /* SalesInvoiceH.get(rec."Document Type",rec."No.");
-                    report.runmodal(50028, true, true, SalesInvoiceH); */
+                    SalesInvoiceH.get(rec."Document Type", rec."No.");
+                    report.runmodal(50028, true, true, SalesInvoiceH);
 
 
 

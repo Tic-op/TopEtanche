@@ -148,7 +148,7 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
                 PromotedCategory = Process;
                 // visible = false;
                 Enabled = (Rec."Type de facturation" = Rec."Type de facturation"::"Contre remboursement");
-                visible = PréFactureAutorisée; // AM290925
+                //visible = PréFactureAutorisée; // AM290925
 
                 trigger OnAction()
                 var
@@ -158,15 +158,16 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
                 begin
 
                     Cu.CheckConditions(Rec);
-                    SalesLine.SetRange("Document Type", Rec."Document Type");
-                    SalesLine.SetRange("Document No.", Rec."No.");
+                    /*   SalesLine.SetRange("Document Type", Rec."Document Type");
+                      SalesLine.SetRange("Document No.", Rec."No.");
 
-                    if SalesLine.FindFirst() then
-                        repeat
-                            SalesLine.TestField("Location Code");
-                        until SalesLine.Next() = 0;
-
+                      if SalesLine.FindFirst() then
+                          repeat
+                              SalesLine.TestField("Location Code");
+                          until SalesLine.Next() = 0;
+   */
                     InvoiceHeader := Rec.TransferToSalesInvoice();
+                    REc.Delete();
                     PAGE.Run(PAGE::"Sales Invoice", InvoiceHeader);
                 end;
             }

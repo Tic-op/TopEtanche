@@ -50,13 +50,13 @@ report 50028 TicketCommandeVente
                     end;
 
                     if NotPrinted = true
-                    then
-                        SL.SetRange(SL.Print, false);
+                    then;
+                    // SL.SetRange(SL.Print, false);
                 end;
 
                 trigger OnPostDataItem()
                 begin
-                    sl.ModifyAll(SL.Print, true);
+                    //  sl.ModifyAll(SL.Print, true);
                 end;
 
             }
