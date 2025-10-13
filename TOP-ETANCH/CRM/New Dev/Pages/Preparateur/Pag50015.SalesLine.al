@@ -28,11 +28,11 @@ page 50015 "salesLine"
                 {
                     Caption = 'SystemId';
                 }
-                field(NumeroBP; rec."Preparation Order No.")
-                {
-                    Caption = 'Numéro BP';
+                /*   field(NumeroBP; rec."Preparation Order No.")
+                  {
+                      Caption = 'Numéro BP';
 
-                }
+                  } */
 
                 field(documentNo; Rec."Document No.")
                 {

@@ -30,6 +30,24 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
                 //  CurrPage.Update();
             end;
         }
+        modify("Qty. to Assemble to Order")
+        {
+            Visible = false;
+        }
+        modify("Unit of Measure Code")
+        {
+            Visible = false;
+        }
+
+
+
+
+
+
+
+
+
+        movebefore("Location Code"; Quantity)
         
         
         addafter("Location Code"){
@@ -47,7 +65,8 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
 
 
             }
-    }
+
+        }
         addafter(Description)
         {     field("DisponibilitéGlobal"; rec.GetDisponibilite(true))
             {

@@ -1,4 +1,7 @@
 namespace Top.Top;
+using Microsoft.Sales.Document;
+using Microsoft.Inventory.Transfer;
+using Microsoft.Sales.Customer;
 
 report 50016 "BonPréparation"
 {
@@ -12,6 +15,7 @@ report 50016 "BonPréparation"
     {
         dataitem(Ordredepreparation; "Ordre de preparation")
         {
+            RequestFilterFields = No;
             column(No; No)
             {
             }
@@ -39,10 +43,15 @@ report 50016 "BonPréparation"
             column(documenttype; "document type")
             {
             }
+
+
+
+
             dataitem("Ligne préparation"; "Ligne préparation")
             {
-                DataItemLink = "Document No." = FIELD(No);
+                DataItemLink = "Document No." = field(No);
                 DataItemLinkReference = Ordredepreparation;
+
                 column(Document_No_; "Document No.")
                 {
 
@@ -50,17 +59,80 @@ report 50016 "BonPréparation"
                 column(Source_type_; "Source type.") { }
                 column(Source_No_; "Source No.") { }
                 column(Source_line_No_; "Source line No.") { }
-                column(Location; Location) { }
+                column(Destination; CustName) { }
+                column(CustPhone; CustPhone) { }
                 column(Bin_Code; "Bin Code") { }
                 column(item_No_; "item No.") { }
                 column(description; description) { }
                 column(Qty; Qty) { }
+                column(DD; Ordredepreparation."Date début préparation") { }
+                column(DF; Ordredepreparation."Date fin préparation") { }
+
+                trigger OnAfterGetRecord()
+                var
+                    SalesL: record "Sales Line";
+                    TransferLine: record "Transfer Line";
+                    Customer: Record Customer;
+                begin
+                    Customer.SetLoadFields("No.", Name, "Phone No.", "Mobile Phone No.");
+                    SalesL.SetLoadFields("Document Type", "Document No.", "Line No.", Type, "Sell-to Customer No.", "Sell-to Customer Name");
+                    SalesL.SetAutoCalcFields("Sell-to Customer Name");
+                    CustName := '';
+                    CustPhone := '';
+                    if imprimer_destination then begin
 
 
 
+                        If "Source type." = "Source type."::Commande then begin
+                            SalesL.get("Sales Document Type"::Order, "Source No.", "Source line No.");
+
+                            Customer.get(SalesL."Sell-to Customer No.");
+                            CustName := SalesL."Sell-to Customer Name";
+                            CustPhone := Customer."Phone No.";
+                        end;
+
+                        If "Source type." = "Source type."::Facture then begin
+
+
+                            SalesL.get("Sales Document Type"::invoice, "Source No.", "Source line No.");
+
+                            Customer.get(SalesL."Sell-to Customer No.");
+                            CustName := SalesL."Sell-to Customer Name";
+                            CustPhone := Customer."Phone No.";
+
+                        end;
+                        If "Source type." = "Source type."::Transfert then begin
+                            TransferLine.get("Source No.", "Source line No.");
+                            CustName := TransferLine."Transfer-to Code";
+                            CustPhone := '';
+                        end;
+
+                    end;
+                end;
             }
+
+
+
+
+
+
+
+            /*   trigger OnAfterGetRecord()
+              begin
+                  Ordredepreparation.Printed += 1;
+                  Modify(false);
+
+              end; */
+
+
+
         }
+
+
+
     }
+
+
     requestpage
     {
         layout
@@ -69,6 +141,10 @@ report 50016 "BonPréparation"
             {
                 group(GroupName)
                 {
+                    field(imprimer_destination; imprimer_destination)
+                    {
+                        ApplicationArea = all;
+                    }
                 }
             }
         }
@@ -78,5 +154,25 @@ report 50016 "BonPréparation"
             {
             }
         }
+
     }
+
+    trigger OnPostReport()
+    begin
+        Ordredepreparation.Printed += 1;
+        Ordredepreparation.Modify(false);
+
+    end;
+
+    trigger OnInitReport()
+    begin
+        imprimer_destination := false;
+
+    end;
+
+
+    var
+        CustName: text;
+        imprimer_destination: Boolean;
+        CustPhone: text;
 }

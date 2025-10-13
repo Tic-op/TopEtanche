@@ -10,9 +10,33 @@ using TopEtanch.TopEtanch;
 pageextension 50034 Salesinvoice extends "Sales Invoice"
 { InsertAllowed = false ;
 
-layout {
+layout
+    {
+        modify("Campaign No.") { visible = false; }
+        modify("Responsibility Center") { visible = false; }
+        modify("Assigned User ID") { visible = false; }
+        modify("Shortcut Dimension 1 Code") { visible = false; }
+        modify("Shortcut Dimension 2 Code") { visible = false; }
+        modify("Prices Including VAT")
+        {
+            visible = false;
+        }
+        modify("Work Description") { visible = false; }
+        modify("Foreign Trade") { Visible = false; }
+        modify("Shipping and Billing")
+        {
+            visible = false;
+        }
+        modify("VAT Country/Region Code") { Visible = false; }
+        modify("EU 3-Party Trade") { Visible = false; }
+        modify("VAT Paid on Debits") { Visible = false; }
+        modify("Payment Discount %") { Visible = false; }
+        modify("Pmt. Discount Date") { Visible = false; }
+        modify("Direct Debit Mandate ID") { Visible = false; }
+        modify(Control174) { visible = false; }
+        modify("Currency Code") { visible = false; }
 
-  addafter("Shipping and Billing")
+        addafter("Shipping and Billing")
         {
             group(Autre)
             {
@@ -140,16 +164,17 @@ layout {
                 PromotedOnly = true;
                 ApplicationArea = All;
                 Image = PrintVoucher ;
+                 visible = false; //AM useless
 
-                Caption = 'Imprimer Tickets'; 
+                 Caption = 'Imprimer Tickets';
                 trigger OnAction() 
                 var 
                 SalesInvoiceH : record "Sales Header" ;
 
                 
                 begin
-                    /* SalesInvoiceH.get(rec."Document Type",rec."No.");
-                    report.runmodal(50028, true, true, SalesInvoiceH); */
+                    SalesInvoiceH.get(rec."Document Type", rec."No.");
+                    report.runmodal(50028, true, true, SalesInvoiceH);
 
 
 

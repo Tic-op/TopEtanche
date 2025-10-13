@@ -18,6 +18,37 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
                 ApplicationArea = all;
             }
         }
+        modify("Work Description")
+        {
+            Visible = false;
+        }
+        modify("Shipping and Billing")
+        {
+            Visible = false;
+        }
+        modify("Prices Including VAT")
+        {
+            Visible = false;
+        }
+        modify(control47)
+        {
+            visible = false;
+        }
+        modify("Transaction Specification") { visible = false; }
+        modify("Transaction Type") { visible = false; }
+        modify("Payment Discount %") { visible = false; }
+        modify("Pmt. Discount Date") { visible = false; }
+        modify("Shortcut Dimension 1 Code") { Visible = false; }
+        modify("Shortcut Dimension 2 Code") { visible = false; }
+        modify("Foreign Trade") { visible = false; }
+        modify("Sell-to Customer Templ. Code") { Visible = false; }
+        modify("Your Reference") { Visible = false; }
+        modify("Campaign No.") { Visible = false; }
+        modify("Responsibility Center") { visible = false; }
+        modify("Assigned User ID") { visible = false; }
+        modify("Currency Code") { visible = false; }
+
+
     }
 
     actions //IS12092025

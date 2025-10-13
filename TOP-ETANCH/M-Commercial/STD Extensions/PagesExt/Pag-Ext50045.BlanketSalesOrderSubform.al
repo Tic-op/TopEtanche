@@ -137,6 +137,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
 
         movebefore("Unit of Measure Code"; "Qty. to Ship")
+        movebefore("Location Code"; Quantity)
         modify("Qty. to Ship")
         {
             enabled = not Lignecomptoir;
@@ -155,6 +156,19 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
 
 
         }
+        modify("Qty. to Assemble to Order")
+        {
+            Visible = false;
+        }
+        modify("Unit of Measure Code")
+        {
+            Visible = false;
+        }
+
+
+        movebefore("Location Code"; Quantity)
+        modify("Shipment Date") { visible = false; }
+
 
 
 
@@ -183,10 +197,23 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
                     dispatch: Report "Dispatch Sales Order Lines";
                     recSalesLine: Record "Sales Line";
                     Itemdist: record "Item Distribution";
+                    Lignepréparation: Record "Ligne préparation";
+                    Ordreprep: Record "Ordre de preparation";
+
 
                 begin
 
                     Itemdist.deleteall();
+                    "Lignepréparation".findfirst;
+                    repeat
+                        If not Ordreprep.get("Lignepréparation"."Document No.") then
+                            "Lignepréparation".Delete(true);
+
+
+
+
+                    until "Lignepréparation".next = 0;
+
                     /* 
                                         recSalesLine.SetRange("Document Type", rec."Document Type");
                                         recSalesLine.SetRange("Document no.", rec."Document no.");
@@ -283,8 +310,19 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
         item: record item;
         SalesL: record "Sales Line";
 
+        SalesH: Record "Sales Header";
+
+
 
     begin
+        SalesH.get(Documenttype, documentno);
+        SalesH.CalcFields("Bon de preparations");
+        if SalesH."Bon de preparations" > 0 then begin
+
+            message('Impossible de distribuer les lignes de ce document, des préparations associées existent.');
+            exit;
+        end;
+
         SalesL.get(Documenttype, documentno, Lineno);
         if not Item.get(SalesL."No.") then exit; // AM 190925
         itemdist.SetRange("Source Doc type", Documenttype);

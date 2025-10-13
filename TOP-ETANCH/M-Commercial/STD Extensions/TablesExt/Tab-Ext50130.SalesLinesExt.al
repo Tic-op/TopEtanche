@@ -119,11 +119,11 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
 
          }
        */
-        field(50006; Print; Boolean)
-        {
-            Caption = 'Imprimé';
-        }
-        field(50007; "Impression No"; Integer) { }
+        /*    field(50006; Print; Boolean) //AM useless
+           {
+               Caption = 'Imprimé';
+           }
+           field(50007; "Impression No"; Integer) { } //AM useless */
 
         field(50005; "Qty in Orders"; Decimal)
         {
@@ -131,12 +131,26 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
             FieldClass = FlowField;
             CalcFormula = Sum("Sales Line"."Outstanding Qty. (Base)" WHERE("Document Type" = FILTER(Order),
              "Blanket Order No." = field("Document No."), "Blanket Order Line No." = field("Line No.")));
+
+
+
         }
-        field(50008; Preparé; Boolean) { }
-        field(50009; statut; Option)
+
+
+
+        field(50008; Preparé; Boolean)
+        {
+            FieldClass = FlowField;
+            CalcFormula = Exist("Ligne préparation" where("Source No." = field("Document No."), "Source line No." = field("Line No.")));
+
+        } //AM Useless
+        field(50009; "statut ligne préparation"; Option) //AM Useless
         {
             Caption = 'Statut';
             OptionMembers = "Créé","En cours","Préparé","Regroupé","livré";
+            FieldClass = FlowField;
+            CalcFormula = lookup("Ligne préparation".Statut where("Source No." = field("Document No."), "Source line No." = field("Line No.")));
+
 
         }
         field(50010; "Preparation Order No."; Code[20])
@@ -145,7 +159,8 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
             //DataClassification = ToBeClassified;
             // TableRelation = "Ordre de preparation".No WHERE("Order No" = FIELD("Document No."), Magasin = FIELD("Location Code"));
             FieldClass = FlowField;
-            CalcFormula = lookup("Ordre de preparation".No WHERE("Order No" = FIELD("Document No."), Magasin = FIELD("Location Code")));
+            // CalcFormula = lookup("Ordre de preparation".No WHERE("Order No" = FIELD("Document No."), Magasin = FIELD("Location Code")));
+            CalcFormula = lookup("Ligne préparation"."Document No." where("Source No." = field("Document No."), "Source line No." = field("Line No.")));
 
         }
         field(50011; "Identifier Code"; Code[100])
@@ -175,7 +190,6 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
                 SalesH: Record "Sales Header";
                 OrdrePrep: Record "Ordre de preparation";
             begin
-
                 OrdrePrep.SetRange("Order No", "Document No.");
                 //OrdrePrep.SetRange(Statut, OrdrePrep.Statut::"Créé"); ??? Nosense 
                 if OrdrePrep.FindFirst() then
@@ -245,6 +259,11 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
                 validate("Qty. to Ship", Quantity);
             end;
         "Shipping No." := SalesH."Shipping No.";
+
+        SalesH.CalcFields("Bon de preparations");
+        if SalesH."Bon de preparations" > 0 then
+            error('Impossible d''ajouter des lignes. Des préparations associées existent.');
+
     end;
 
     /* trigger OnBeforeInsert()

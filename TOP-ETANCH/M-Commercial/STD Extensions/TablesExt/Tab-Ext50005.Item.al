@@ -84,7 +84,7 @@ tableextension 50005 Itemext extends Item
                                                                             Type = const(Item),
                                                                             "No." = field("No."),
                                                                             "Location Code" = field("Location Filter"),
-                                                                            "Bin Code" = field("Bin Filter"))
+                                                                            "Bin Code" = field("Bin Filter"), "Qty. to Ship (Base)" = filter(> 0)) //AM only Positive quantities
                                                                            );
         }
 
@@ -210,7 +210,7 @@ tableextension 50005 Itemext extends Item
                                                                             Type = const(Item),
                                                                             "No." = field("No."),
                                                                             "Location Code" = field("Location Filter"),
-                                                                            "Bin Code" = field("Bin Filter"), "Shipment No." = const(''))
+                                                                            "Bin Code" = field("Bin Filter"), "Shipment No." = const(''), Quantity = filter(> 0))//AM only Positive quantities
                                                                            );
 
             DecimalPlaces = 0 : 3;

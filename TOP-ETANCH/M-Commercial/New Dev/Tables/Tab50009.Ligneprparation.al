@@ -2,6 +2,8 @@ table 50009 "Ligne préparation"
 {
     Caption = 'Ligne préparation';
     DataClassification = ToBeClassified;
+    DrillDownPageID = "Lignes préparations List";
+    LookupPageID = "Lignes préparations List";
     
     fields
     {
@@ -44,6 +46,28 @@ table 50009 "Ligne préparation"
         {
             Caption = 'Qty';
         }
+        field(10; Statut; Option)
+        {
+            Caption = 'Statut';
+            OptionMembers = "Créé","En cours","Préparé","Regroupé","livré";
+
+        }
+        field(11; "Creation date"; DateTime)
+        {
+            Caption = 'Date de création';
+        }
+        field(12; "Date début préparation"; DateTime)
+        {
+
+        }
+        field(13; "Date fin préparation"; DateTime)
+        {
+
+        }
+        field(14; "Préparateur"; Text[50])
+        {
+            TableRelation = "Logistic resource" where(Magasin = field(Location), blocked = const(false));
+        }
     }
     keys
     {
@@ -51,5 +75,10 @@ table 50009 "Ligne préparation"
         {
             Clustered = true;
         }
+        key(StatusKey; Statut) { }
+        key(Datekey; "Creation date", "Date début préparation", "Date fin préparation") { }
+        key(Locationkey; Location, "Préparateur") { }
+        key(IndicateurKey; Statut, "Source type.", Location, "Préparateur") { }
+
     }
 }

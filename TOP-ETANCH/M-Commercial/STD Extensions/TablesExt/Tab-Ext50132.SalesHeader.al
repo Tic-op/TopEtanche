@@ -19,18 +19,18 @@ tableextension 50132 SalesHeader extends "Sales Header"
             Caption = 'Montant Timbre';
             DataClassification = ToBeClassified;
         }
-        field(50005; "Nombre de Cartons"; integer)
-        {
-            Caption = 'Nombre de Carton';
-            DataClassification = ToBeClassified;
-        }
-        field(50006; "Prise en charge"; Boolean)
-        {
+        /*  field(50005; "Nombre de Cartons"; integer)
+         {
+             Caption = 'Nombre de Carton';
+             DataClassification = ToBeClassified;
+         }
+         field(50006; "Prise en charge"; Boolean)
+         {
 
-            Caption = 'Prise en charge';
-            DataClassification = ToBeClassified;
+             Caption = 'Prise en charge';
+             DataClassification = ToBeClassified;
 
-        }
+         } */
 
         field(50108; "Type de facturation"; Option)
         {
@@ -330,13 +330,14 @@ tableextension 50132 SalesHeader extends "Sales Header"
         NewInvoiceHeader.Validate("Posting Date", Today);
         NewInvoiceHeader.Validate("Document Date", Today);
         // NewInvoiceHeader."Posting No." := seriesMgt.GetNextNo(SalesSetup."Posted Invoice Nos.");
-        Salesevent.affecterSoucheInvoice(NewInvoiceHeader);
+        If SalesSetup."Utiliser Pré-Facture" then //AM 091025
+            Salesevent.affecterSoucheInvoice(NewInvoiceHeader);
         NewInvoiceHeader.Insert(true);
 
         SL.SetRange("Document Type", Rec."Document Type");
         SL.SetRange("Document No.", Rec."No.");
 
-        if SL.FindFirst() then begin
+        /* if SL.FindFirst() then begin
             LineNo := 10000;
             repeat
                 NewInvoiceLine.Init();
@@ -345,14 +346,30 @@ tableextension 50132 SalesHeader extends "Sales Header"
                 NewInvoiceLine."Line No." := LineNo;
                 NewInvoiceLine.Validate("Type", SL."Type");
                 NewInvoiceLine.Validate("No.", SL."No.");
-                NewInvoiceLine.Validate("Quantity", SL."Qty. to Ship");//à faire //AM 290925
+                NewInvoiceLine.Validate("Quantity", SL."Quantity");//AM 290925 changed from  SL."Qty. to Ship"
                 NewInvoiceLine.Validate("Location Code", SL."Location Code");
-                NewInvoiceLine.validate("Bin Code", SL."Bin Code");
+                // NewInvoiceLine.validate("Bin Code", SL."Bin Code"); Promleme testfield sur location 
+                NewInvoiceLine."Bin Code" := Sl."Bin Code"; //AM 290925
                 NewInvoiceLine.Validate("Unit of Measure Code", SL."Unit of Measure Code");
                 NewInvoiceLine.Validate("Unit Price", SL."Unit Price");
                 NewInvoiceLine.Insert(true);
                 LineNo += 10000;
+            until SL.Next() = 0; */
+        if SL.FindFirst() then begin  // New version AM 091025
+            LineNo := 10000;
+            repeat
+                NewInvoiceLine.Init();
+                NewInvoiceLine := SL;
+                NewInvoiceLine."Document Type" := NewInvoiceHeader."Document Type";
+                NewInvoiceLine."Document No." := NewInvoiceHeader."No.";
+                NewInvoiceLine."Line No." := SL."Line No.";
+                NewInvoiceLine.Validate("Quantity", SL."Quantity");
+                NewInvoiceLine.Insert(true);
             until SL.Next() = 0;
+
+
+
+
         end;
 
         exit(NewInvoiceHeader);

@@ -111,5 +111,12 @@ permissionset 50000 GeneratedPermission
         page PriceListSubform = X,
         tabledata "Ligne préparation" = RIMD,
         table "Ligne préparation" = X,
-        report "BonPréparation" = X;
+        report "BonPréparation" = X,
+        tabledata "Indicateur Préparation" = RIMD,
+        table "Indicateur Préparation" = X,
+        report "facture non validée" = X,
+        codeunit "PréparationEvent" = X,
+        page "KPI Préparation" = X,
+        page "Lignes préparations List" = X,
+        page "Lignes préparations Subform" = X;
 }

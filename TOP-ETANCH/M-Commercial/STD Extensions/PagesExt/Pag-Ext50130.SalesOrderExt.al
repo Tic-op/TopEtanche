@@ -19,11 +19,11 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
     {
         addafter("Posting Date")
         {
-            field("Prise en charge"; Rec."Prise en charge")
-            {
-                ApplicationArea = all;
+            /*  field("Prise en charge"; Rec."Prise en charge")
+             {
+                 ApplicationArea = all;
 
-            }
+             } */
             /* field("Vente comptoir"; Rec."Vente comptoir")
             {
                 ApplicationArea = all;
@@ -31,7 +31,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                 begin
 
                     CurrPage.update();
-                end;
+                end;     
             } */
 
         }
@@ -45,8 +45,8 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
             var
                 customer: Record Customer;
             begin
-                rec."Prise en charge" := true;
-                rec.Modify();
+                /*  rec."Prise en charge" := true;
+                 rec.Modify(); */
                 if rec."Sell-to Customer No." <> '' then begin
                     customer.Get(rec."Sell-to Customer No.");
                     if customer."Cause du blocage" <> customer."Cause du blocage"::"Non bloqué" then
@@ -114,6 +114,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
         }
 
 
+
         modify("Invoice Details")
         {
             Visible = false;
@@ -150,10 +151,13 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
             end;
 
         }
+        modify("Currency Code") { visible = false; }
 
 
 
         moveafter("Salesperson Code"; "Location Code")
+        modify("Foreign Trade") { Visible = false; }
+
 
 
 

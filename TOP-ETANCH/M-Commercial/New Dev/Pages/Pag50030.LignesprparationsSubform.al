@@ -6,7 +6,7 @@ page 50030 "Lignes préparations Subform"
     Caption = 'Lignes préparations Subform';
     PageType = ListPart;
     SourceTable = "Ligne préparation";
-    ModifyAllowed = false ;
+    //ModifyAllowed = false ;
     InsertAllowed = false ;
     DeleteAllowed = false ;
     
@@ -17,41 +17,69 @@ page 50030 "Lignes préparations Subform"
         {
             repeater(General)
             {
+                Enabled = (Rec.Statut = REc.Statut::"Créé") or (rec.Statut = rec.Statut::"En cours");
                 field("Document No."; Rec."Document No.")
                 {
                     ToolTip = 'Specifies the value of the Document No. field.', Comment = '%';
+                    editable = false;
+                    Visible = false;
                 }
                 field("Source type."; Rec."Source type.")
                 {
                     ToolTip = 'Specifies the value of the Source type. field.', Comment = '%';
+                    editable = false;
+                    Visible = false;
                 }
                 field("Source No."; Rec."Source No.")
                 {
                     ToolTip = 'Specifies the value of the Source No. field.', Comment = '%';
+                    editable = false;
+                    Visible = false;
                 }
                 field("Source line No."; Rec."Source line No.")
                 {
                     ToolTip = 'Specifies the value of the Source line No. field.', Comment = '%';
+                    editable = false;
+                    Visible = false;
                 }
                 field("item No."; Rec."item No.")
                 {
                     ToolTip = 'Specifies the value of the item No. field.', Comment = '%';
+                    editable = false;
                 }
                 field(description; Rec.description)
                 {
                     ToolTip = 'Specifies the value of the description field.', Comment = '%';
+                    editable = false;
                 }
                 field(Location; Rec.Location)
                 {
                     ToolTip = 'Specifies the value of the Location field.', Comment = '%';
+                    editable = false;
+                    Visible = false;
                 }
                 field("Bin Code"; Rec."Bin Code")
                 {
                     ToolTip = 'Specifies the value of the Bin Code field.', Comment = '%';
+                    editable = false;
                 }
                 field(Qty; Rec.Qty)
                 {
                     ToolTip = 'Specifies the value of the Qty field.', Comment = '%';
+                    editable = false;
+                    DecimalPlaces = 0 : 3;
+                }
+                field(Statut; Rec.Statut)
+                {
+                    Enabled = rec.Statut = rec.Statut::"En cours";
+                    trigger OnValidate()
+
+                    begin
+                        if (xRec.Statut <> rec.Statut::"En cours") or ((rec.Statut <> rec.Statut::"Préparé") and (rec.Statut <> rec.Statut::"En cours")) then
+                            Error('Vous ne pouvez passer que du "En cours" à "Préparé"');
+
+                    end;
+
                 }
             }
         }

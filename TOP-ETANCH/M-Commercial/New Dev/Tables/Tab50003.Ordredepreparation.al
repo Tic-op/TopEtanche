@@ -2,6 +2,8 @@ table 50003 "Ordre de preparation"
 {
     Caption = 'Ordre de preparation';
     DataClassification = ToBeClassified;
+    DrillDownPageID = "Liste bon de préparation";
+    LookupPageID = "Liste bon de préparation";
 
     fields
     {
@@ -15,11 +17,33 @@ table 50003 "Ordre de preparation"
             OptionMembers = "Créé","En cours","Préparé","Regroupé","livré";
             trigger OnValidate()
             var
-                SL: Record "Sales Line";
+                //  SL: Record "Sales Line";
+                PrepLine: record "Ligne préparation";
             begin
-                SL.SetFilter("Document No.", "Order No");
-                SL.SetRange("Location Code", Magasin);
-                sl.Modifyall(Statut, Statut);
+                if (Statut = Statut::"Créé") and (xRec.Statut <> Statut::"Créé") then
+                    error('impossible de passer à statut "Crée" depuis un statut postérieur');
+
+
+                If (Statut = Statut::"En cours") and (xrec.Statut = Statut::"Créé") then begin
+                    "Date début préparation" := CurrentDateTime;
+
+                end;
+                If (Statut = Statut::"livré") then begin
+                    "Date fin préparation" := CurrentDateTime;
+
+                end;
+
+
+
+
+
+                PrepLine.setrange("Document No.", No);
+                if PrepLine.findset() then
+                    PrepLine.ModifyAll(Statut, Statut);
+
+                /*  SL.SetFilter("Document No.", "Order No");
+                 SL.SetRange("Location Code", Magasin);
+                 sl.Modifyall(Statut, Statut); */
             end;
 
         }
@@ -64,6 +88,11 @@ table 50003 "Ordre de preparation"
             OptionMembers = "Commande","Transfert","Facture";
 
         }
+        field(11; Printed; integer)
+        {
+            initvalue = 0;
+
+        }
     }
     keys
     {
@@ -71,10 +100,14 @@ table 50003 "Ordre de preparation"
         {
             Clustered = true;
         }
-        key(PK2; "document type", "Order No")
+        key(Sourcekey; "document type", "Order No")
         {
 
         }
+
+        key(StatusKey; Statut) { }
+        key(Datekey; "Creation date", "Date début préparation", "Date fin préparation") { }
+        key(Locationkey; Magasin, "Préparateur") { }
 
     }
     trigger OnInsert()
@@ -92,6 +125,28 @@ table 50003 "Ordre de preparation"
         //I  used an integration event on the database on afterinsert // AM 
 
 
+    end;
+
+    Trigger OnDelete()
+    var
+        Lignepréparation: Record "Ligne préparation";
+    begin
+
+        if (Statut <> Statut::"Créé") and (Statut <> Statut::"En cours")
+        then
+            error('Impossible de supprimer un bon de préparation de statut %1 ', Statut);
+        //"Lignepréparation".SetRange("Source type.", "document type");
+        "Lignepréparation".SetRange("Document No.", No);
+        if "Lignepréparation".findset then
+            "Lignepréparation".DeleteAll(true);
+    end;
+
+    Procedure Countligne(): Boolean
+    var
+        Preplines: record "Ligne préparation";
+    begin
+        Preplines.setrange("Document No.", No);
+        exit(Preplines.count < 2);
     end;
 
 

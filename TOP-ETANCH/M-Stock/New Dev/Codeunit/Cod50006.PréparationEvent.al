@@ -177,8 +177,12 @@ codeunit 50006 PréparationEvent
                        "LignePréparation"."Bin Code":= salesL."Bin Code";
                        "LignePréparation"."item No.":=salesL."No.";
                        "LignePréparation".description:=salesL.Description;
-                       "LignePréparation".Qty:=salesL."Quantity (Base)";
 
+                      // "LignePréparation".Qty:=salesL."Quantity (Base)";
+                         if "LignePréparation"."Source type."= "LignePréparation"."Source type."::Facture then 
+                         "LignePréparation".Qty := salesL."Qty. to Invoice (Base)" ;
+                          if "LignePréparation"."Source type."= "LignePréparation"."Source type."::Commande then 
+                         "LignePréparation".Qty := salesL."Qty. to Ship (Base)";
                         "LignePréparation".Insert();
                        until salesL.next= 0 ;
         

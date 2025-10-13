@@ -218,6 +218,15 @@ pageextension 50047 "Sales Invoice Subform" extends "Sales Invoice Subform"
 
 
         moveafter("Location Code"; "Bin Code")
+        movebefore("Location Code"; Quantity)
+        modify("FA Posting Date")
+        {
+            Visible = false;
+        }
+        modify("Unit of Measure Code")
+        {
+            Visible = false;
+        }
 
 
 
@@ -403,9 +412,18 @@ pageextension 50047 "Sales Invoice Subform" extends "Sales Invoice Subform"
         DispPage: Page "itemdistribution";
         item: record item;
         SalesL: record "Sales Line";
+        SalesH: Record "Sales Header";
+
 
 
     begin
+        SalesH.get(Documenttype, documentno);
+        SalesH.CalcFields("Bon de preparations");
+        if SalesH."Bon de preparations" > 0 then begin
+
+            message('Impossible de distribuer les lignes de ce document, des préparations associées existent.');
+            exit;
+        end;
         SalesL.get(Documenttype, documentno, Lineno);
         if not Item.get(SalesL."No.") then exit; // AM 190925
         itemdist.SetRange("Source Doc type", Documenttype);
