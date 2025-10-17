@@ -9,42 +9,42 @@ table 50009 "Ligne préparation"
     {
         field(1; "Document No."; Code[20])
         {
-            Caption = 'Document No.';
+            Caption = 'No document';
         }
         field(2; "Source type."; Option)
         {
-            Caption = 'Source type.'; 
+            Caption = 'Type.';
             OptionMembers ="Commande","Transfert","Facture";
         }
         field(3; "Source No."; Code[20])
         {
-            Caption = 'Source No.';
+            Caption = 'No.';
         }
         field(4; "Source line No."; Integer)
         {
-            Caption = 'Source line No.';
+            Caption = 'No. ligne';
         }
         field(5; "item No."; Code[20])
         {
-            Caption = 'item No.';
+            Caption = 'No. article';
             TableRelation = item ;
         }
         field(6; description; Text[100])
         {
-            Caption = 'description';
+            Caption = 'Description';
         }
         field(7; Location; Code[10])
         {
-            Caption = 'Location';
+            Caption = 'Magasin';
             
         }
         field(8; "Bin Code"; Code[10])
         {
-            Caption = 'Bin Code';
+            Caption = 'Emplacement';
         }
         field(9; Qty; decimal)
         {
-            Caption = 'Qty';
+            Caption = 'Qté';
         }
         field(10; Statut; Option)
         {
@@ -67,6 +67,11 @@ table 50009 "Ligne préparation"
         field(14; "Préparateur"; Text[50])
         {
             TableRelation = "Logistic resource" where(Magasin = field(Location), blocked = const(false));
+        }
+        Field(15; Demandeur; Text[50]) { }
+        field(16; "Nom demandeur"; text[100])
+        {
+
         }
     }
     keys

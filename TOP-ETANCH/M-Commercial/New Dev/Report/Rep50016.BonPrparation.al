@@ -59,7 +59,7 @@ report 50016 "BonPréparation"
                 column(Source_type_; "Source type.") { }
                 column(Source_No_; "Source No.") { }
                 column(Source_line_No_; "Source line No.") { }
-                column(Destination; CustName) { }
+                column(Destination; Demandeur) { }
                 column(CustPhone; CustPhone) { }
                 column(Bin_Code; "Bin Code") { }
                 column(item_No_; "item No.") { }
@@ -67,6 +67,8 @@ report 50016 "BonPréparation"
                 column(Qty; Qty) { }
                 column(DD; Ordredepreparation."Date début préparation") { }
                 column(DF; Ordredepreparation."Date fin préparation") { }
+                Column(NumTicket; NumTicket) { }
+                Column(TotalTicket; "Ligne préparation".count) { }
 
                 trigger OnAfterGetRecord()
                 var
@@ -79,36 +81,42 @@ report 50016 "BonPréparation"
                     SalesL.SetAutoCalcFields("Sell-to Customer Name");
                     CustName := '';
                     CustPhone := '';
+                    NumTicket += 1;
                     if imprimer_destination then begin
-
-
-
-                        If "Source type." = "Source type."::Commande then begin
-                            SalesL.get("Sales Document Type"::Order, "Source No.", "Source line No.");
-
-                            Customer.get(SalesL."Sell-to Customer No.");
-                            CustName := SalesL."Sell-to Customer Name";
+                        if ("Source type." = "Source type."::Commande) or ("Source type." = "Source type."::Facture) then begin
+                            Customer.get(Demandeur);
                             CustPhone := Customer."Phone No.";
-                        end;
-
-                        If "Source type." = "Source type."::Facture then begin
-
-
-                            SalesL.get("Sales Document Type"::invoice, "Source No.", "Source line No.");
-
-                            Customer.get(SalesL."Sell-to Customer No.");
-                            CustName := SalesL."Sell-to Customer Name";
-                            CustPhone := Customer."Phone No.";
-
-                        end;
-                        If "Source type." = "Source type."::Transfert then begin
-                            TransferLine.get("Source No.", "Source line No.");
-                            CustName := TransferLine."Transfer-to Code";
-                            CustPhone := '';
-                        end;
-
+                        end
                     end;
+
+
+                    /* 
+                                            If "Source type." = "Source type."::Commande then begin
+                                                SalesL.get("Sales Document Type"::Order, "Source No.", "Source line No.");
+
+                                                Customer.get(SalesL."Sell-to Customer No.");
+                                                CustName := SalesL."Sell-to Customer Name";
+                                                CustPhone := Customer."Phone No.";
+                                            end;
+
+                                            If "Source type." = "Source type."::Facture then begin
+
+
+                                                SalesL.get("Sales Document Type"::invoice, "Source No.", "Source line No.");
+
+                                                Customer.get(SalesL."Sell-to Customer No.");
+                                                CustName := SalesL."Sell-to Customer Name";
+                                                CustPhone := Customer."Phone No.";
+
+                                            end;
+                                            If "Source type." = "Source type."::Transfert then begin
+                                                TransferLine.get("Source No.", "Source line No.");
+                                                CustName := TransferLine."Transfer-to Code";
+                                                CustPhone := '';
+                                            end; */
+
                 end;
+
             }
 
 
@@ -143,6 +151,7 @@ report 50016 "BonPréparation"
                 {
                     field(imprimer_destination; imprimer_destination)
                     {
+                        Caption = 'Imprimer détails demandeur';
                         ApplicationArea = all;
                     }
                 }
@@ -167,6 +176,7 @@ report 50016 "BonPréparation"
     trigger OnInitReport()
     begin
         imprimer_destination := false;
+        NumTicket := 0;
 
     end;
 
@@ -175,4 +185,5 @@ report 50016 "BonPréparation"
         CustName: text;
         imprimer_destination: Boolean;
         CustPhone: text;
+        NumTicket: Integer;
 }

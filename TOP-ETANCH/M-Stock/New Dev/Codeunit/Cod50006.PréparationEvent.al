@@ -79,6 +79,9 @@ codeunit 50006 PréparationEvent
                                 OrdrePrep."Creation date" := CurrentDateTime;
                                 OrdrePrep.Statut := OrdrePrep.Statut::"Créé";
                                 OrdrePrep."document type" := DocumentType ;
+                                OrdrePrep.Demandeur := SalesLine."Sell-to Customer No.";
+                                SalesLine.CalcFields("Sell-to Customer Name");
+                                OrdrePrep."Nom demandeur" := SalesLine."Sell-to Customer Name";
                               //  OrdrePrep."document type" := OrdrePrep."document type"::Facture;
                                 //SalesSetup.Get();
                                 OrdrePrep.Insert(true);
@@ -111,6 +114,8 @@ codeunit 50006 PréparationEvent
                                 OrdrePrep."Creation date" := CurrentDateTime;
                                 OrdrePrep.Statut := OrdrePrep.Statut::"Créé";
                                 OrdrePrep."document type" := DocumentType ;
+                OrdrePrep.Demandeur := transferLine."Transfer-to Code";
+                OrdrePrep."Nom demandeur" := TransferH."Transfer-to Name";
                               //  OrdrePrep."document type" := OrdrePrep."document type"::Facture;
                                 //SalesSetup.Get();
                                OrdrePrep.Insert(true)  
@@ -151,8 +156,12 @@ codeunit 50006 PréparationEvent
                        "LignePréparation"."item No.":=TransfertLine."Item No.";
                        "LignePréparation".description:=TransfertLine.Description;
                        "LignePréparation".Qty:=TransfertLine."Quantity (Base)";
+                                                           "LignePréparation".Demandeur := "OrdrePréparation".Demandeur;
+                                                           "LignePréparation"."Nom demandeur" := "OrdrePréparation"."Nom demandeur";
 
-                        "LignePréparation".Insert();
+
+
+                                                           "LignePréparation".Insert();
                        until TransfertLine.next= 0 ;
 
 
@@ -177,10 +186,13 @@ codeunit 50006 PréparationEvent
                        "LignePréparation"."Bin Code":= salesL."Bin Code";
                        "LignePréparation"."item No.":=salesL."No.";
                        "LignePréparation".description:=salesL.Description;
+                                                    "LignePréparation".Demandeur := "OrdrePréparation".Demandeur;
+                                                    "LignePréparation"."Nom demandeur" := "OrdrePréparation"."Nom demandeur";
 
-                      // "LignePréparation".Qty:=salesL."Quantity (Base)";
-                         if "LignePréparation"."Source type."= "LignePréparation"."Source type."::Facture then 
-                         "LignePréparation".Qty := salesL."Qty. to Invoice (Base)" ;
+
+                                                    // "LignePréparation".Qty:=salesL."Quantity (Base)";
+                                                    if "LignePréparation"."Source type." = "LignePréparation"."Source type."::Facture then
+                                                        "LignePréparation".Qty := salesL."Qty. to Invoice (Base)";
                           if "LignePréparation"."Source type."= "LignePréparation"."Source type."::Commande then 
                          "LignePréparation".Qty := salesL."Qty. to Ship (Base)";
                         "LignePréparation".Insert();
@@ -235,14 +247,50 @@ codeunit 50006 PréparationEvent
                begin 
                   OrdrePrep.setrange("document type",DocumentType);
                   OrdrePrep.SetRange("Order No",documentNo);
-                  OrdrePrep.setfilter(Statut,'<>%1', OrdrePrep.Statut::"livré") ;
+        OrdrePrep.setfilter(Statut, '<>%1', OrdrePrep.Statut::"Préparé");
 
                     if OrdrePrep.FindFirst()  then
-                        Error('Un Ordre de préparation associé à ce document dont le statut est différent de "livré" existe. Impossible de valider ce docment.');
+            Error('Un Ordre de préparation associé à ce document dont le statut est différent de "préparé" existe. Impossible de valider ce docment.');
 
 
 
-               end;
+    end;
+
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", OnAfterPostSalesDoc, '', false, false)]
+    procedure AssignePostedDocNumToPrepOrder(var SalesHeader: Record "Sales Header"; SalesInvHdrNo: Code[20]; SalesShptHdrNo: Code[20])
+    var
+        OrdrePrep: Record "Ordre de preparation";
+    begin
+        If SalesHeader."Document Type" = "Sales Document Type"::Invoice then begin
+            OrdrePrep.setrange("document type", OrdrePrep."document type"::Facture);
+            OrdrePrep.setrange("Order No", SalesHeader."No.");
+            If OrdrePrep.Findset() then
+                OrdrePrep.ModifyAll("Num document validé", SalesInvHdrNo, false);
+        end;
+        If SalesHeader."Document Type" = "Sales Document Type"::Order then begin
+            OrdrePrep.setrange("document type", OrdrePrep."document type"::Commande);
+            OrdrePrep.setrange("Order No", SalesHeader."No.");
+            If OrdrePrep.Findset() then
+                OrdrePrep.ModifyAll("Num document validé", SalesShptHdrNo, false);
+        end;
+
+
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"TransferOrder-Post Shipment", OnAfterTransferOrderPostShipment, '', false, false)]
+
+    procedure AssignePostedDocNumToPrepOrderTransfert(var TransferHeader: Record "Transfer Header"; var TransferShipmentHeader: Record "Transfer Shipment Header")
+    var
+        OrdrePrep: Record "Ordre de preparation";
+    begin
+        OrdrePrep.setrange("document type", OrdrePrep."document type"::Transfert);
+        OrdrePrep.setrange("Order No", TransferHeader."No.");
+        If OrdrePrep.Findset() then
+            OrdrePrep.ModifyAll("Num document validé", TransferShipmentHeader."No.", false);
+
+    end;
 
 
 
@@ -250,18 +298,16 @@ codeunit 50006 PréparationEvent
 
 
 
-     
 
 
 
 
 
-        
 
 
 
 
 
-   
-    
+
+
 }

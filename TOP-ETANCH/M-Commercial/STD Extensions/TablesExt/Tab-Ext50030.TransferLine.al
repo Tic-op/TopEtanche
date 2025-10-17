@@ -33,20 +33,20 @@ tableextension 50030 TransferLine extends "Transfer Line"
         }
     }
 
-     trigger OnModify()
+    /*  trigger OnModify()
     var
         OrdrePrep: Record "Ordre de preparation";
     begin
       begin 
             OrdrePrep.setrange("document type",OrdrePrep."document type"::Transfert);
             OrdrePrep.SetRange("Order No", "Document No.");
-            //OrdrePrep.setrange(Statut,OrdrePrep.Statut::"Créé");
+            // OrdrePrep.setrange(Statut,OrdrePrep.Statut::"Créé");
             if OrdrePrep.Findset() then begin
                 //if OrdrePrep.Statut = OrdrePrep.Statut::"Créé" then
-                Error('Impossible de modifier cette ligne, un bon de préparation est crée');
+                Error('Impossible de modifier cette ligne, un bon de préparation est crée'); 
             end;
         end;
-    end;
+    end; */  // AM 161025 Blocage lors de la validation ==> page transfer subform
 
     trigger OnDelete()
     var

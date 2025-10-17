@@ -82,7 +82,8 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
         }
         modify(WorkDescription)
         {
-            Importance = Promoted;
+            //Importance = Promoted;
+            visible = false;
         }
 
         modify(Status)
@@ -133,8 +134,6 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
         {
             Visible = true;
             caption = 'magasin de livraison';
-
-
             ApplicationArea = all;
             trigger OnAfterValidate()
             var

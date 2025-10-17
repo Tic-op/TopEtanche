@@ -155,12 +155,13 @@ report 50006 "facture non validée"
 
                     montant := Round("Sales Line".Amount);
 
-                    if SansRemise then begin
-                        Remise := 0;
-                        "Line Discount %" := 0;
-                        "Line Discount Amount" := 0;
-                        montant := Quantity * "Unit Price";
-                    end else begin
+                    /*  if SansRemise then begin
+                         Remise := 0;
+                         "Line Discount %" := 0;
+                         "Line Discount Amount" := 0;
+                         montant := Quantity * "Unit Price";
+                     end else */
+                    begin
                         Remise := montant - (montant * "Line Discount %" / 100);
                         totalremise += Remise;
                     end;
@@ -175,6 +176,15 @@ report 50006 "facture non validée"
                     MontTlettre."Montant en texte"(txtMntTLettres, MontantNet2);
 
                     reference := "No.";
+
+                    if Type = "Sales Line Type"::Item then begin
+
+                        if Vendorref then begin
+
+                            if item.get("No.") then
+                                reference := item."Vendor Item No.";
+                        end
+                    end
                     /*   if OptionReference = OptionReference::Vide then begin
                           i += 1;
                           reference := Format(i);
@@ -238,9 +248,9 @@ report 50006 "facture non validée"
                 group(GroupName)
                 {
 
-                    field("Afficher code "; OptionReference)
+                    field("Afficher référence fournisseur"; Vendorref)
                     {
-                        Caption = 'Afficher code ';
+                        Caption = 'Afficher référence fournisseur';
                         ApplicationArea = all;
                         // Editable = IsEditable;
 
@@ -264,7 +274,7 @@ report 50006 "facture non validée"
     }
     trigger OnInitReport()
     begin
-        SansRemise := false;
+        // SansRemise := false;
     end;
 
     var
@@ -288,7 +298,8 @@ report 50006 "facture non validée"
         reference: text;
         i: Integer;
         OptionReference: Option "Article","Origine","Vide";
-        SansRemise: Boolean;
+        //  SansRemise: Boolean;
+        Vendorref: Boolean;
 
 
 

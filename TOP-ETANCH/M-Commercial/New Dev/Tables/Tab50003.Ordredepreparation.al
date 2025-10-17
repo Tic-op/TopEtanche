@@ -20,15 +20,15 @@ table 50003 "Ordre de preparation"
                 //  SL: Record "Sales Line";
                 PrepLine: record "Ligne préparation";
             begin
-                if (Statut = Statut::"Créé") and (xRec.Statut <> Statut::"Créé") then
-                    error('impossible de passer à statut "Crée" depuis un statut postérieur');
+                /*  if (Statut = Statut::"Créé") and (xRec.Statut <> Statut::"Créé") then
+                     error('impossible de passer à statut "Crée" depuis un statut postérieur'); */
 
 
                 If (Statut = Statut::"En cours") and (xrec.Statut = Statut::"Créé") then begin
                     "Date début préparation" := CurrentDateTime;
 
                 end;
-                If (Statut = Statut::"livré") then begin
+                If (Statut = Statut::"Préparé") then begin
                     "Date fin préparation" := CurrentDateTime;
 
                 end;
@@ -92,6 +92,17 @@ table 50003 "Ordre de preparation"
         {
             initvalue = 0;
 
+        }
+        Field(12; Demandeur; Text[50]) { }
+        field(13; "Nom demandeur"; text[100])
+        {
+
+        }
+        field(14; "Num document validé"; Code[20])
+        {
+            TableRelation = if ("document type" = const(commande)) "Sales Shipment Header" where("No." = field("Num document validé"))
+            else if ("document type" = const(facture)) "Sales Invoice Header" where("No." = field("Num document validé"))
+            else if ("document type" = const(Transfert)) "Transfer Shipment Header" where("No." = field("Num document validé"));
         }
     }
     keys

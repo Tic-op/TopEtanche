@@ -95,10 +95,15 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 else if rec.GetDisponibilite(false) < 0 then error('Quantité non disponible..')
             end;
         }
+        modify("Qty. to Invoice")
+        {
+            visible = false;
+        }
 
         modify("Qty. to Ship")
         {
             enabled = not Lignecomptoir;
+            visible = false;
             trigger OnBeforeValidate()
             var
 

@@ -18,12 +18,13 @@ page 50005 "Bon de preparation"
             group(General)
             {
                 Caption = 'General';
-                Enabled = (Rec.Statut = REc.Statut::"Créé") or (rec.Statut = rec.Statut::"En cours");
+                // Enabled = (Rec.Statut = REc.Statut::"Créé") or (rec.Statut = rec.Statut::"En cours");
 
                 field(No; Rec.No)
                 {
                     ToolTip = 'Specifies the value of the No field.', Comment = '%';
                     ApplicationArea = all;
+                    visible = false;
                 }
                 field("Order No"; Rec."Order No")
                 {
@@ -107,7 +108,7 @@ page 50005 "Bon de preparation"
                 ApplicationArea = all;
                 Promoted = true;
                 PromotedCategory = Process;
-                enabled = (rec.Statut = rec.Statut::"Créé") or (rec.Statut = rec.Statut::"En cours");
+                // enabled = (rec.Statut = rec.Statut::"Créé") or (rec.Statut = rec.Statut::"En cours");
                 trigger OnAction()
                 var
                     OrdrePrep: Record "Ordre de preparation";

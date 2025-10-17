@@ -87,7 +87,7 @@ report 50105 AvoirVente
 
 
                     column(i; "Document Line No.") { }
-                    column(No; SalesCreditLines."No.") { }
+                    column(No; reference) { } ////SalesCreditLines."No."
                     column(Description; SalesCreditLines.Description) { }
 
 
@@ -125,7 +125,8 @@ report 50105 AvoirVente
 
                     trigger OnAfterGetRecord()
                     var
-                    //  SHIPH: Record "Sales Shipment Header";
+                        //  SHIPH: Record "Sales Shipment Header";
+                        item: record item;
                     begin
                         /*   IF Doc0 <> "Document No." then
                                textDoc := 'Bon de livraison N° ' + "Document No."
@@ -142,6 +143,17 @@ report 50105 AvoirVente
                         txtMntTLettres := '';
                         MontTlettre."Montant en texte"(txtMntTLettres, TotalNet + totalTVA + SalesCrHeader."Stamp Amount");
                         // MontTlettre."Montant en texte"(txtMntTLettres, TotalNet + totalTVA);
+
+                        reference := SalesCreditLines."No.";
+
+                        if SalesCreditLines.type = "Sales Line Type"::Item then begin
+
+                            if Vendorref then begin
+
+                                if item.get("Item No.") then
+                                    reference := item."Vendor Item No.";
+                            end
+                        end
 
                     end;
 
@@ -195,8 +207,11 @@ report 50105 AvoirVente
         {
             area(Content)
             {
-                group(GroupName)
+                field("Afficher référence fournisseur"; Vendorref)
                 {
+                    Caption = 'Afficher référence fournisseur';
+                    ApplicationArea = all;
+                    // Editable = IsEditable;
 
                 }
             }
@@ -295,6 +310,8 @@ report 50105 AvoirVente
         baseHT: Decimal;
         TotalRemise: Decimal;
         txtMntTLettres: text;
+        reference: code[20];
+        vendorref: Boolean;
 
 
 

@@ -73,6 +73,18 @@ pageextension 50139 CustomerCard extends "customer Card"
             }
 
         }
+        addafter("Credit Limit (LCY)")
+        {
+            field("Encours Restant"; rec.CalcRestant)
+            {
+                ApplicationArea = all;
+                Editable = false;
+                /*  trigger OnDrillDown()
+                 begin
+                     rec.ShowCalcRestant;
+                 end; */
+            }
+        }
 
         addafter("SIREN No.")
         {
@@ -133,5 +145,7 @@ pageextension 50139 CustomerCard extends "customer Card"
             Visible = false;
         }
     }
+
+
 
 }

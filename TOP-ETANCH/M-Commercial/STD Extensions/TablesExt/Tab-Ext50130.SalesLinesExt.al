@@ -295,7 +295,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
     var
         OrdrePrep: Record "Ordre de preparation";
     begin
-        if "Document Type" = "Document Type"::Order then begin
+        if (("Document Type" = "Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice)) and (type = "Sales Line Type"::item) then begin
             OrdrePrep.SetRange("Order No", "Document No.");
             //OrdrePrep.SetFilter(Statut, '<>%1', OrdrePrep.Statut::"Créé");
             if OrdrePrep.FindFirst() then

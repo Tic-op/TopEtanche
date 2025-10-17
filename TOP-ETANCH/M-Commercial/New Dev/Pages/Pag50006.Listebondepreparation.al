@@ -11,6 +11,9 @@ page 50006 "Liste bon de préparation"
     CardPageId = "Bon de preparation";
     UsageCategory = Lists;
     Editable = false;
+    InsertAllowed = false;
+    ModifyAllowed = false;
+    DeleteAllowed = false;
 
     layout
     {
@@ -51,6 +54,15 @@ page 50006 "Liste bon de préparation"
                 }
                 field("Creation date"; Rec."Creation date")
                 { ApplicationArea = all; }
+                field("Date début préparation"; Rec."Date début préparation")
+                {
+                    ApplicationArea = all;
+                }
+                Field("Nom demandeur"; Rec."Nom demandeur")
+                { ApplicationArea = all; }
+                field("Num document validé"; Rec."Num document validé")
+                { ApplicationArea = all; }
+
 
 
             }

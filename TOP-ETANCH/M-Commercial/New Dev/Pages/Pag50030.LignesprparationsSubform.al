@@ -17,7 +17,7 @@ page 50030 "Lignes préparations Subform"
         {
             repeater(General)
             {
-                Enabled = (Rec.Statut = REc.Statut::"Créé") or (rec.Statut = rec.Statut::"En cours");
+                //  Enabled = (Rec.Statut = REc.Statut::"Créé") or (rec.Statut = rec.Statut::"En cours");
                 field("Document No."; Rec."Document No.")
                 {
                     ToolTip = 'Specifies the value of the Document No. field.', Comment = '%';

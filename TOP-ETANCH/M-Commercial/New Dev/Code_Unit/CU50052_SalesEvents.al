@@ -180,7 +180,7 @@ codeunit 50052 SalesEvents
         // Cust.SetLoadFields("No."); Cust.calcrestant ne fonctionne plus je pense qu'il faut importer tout les champs que calcrestant() utilise car la procedure s'execute au niveu du record pas la table
         Cust.get(SalesHeader."Sell-to Customer No.");
         SalesHeader.CalcFields("Amount Including VAT");
-        if (SalesHeader."Amount Including VAT" + SalesHeader."Stamp Amount") > cust.CalcRestant() then Error('Montant supérieur aux solde client');
+        if (SalesHeader."Amount Including VAT" + SalesHeader."Stamp Amount") > cust.CalcRestant() then Error('Dépassement plafond autorisé');
 
 
 

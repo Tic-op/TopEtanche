@@ -123,11 +123,11 @@ tableextension 50140 CustomerExtension extends Customer
          if (Blocked <> Blocked::" ") and ("Cause du blocage" = "Cause du blocage"::"Non bloqué") then begin
              "Cause du blocage" := "Cause du blocage"::Autres;
              //  Modify();
-         end;
+         end;*/
 
-         if rec."Credit Limit (LCY)" <= 0 then
+        if rec."Credit Limit (LCY)" <= 0 then
              exit(99999999);
-  */
+
 
 
 

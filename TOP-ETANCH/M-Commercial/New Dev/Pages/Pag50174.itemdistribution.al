@@ -379,7 +379,7 @@ page 50174 "itemdistribution"
 
                 stockmin.SetRange(Item, Rec.Item);
                 //stockmin.SetRange(Location, CurrentSourceLocation);
-                stockmin.SetRange(Location, TransferHeader."Transfer-to Code");
+                stockmin.SetRange(Location, TransferHeader."Transfer-from Code");
 
                 /* if Rec."Bin Code" <> '' then
                     stockmin.SetRange("Bin code", Rec."Bin Code"); */
@@ -422,6 +422,7 @@ page 50174 "itemdistribution"
                             Error('Le Bin Code %1 n''existe pas dans le magasin %2.', Rec."Bin Code", CurrentSourceLocation);
                         TransferLine.Validate("Transfer-from Bin Code", Rec."Bin Code");
                     end;
+                    Message(TransferLine."Line No.".ToText());
 
                     TransferLine.Insert(true);
                 end

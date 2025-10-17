@@ -19,6 +19,22 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
         {
             Visible = true;
         }
+        modify("Qty. to ship")
+        {
+            visible = false;
+        }
+        modify("Qty. to Receive")
+        {
+            Visible = false;
+        }
+        modify("Receipt Date")
+        { visible = false; }
+        modify("Shipment Date") { visible = false; }
+        modify("Reserved Quantity Inbnd.") { visible = false; }
+        modify("Reserved Quantity Outbnd.") { visible = false; }
+        modify("Reserved Quantity Shipped") { visible = false; }
+
+
 
     }
     actions
@@ -112,6 +128,19 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
             }
         }
     }
+    trigger OnModifyRecord(): Boolean
+    var
+        OrdrePrep: Record "Ordre de preparation";
+
+    begin
+        OrdrePrep.setrange("document type", OrdrePrep."document type"::Transfert);
+        OrdrePrep.SetRange("Order No", rec."Document No.");
+        // OrdrePrep.setrange(Statut,OrdrePrep.Statut::"Créé");
+        if OrdrePrep.Findset() then begin
+            //if OrdrePrep.Statut = OrdrePrep.Statut::"Créé" then
+            Error('Impossible de modifier cette ligne, un bon de préparation associé existe, penser à supprimer le bon de préparation');
+        end;
+    end;
     procedure lastlineNo(): integer
     var
         transferL: record "Transfer Line";

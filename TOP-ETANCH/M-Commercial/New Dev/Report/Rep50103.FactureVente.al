@@ -98,7 +98,7 @@ report 50103 FactureVente
 
 
 
-                column(No; "No.") { }
+                column(No; reference) { }
                 column(VAT__; "VAT %") { }
 
                 column(Item_Reference_No_; reference)
@@ -193,6 +193,14 @@ report 50103 FactureVente
                                         // CurrReport.Skip();
                                         LastArticleCode := "No."; */
                     CalculerTotal();
+                    if Type = "Sales Line Type"::Item then begin
+
+                        if Vendorref then begin
+
+                            if item.get("No.") then
+                                reference := item."Vendor Item No.";
+                        end
+                    end
                 end;
             }
 
@@ -226,8 +234,12 @@ report 50103 FactureVente
         {
             area(Content)
             {
-                group(GroupName)
+                field("Afficher référence fournisseur"; Vendorref)
                 {
+                    Caption = 'Afficher référence fournisseur';
+                    ApplicationArea = all;
+                    // Editable = IsEditable;
+
                 }
             }
         }
@@ -327,4 +339,5 @@ report 50103 FactureVente
         reference: Code[20];
 
         TotalNet: Decimal;
+        vendorref: Boolean;
 }

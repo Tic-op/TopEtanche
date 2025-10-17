@@ -5,6 +5,7 @@ using Microsoft.Foundation.Company;
 using Microsoft.Sales.Customer;
 using Pharmatec_Ticop.Pharmatec_Ticop;
 using Microsoft.CRM.Team;
+using Microsoft.Inventory.Item;
 
 report 50002 BL
 {
@@ -88,7 +89,7 @@ report 50002 BL
                 column(MontantNet; MontantNet)
                 {
                 }
-                column(No; "No.") { }
+                column(No; reference) { }
 
                 column(totalTVA; totalTVA)
                 {
@@ -123,6 +124,7 @@ report 50002 BL
                 trigger OnAfterGetRecord()
                 var
                     cust: Record Customer;
+                    item: Record Item;
                 begin
                     if "Sales Shipment Line"."No." = '' then
                         CurrReport.Skip();
@@ -146,6 +148,15 @@ report 50002 BL
                     MontTlettre."Montant en texte"(txtMntTLettres, MontantNet2);
 
 
+                    reference := "No.";
+                    if Type = type::Item then begin
+
+                        if Vendorref then begin
+
+                            if item.get("No.") then
+                                reference := item."Vendor Item No.";
+                        end
+                    end
 
 
                 end;
@@ -196,6 +207,13 @@ report 50002 BL
         {
             area(content)
             {
+                field("Afficher référence fournisseur"; Vendorref)
+                {
+                    Caption = 'Afficher référence fournisseur';
+                    ApplicationArea = all;
+                    // Editable = IsEditable;
+
+                }
 
             }
         }
@@ -225,6 +243,7 @@ report 50002 BL
         SalesPersonPhone: text;
         Solde: decimal;
         reference: Code[20];
+        Vendorref: Boolean;
 
 
 }
