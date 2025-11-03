@@ -20,59 +20,16 @@ tableextension 50005 Itemext extends Item
     fields
     {
 
-        field(50000; Salesperson; Code[20])
-        {
+        /*  field(50000; Salesperson; Code[20])
+         {
 
-            Caption = 'salesperson';
-            FieldClass = FlowFilter;
-
-
-        }
+             Caption = 'salesperson';
+             FieldClass = FlowFilter;
 
 
-        field(50001; Famille; Code[20])
-        {
-            Caption = 'Famille';
-            DataClassification = ToBeClassified;
-            TableRelation = "Item Category"."Code" where("Parent Category" = const(''));
+         } */
 
-            trigger OnValidate()
-            begin
 
-                if (xRec.Famille <> Famille) then begin
-                    "Sous-famille 1" := '';
-                    "Sous-famille 2" := '';
-                end;
-
-                UpdateItemCategory();
-            end;
-        }
-        field(50002; "Sous-famille 1"; Code[20])
-        {
-            Caption = 'Sous-famille 1';
-            DataClassification = ToBeClassified;
-            TableRelation = "Item Category"."Code" where("Parent Category" = field(Famille));
-            trigger OnValidate()
-            begin
-                if (xRec."Sous-famille 1" <> "Sous-famille 1") then begin
-                    "Sous-famille 2" := '';
-                end;
-
-                UpdateItemCategory()
-            end;
-
-        }
-        field(50003; "Sous-famille 2"; Code[20])
-        {
-            Caption = 'Sous-famille 2';
-            DataClassification = ToBeClassified;
-            TableRelation = "Item Category"."Code" where("Parent Category" = field("Sous-famille 1"));
-
-            trigger OnValidate()
-            begin
-                UpdateItemCategory()
-            end;
-        }
 
 
         field(50006; "Qty. to ship on order line"; Decimal)
@@ -227,10 +184,6 @@ tableextension 50005 Itemext extends Item
     }
     keys
     {
-        key(Key2; famille, "Sous-famille 1", "Sous-famille 2")
-        {
-
-        }
 
         //key(KeyOrigin; "Item Origin") { }
 
@@ -238,15 +191,15 @@ tableextension 50005 Itemext extends Item
 
 
 
-    local procedure UpdateItemCategory()
-    begin
-        if Famille <> '' then
-            "Item Category Code" := Famille;
-        if "Sous-famille 1" <> '' then
-            "Item Category Code" := "Sous-famille 1";
-        if "Sous-famille 2" <> '' then
-            "Item Category Code" := "Sous-famille 2";
-    end;
+    /*  local procedure UpdateItemCategory()
+     begin
+         if Famille <> '' then
+             "Item Category Code" := Famille;
+         if "Sous-famille 1" <> '' then
+             "Item Category Code" := "Sous-famille 1";
+         if "Sous-famille 2" <> '' then
+             "Item Category Code" := "Sous-famille 2";
+     end; */
 
 
     procedure ControlUnitéDépot(Qty: decimal; locationCode: code[10]);

@@ -1,6 +1,6 @@
 namespace TopEtanch.TopEtanch;
 
-page 50004 "Type Attribut"
+/* page 50004 "Type Attribut"
 {
     ApplicationArea = All;
     Caption = 'Catégorie Attribut';
@@ -28,4 +28,4 @@ page 50004 "Type Attribut"
             }
         }
     }
-}
+} */

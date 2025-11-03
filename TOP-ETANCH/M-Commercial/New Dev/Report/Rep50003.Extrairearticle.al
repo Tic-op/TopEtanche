@@ -14,7 +14,7 @@ report 50003 "Extraire article"
     {
         dataitem(Item; Item)
         {
-            RequestFilterFields = "No.", Famille, Description;
+            RequestFilterFields = "No.", Description;
             trigger OnAfterGetRecord()
             var
                 TransferLine: Record "Transfer Line";

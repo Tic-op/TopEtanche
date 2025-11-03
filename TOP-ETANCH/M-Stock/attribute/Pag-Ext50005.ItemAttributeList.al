@@ -16,13 +16,13 @@ pageextension 50005 "Item Attribute List" extends "Item Attributes"
             }
 
         }
-        addafter(Name)
-        {
-            field("Type Attribut"; Rec."Type Attribut")
-            {
-                ApplicationArea = all;
+        /*   addafter(Name)
+          {
+              field("Type Attribut"; Rec."Type Attribut")
+              {
+                  ApplicationArea = all;
 
-            }
-        }
+              }
+          } */
     }
 }

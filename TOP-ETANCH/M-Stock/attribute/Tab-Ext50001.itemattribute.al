@@ -2,7 +2,7 @@ namespace TopEtanch.TopEtanch;
 
 using Microsoft.Inventory.Item.Attribute;
 
-tableextension 50001 "item attribute" extends "Item Attribute"
+/* tableextension 50001 "item attribute" extends "Item Attribute"
 {
     fields
     {
@@ -11,6 +11,10 @@ tableextension 50001 "item attribute" extends "Item Attribute"
             Caption = 'Catégorie Attribut';
             DataClassification = ToBeClassified;
             TableRelation = "Catégorie Attribut";
+        }
+        field(50001; Description; Text[100])
+        {
+
         }
 
     }
@@ -52,7 +56,12 @@ tableextension 50006 "item attribute Value Selection" extends "Item Attribute Va
             DataClassification = ToBeClassified;
             TableRelation = "Catégorie Attribut";
         }
+        field(50001; Description; text[100])
+        {
+        }
+
+
 
     }
-}
+} */
 

@@ -1,4 +1,4 @@
-table 50002 "Catégorie Attribut"
+/* table 50002 "Catégorie Attribut"
 {
     Caption = 'Type Attribut';
     DataClassification = ToBeClassified;
@@ -22,4 +22,4 @@ table 50002 "Catégorie Attribut"
             Clustered = true;
         }
     }
-}
+} */

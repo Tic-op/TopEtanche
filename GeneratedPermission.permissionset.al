@@ -1,8 +1,8 @@
 permissionset 50000 GeneratedPermission
 {
     Assignable = true;
-    Permissions = tabledata "Catégorie Attribut" = RIMD,
-        tabledata ContactApprobation = RIMD,
+    Permissions = //tabledata "Catégorie Attribut" = RIMD,
+ tabledata ContactApprobation = RIMD,
         tabledata "Importation offre prix" = RIMD,
         tabledata "Inventory Entry" = RIMD,
         tabledata "Inventory header" = RIMD,
@@ -15,7 +15,7 @@ permissionset 50000 GeneratedPermission
         tabledata "Ordre de preparation" = RIMD,
         tabledata PurchasePlanning = RIMD,
         tabledata "Reception Entry" = RIMD,
-        table "Catégorie Attribut" = X,
+    // table "Catégorie Attribut" = X,
         table ContactApprobation = X,
         table "Importation offre prix" = X,
         table "Inventory Entry" = X,
@@ -98,7 +98,7 @@ permissionset 50000 GeneratedPermission
         page salesLine = X,
         page ScanCode = X,
         page "Stock min d'un article par mag" = X,
-        page "Type Attribut" = X,
+    // page "Type Attribut" = X,
         page "Valeur Stock" = X,
         page "XXXX Yasser" = X,
         tabledata HistVenteArticle = RIMD,
@@ -118,5 +118,11 @@ permissionset 50000 GeneratedPermission
         codeunit "PréparationEvent" = X,
         page "KPI Préparation" = X,
         page "Lignes préparations List" = X,
-        page "Lignes préparations Subform" = X;
+        page "Lignes préparations Subform" = X,
+        tabledata "Fiche matériaux" = RIMD,
+        tabledata "Propriété matériaux" = RIMD,
+        table "Fiche matériaux" = X,
+        table "Propriété matériaux" = X,
+        page "Fiche matériaux" = X,
+        page "Propriété matériaux" = X;
 }

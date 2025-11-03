@@ -9,7 +9,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.0.20283.0</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2025-10-16T16:18:17.4108114Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2025-10-22T15:30:35.2855605Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -50,14 +50,14 @@
                                     <TextRun>
                                       <Value>N° Article:</Value>
                                       <Style>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
                                       <Value>=Fields!item_No_.Value</Value>
                                       <Style>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -88,14 +88,14 @@
                                     <TextRun>
                                       <Value>Description: </Value>
                                       <Style>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>6pt</FontSize>
                                         <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
                                       <Value>=Fields!description.Value</Value>
                                       <Style>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>6pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -103,9 +103,9 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>0.7349in</Top>
+                              <Top>0.67934in</Top>
                               <Left>0.08326in</Left>
-                              <Height>0.14444in</Height>
+                              <Height>0.17222in</Height>
                               <Width>2.2423in</Width>
                               <ZIndex>1</ZIndex>
                               <Style>
@@ -127,14 +127,14 @@
                                     <TextRun>
                                       <Value>Quantité:          </Value>
                                       <Style>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>7pt</FontSize>
                                         <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
                                       <Value>=Fields!Qty.Value</Value>
                                       <Style>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -166,14 +166,14 @@
                                     <TextRun>
                                       <Value>Magasin: </Value>
                                       <Style>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>6pt</FontSize>
                                         <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
                                       <Value>=Fields!Magasin.Value</Value>
                                       <Style>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>6pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -183,7 +183,7 @@
                               <rd:DefaultName>Textbox18</rd:DefaultName>
                               <Top>0.87934in</Top>
                               <Left>0.08326in</Left>
-                              <Height>0.13889in</Height>
+                              <Height>0.16667in</Height>
                               <Width>1.04948in</Width>
                               <ZIndex>3</ZIndex>
                               <Style>
@@ -205,14 +205,14 @@
                                     <TextRun>
                                       <Value>Emplacement: </Value>
                                       <Style>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>6pt</FontSize>
                                         <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
                                       <Value>=Fields!Bin_Code.Value</Value>
                                       <Style>
-                                        <FontSize>5pt</FontSize>
+                                        <FontSize>6pt</FontSize>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
@@ -220,7 +220,7 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>1.01823in</Top>
+                              <Top>1.07379in</Top>
                               <Left>0.08326in</Left>
                               <Height>0.15in</Height>
                               <Width>1.21807in</Width>
@@ -423,6 +423,7 @@
                             </Border>
                           </Style>
                         </Rectangle>
+                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>
