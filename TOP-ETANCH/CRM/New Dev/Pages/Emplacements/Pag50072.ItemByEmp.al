@@ -15,7 +15,7 @@ page 50072 ItemByEmp
     EntitySetName = 'ItemByEmp';
     PageType = API;
     SourceTable = "Bin Content";
-
+    ODataKeyFields = SystemId;
     layout
     {
         area(Content)

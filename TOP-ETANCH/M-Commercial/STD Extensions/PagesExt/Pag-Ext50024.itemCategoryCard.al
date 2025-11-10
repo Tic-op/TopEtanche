@@ -19,11 +19,11 @@ pageextension 50024 itemCategoryCard extends "Item Category Card"
             }
 
             field("Default Depot"; Rec."Default Depot") { ApplicationArea = all; }
-            field("Fiche matériaux"; Rec."Fiche matériaux")
+           /*  field("Fiche matériaux"; Rec."Fiche matériaux")
             {
                 enabled = rec.Level = rec.Level::Type;
                 ApplicationArea = all;
-            }
+            } */
         }
     }
     Actions
@@ -44,7 +44,7 @@ pageextension 50024 itemCategoryCard extends "Item Category Card"
 
             }
 
-            action(Extraire_attribut_matériaux)
+           /*  action(Extraire_attribut_matériaux)
             {
                 caption = 'Extraire attributs matériaux';
                 ApplicationArea = all;
@@ -99,7 +99,7 @@ pageextension 50024 itemCategoryCard extends "Item Category Card"
 
 
                 end;
-            }
+            } */
         }
     }
 }

@@ -15,6 +15,7 @@ page 50011 Reclassement
     EntitySetName = 'IJLS';
     PageType = API;
     SourceTable = "Item Journal Line";
+    ODataKeyFields = SystemId;
 
     layout
     {
@@ -90,6 +91,7 @@ page 50011 Reclassement
         Rec."Journal Batch Name" := 'DEFAUT';
         Rec."Entry Type" := Rec."Entry Type"::Transfer;
         Rec."Document Date" := Today;
+
 
 
         LastLine.SetRange("Journal Template Name", Rec."Journal Template Name");

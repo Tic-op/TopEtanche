@@ -172,6 +172,11 @@ tableextension 50005 Itemext extends Item
 
             DecimalPlaces = 0 : 3;
         }
+        field(50201;"Prix minimal";decimal){
+
+            
+        }
+        
         modify("Base Unit of Measure")
         {
             trigger OnAfterValidate()

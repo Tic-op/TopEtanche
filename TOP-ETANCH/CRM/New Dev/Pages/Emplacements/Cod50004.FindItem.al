@@ -88,4 +88,6 @@ codeunit 50004 FindItemEmplacements
         exit('Aucun résultat trouvé pour: ' + Search);
     end;
 
+
+
 }

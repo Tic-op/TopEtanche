@@ -20,18 +20,18 @@ tableextension 50023 itemcategoryExt extends "Item Category"
             OptionMembers = "",Famille,Catégorie,Produit,"Type";
             trigger OnValidate()
             begin
-                if level <> Level::Type then begin
+               /*  if level <> Level::Type then begin
                     "Fiche matériaux" := '';
-                    Modify();
-                end
+                    Modify(); */
+                end;
 
-            end;
+            //end;
         }
-        field(50002; "Fiche matériaux"; Code[50])
+      /*   field(50002; "Fiche matériaux"; Code[50])
         {
             TableRelation = if (Level = const("Type")) "Fiche matériaux".Code;
 
-        }
+        } */
 
 
 
@@ -43,16 +43,7 @@ tableextension 50023 itemcategoryExt extends "Item Category"
         key(DefaultDepot; "Default Depot") { }
     }
 
-    procedure applyattributMatériaux()
-    Var
-        ItemAttribut: Record "Item Attribute";
-        itemarrtibuteValue: record "Item Attribute Value";
-        ItemattributeMapping: record "Item Attribute Value Mapping";
-
-    begin
-
-
-    end;
+   
 
 
 }

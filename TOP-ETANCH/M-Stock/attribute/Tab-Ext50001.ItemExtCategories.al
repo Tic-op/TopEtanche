@@ -57,7 +57,14 @@ tableextension 50001 ItemExt_Categories extends Item
                
             end;
         }
-     
-      
+        field(50004; "Fiche matériaux"; Code[50])
+        {
+           TableRelation ="Fiche matériaux".Code;
+
+        }
+        Field(50005;"Valeur attribut";text[250])
+        {
+            
+        }
     }
 }

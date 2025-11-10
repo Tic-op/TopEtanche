@@ -18,16 +18,20 @@ using Microsoft.Inventory.Item.Attribute;
         }
 
     }
-}
+} */
 tableextension 50003 "item attribute Value" extends "Item Attribute Value"
 {
     fields
     {
-        field(50000; "Type Attribut"; Code[25])
+       /*  field(50000; "Type Attribut"; Code[25])
         {
             Caption = 'Catégorie Attribut';
             DataClassification = ToBeClassified;
             TableRelation = "Catégorie Attribut";
+        } */
+        field(50001;"Null Value";Boolean)
+        { 
+            
         }
 
     }
@@ -36,16 +40,31 @@ tableextension 50004 "item attribute Mapping" extends "Item Attribute Value Mapp
 {
     fields
     {
-        field(50000; "Type Attribut"; Code[25])
+        field(50000;"Valeur attribut";Text[250])
         {
-            Caption = 'Catégorie Attribut';
+            Caption = 'Valeur Attribut';
             DataClassification = ToBeClassified;
-            TableRelation = "Catégorie Attribut";
+            TableRelation = "Item Attribute Value".Value where("Attribute ID" =field("Item Attribute ID"),ID = field("Item Attribute Value ID"));
 
         }
 
     }
+    keys {
+
+        key(keyvalue;"Valeur attribut"){}
+    }
+    trigger OnAfterInsert() var 
+    IAV : record "Item Attribute Value";
+     begin
+        IAV.get("Item Attribute ID","Item Attribute Value ID");
+        "Valeur attribut" := Iav.Value;
+
+
+    end;
+
+    
 }
+/*
 tableextension 50006 "item attribute Value Selection" extends "Item Attribute Value Selection"
 {
     fields

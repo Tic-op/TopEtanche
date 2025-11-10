@@ -2,12 +2,13 @@ namespace TopEtanch.TopEtanch;
 
 using Microsoft.Inventory.Item;
 using BSPCloud.BSPCloud;
+using Microsoft.Inventory.Item.Attribute;
 
 pageextension 50010 "Item Card" extends "Item Card"
 {
     layout
 
-    {
+    {   
         addlast(InventoryGrp)
         {
             field("Unité de Dépot"; Rec."Unité de Dépot")
@@ -119,11 +120,21 @@ pageextension 50010 "Item Card" extends "Item Card"
             }
 
         }
-
+         modify(Inventory)
+        { trigger OnAssistEdit() begin 
+            exit;
+        end;
+           
+        }
+        addafter("Unit Price") {
+            field("Prix minimal";Rec."Prix minimal")
+            {ApplicationArea = all ;}
+        }
+ 
     }
 
     actions
-    {
+    {  
 
         addbefore(Navigation_Item)
         {

@@ -43,7 +43,7 @@ moveafter("Vendor Name";"Vendor Item No.")
     
     begin 
     if REc.FindSet() then 
-    vendor.SetLoadFields(Name);
+    vendor.SetLoadFields("No.",Name);
     repeat 
     if vendor.get(rec."Vendor No.")then begin  rec."Vendor Name" := vendor.name;
     rec.Modify();end
@@ -53,9 +53,13 @@ moveafter("Vendor Name";"Vendor Item No.")
     end;
 
             }
+
+          
         }
     }
-  
-    
+ 
+
+
+ 
 }
 
