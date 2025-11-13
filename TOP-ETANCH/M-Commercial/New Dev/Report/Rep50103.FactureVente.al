@@ -93,7 +93,7 @@ report 50103 FactureVente
             dataitem("SalesInvLines"; "Sales Invoice Line")
             {
                 DataItemLink = "Document No." = FIELD("No.");
-                //DataItemLinkReference = "Sales Invoice Header";
+                DataItemLinkReference = "Sales Invoice Header";
                 DataItemTableView = where(type = filter(item));
 
 
@@ -200,6 +200,7 @@ report 50103 FactureVente
                             if item.get("No.") then
                                 reference := item."Vendor Item No.";
                         end
+                        else reference := "No.";
                     end
                 end;
             }

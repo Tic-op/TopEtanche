@@ -44,28 +44,39 @@ tableextension 50004 "item attribute Mapping" extends "Item Attribute Value Mapp
         {
             Caption = 'Valeur Attribut';
             DataClassification = ToBeClassified;
-            TableRelation = "Item Attribute Value".Value where("Attribute ID" =field("Item Attribute ID"),ID = field("Item Attribute Value ID"));
+           // TableRelation = "Item Attribute Value".Value where("Attribute ID" =field("Item Attribute ID"),ID = field("Item Attribute Value ID"));
 
         }
+      /*   modify("Item Attribute Value ID"){
+            trigger OnAfterValidate() 
+            var 
+             IAV : record "Item Attribute Value";
+     begin
+        if IAV.get("Item Attribute ID","Item Attribute Value ID") then 
+        "Valeur attribut" := Iav.Value;
+        Modify();
+    end;
+        } */
+        
 
     }
     keys {
 
         key(keyvalue;"Valeur attribut"){}
     }
-    trigger OnAfterInsert() var 
+   trigger OnafterInsert() var 
     IAV : record "Item Attribute Value";
      begin
-        IAV.get("Item Attribute ID","Item Attribute Value ID");
-        "Valeur attribut" := Iav.Value;
-
-
+       IAV.get("Item Attribute ID","Item Attribute Value ID")  ;
+        "Valeur attribut" := Iav.value;
+        Modify();
     end;
+   
 
     
 }
-/*
-tableextension 50006 "item attribute Value Selection" extends "Item Attribute Value Selection"
+
+/*tableextension 50006 "item attribute Value Selection" extends "Item Attribute Value Selection"
 {
     fields
     {

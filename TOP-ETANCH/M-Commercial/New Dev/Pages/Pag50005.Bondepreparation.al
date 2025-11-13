@@ -70,6 +70,7 @@ page 50005 "Bon de preparation"
                 {
                     ApplicationArea = all;
                     Caption = 'Nombre d''impression';
+                    editable=false ;
                 }
 
             }

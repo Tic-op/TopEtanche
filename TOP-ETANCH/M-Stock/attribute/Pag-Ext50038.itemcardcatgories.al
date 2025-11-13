@@ -45,6 +45,7 @@ pageextension 50038 "item card catégories" extends "Item Card"
         {
             ApplicationArea= all;
               Promoted = true ;
+              //visible=false ;
                 PromotedCategory = Process ;
             trigger OnAction() var IAVM : Record "Item Attribute Value Mapping";
                   ia : record "Item Attribute Value" ;
@@ -52,6 +53,19 @@ pageextension 50038 "item card catégories" extends "Item Card"
 
                 iavm.deleteall;
              end;
+        }
+        action(généraliserAttribut_Type)
+        {
+
+            ApplicationArea= all ;
+            Promoted = true ;
+            PromotedCategory = process ;
+            trigger OnAction() 
+            var Cu : codeunit "Attribut management" ;
+            begin 
+                Cu."généraliserAttributPardefaut"(Rec);
+
+            end;
         }
          action(Extraire_attribut_matériaux)
             {

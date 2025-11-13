@@ -57,6 +57,7 @@ pageextension 50022 "Posted Purchase Receipt" extends "Posted Purchase Receipt"
                     location: record Location;
                     PurchRcLine: Record "Purch. Rcpt. Line";
                     TransferH: record "Transfer Header";
+                    item : Record item ;
 
                 begin
                     Rec.CalcFields(Transfer);
@@ -67,12 +68,26 @@ pageextension 50022 "Posted Purchase Receipt" extends "Posted Purchase Receipt"
                     itemCategory.SetCurrentKey("Default Depot");
                     if itemCategory.findfirst() then
                         repeat
+                            PurchRcLine.setrange(Type , PurchRcLine.Type::Item);
                             PurchRcLine.setrange("Document No.", rec."No.");
                             PurchRcLine.SetRange("Item Category Code", itemCategory.code);
                             if PurchRcLine.findfirst() then
                                 repeat
-
-                                    insertTransferLine(Rec."No.", itemCategory."Default Depot", PurchRcLine);
+                                  
+                                    begin 
+                                         item.Get(PurchRcLine."No.");
+                                         if item."Default depot"<>'' then 
+                                         insertTransferLine(Rec."No.",item."Default depot",PurchRcLine)
+                                         else
+                                         begin 
+                                            if itemCategory."Default Depot"<>'' then 
+                                    insertTransferLine(Rec."No.", itemCategory."Default Depot", PurchRcLine)
+                                    else 
+                                          error('Dépot par défaut manquant au niveau de l''article');
+                                         end;
+                                           
+                                    end;
+                                   
 
 
                                 until PurchRcLine.Next() = 0;

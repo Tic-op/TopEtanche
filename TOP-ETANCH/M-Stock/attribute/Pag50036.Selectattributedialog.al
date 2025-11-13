@@ -19,6 +19,9 @@ page 50110 "Select Attribute Dialog"
                 
                 ToolTip = 'Choisis l’attribut sur lequel tu veux trier les articles.';
             }
+            field(Libéllé;GetLabel()){
+                Editable = false ;
+            }
         }
     }
 
@@ -34,5 +37,16 @@ page 50110 "Select Attribute Dialog"
         exit(IA.ID); */
         exit(SelectedAttribute);
     end;
+
+    local procedure GetLabel() : Text 
+    var ItemAtt : Record "Item Attribute" ;
+    begin
+        if ItemAtt.get(SelectedAttribute) then 
+        exit(ItemAtt.Name) ;
+        exit('') ;
+
+
+    end;
+    
 }
 

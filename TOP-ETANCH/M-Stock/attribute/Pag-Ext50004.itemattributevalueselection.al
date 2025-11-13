@@ -2,7 +2,7 @@ namespace TopEtanch.TopEtanch;
 
 using Microsoft.Inventory.Item.Attribute;
 
-pageextension 50054 "item attribute value selection" extends "Item Attribute Value List"
+pageextension 50054 "item attribute value editor" extends "Item Attribute Value Editor"
 {
     // InsertAllowed = false;
     //DeleteAllowed = false;
