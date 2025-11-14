@@ -334,6 +334,7 @@ page 50174 "itemdistribution"
         item: Record Item;
         "Qté par unité Sortie": decimal;
         "Qté réelle à transferer": decimal;
+        Locationtransit : record location ;
 
 
 
@@ -370,7 +371,10 @@ page 50174 "itemdistribution"
                     // TransferHeader."In-Transit Code" := CodeTransit();
                     TransferHeader."Source No." := Doc;
                     TransferHeader."Source Line No." := Line;
-                    TransferHeader."Direct Transfer" := true;
+                   // TransferHeader."Direct Transfer" := true;
+                    Locationtransit.setrange("Use As In-Transit",true);
+            Locationtransit.FindFirst() ;
+            TransferHeader.validate("In-Transit Code",Locationtransit.code);
                     TransferHeader.Insert(true);
                     TransferNo := TransferHeader."No.";
                     LastSourceLocation := CurrentSourceLocation;
@@ -422,7 +426,7 @@ page 50174 "itemdistribution"
                             Error('Le Bin Code %1 n''existe pas dans le magasin %2.', Rec."Bin Code", CurrentSourceLocation);
                         TransferLine.Validate("Transfer-from Bin Code", Rec."Bin Code");
                     end;
-                    Message(TransferLine."Line No.".ToText());
+                    //Message(TransferLine."Line No.".ToText());
 
                     TransferLine.Insert(true);
                 end

@@ -110,6 +110,7 @@ pageextension 50022 "Posted Purchase Receipt" extends "Posted Purchase Receipt"
     var
         TransferH: record "Transfer Header";
         TransferL: record "Transfer Line";
+        Locationtransit : record Location ;
 
     begin
 
@@ -123,7 +124,10 @@ pageextension 50022 "Posted Purchase Receipt" extends "Posted Purchase Receipt"
             TransferH.init();
             TransferH.validate("Transfer-from Code", PurchRcLine."Location Code");
             TransferH.Validate("Transfer-To Code", Location);
-            TransferH."Direct Transfer" := true;
+            //TransferH."Direct Transfer" := true;
+            Locationtransit.setrange("Use As In-Transit",true);
+            Locationtransit.FindFirst() ;
+            TransferH.validate("In-Transit Code",Locationtransit.code);
             TransferH.validate("Num récéption", PurchRcLine."Document No.");
             TransferH.insert(true);
 

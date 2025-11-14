@@ -190,11 +190,13 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
                 SalesH: Record "Sales Header";
                 OrdrePrep: Record "Ordre de preparation";
             begin
-                OrdrePrep.SetRange("Order No", "Document No.");
+               // OrdrePrep.SetRange("Order No", "Document No.");
                 //OrdrePrep.SetRange(Statut, OrdrePrep.Statut::"Créé"); ??? Nosense 
-                if OrdrePrep.FindFirst() then
-                    Error('Impossible de modifier le magasin, veuillez supprimer le bon préparation existant');
-
+                //if OrdrePrep.FindFirst() then
+                 //   Error('Impossible de modifier le magasin, veuillez supprimer le bon préparation existant');
+                 CalcFields("Preparé");
+                 if "Preparé" then 
+                 Error('Impossible de modifier le magasin, veuillez supprimer le bon préparation existant');
                 CheckQuantiy("Quantity (Base)");
                 CheckQuantiy("Qty. to Ship (Base)");
                 SalesH.Get("Document Type", "Document No.");
@@ -250,6 +252,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
     trigger OnAfterInsert()
     var //location : record location; 
         SalesH: record "Sales Header";
+        ORdreprep : Record "Ordre de preparation" ;
     begin
         SalesH.get("Document Type", "Document No.");
         if type = "Sales Line Type"::Item then
@@ -260,10 +263,14 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
             end;
         "Shipping No." := SalesH."Shipping No.";
 
-        SalesH.CalcFields("Bon de preparations");
+       /*  SalesH.CalcFields("Bon de preparations");
         if SalesH."Bon de preparations" > 0 then
             error('Impossible d''ajouter des lignes. Des préparations associées existent.');
-
+ */        
+         ORdreprep.setrange("Order No","Document No.");
+         ORdreprep.SetRange(Statut, ORdreprep.Statut::"Créé",ORdreprep.Statut::"En cours");
+         if ORdreprep.FindFirst() then 
+         error('veuillez préparer les préparations existantes avant d''ajouter des lignes') ;
     end;
 
     /* trigger OnBeforeInsert()
@@ -282,25 +289,32 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
     var
         OrdrePrep: Record "Ordre de preparation";
     begin
-        if "Document Type" = "Document Type"::Order then begin
+       /*  if "Document Type" = "Document Type"::Order then begin
             OrdrePrep.SetRange("Order No", "Document No.");
             if OrdrePrep.FindFirst() then begin
                 //if OrdrePrep.Statut = OrdrePrep.Statut::"Créé" then
-                Error('Impossible de modifier cette ligne, un bon de préparation est crée');
-            end;
-        end;
+                Error('Impossible de modifier cette ligne, veuillez supprimer le bon de préparation associé.');
+            end; */
+
+            CalcFields("Preparé");
+            if "Preparé" then 
+            Error('Impossible de modifier cette ligne, veuillez supprimer le bon de préparation associé.');
+        
     end;
 
     trigger OnDelete()
     var
         OrdrePrep: Record "Ordre de preparation";
     begin
-        if (("Document Type" = "Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice)) and (type = "Sales Line Type"::item) then begin
+      /*   if (("Document Type" = "Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice)) and (type = "Sales Line Type"::item) then begin
             OrdrePrep.SetRange("Order No", "Document No.");
             //OrdrePrep.SetFilter(Statut, '<>%1', OrdrePrep.Statut::"Créé");
             if OrdrePrep.FindFirst() then
-                Error('Impossible de supprimer cette ligne , un bon de préparation est en cours');
-        end;
+                Error('Impossible de supprimer cette ligne , veuillez supprimer le bon de préparation associé.');
+        end; */
+          CalcFields("Preparé");
+            if "Preparé" then 
+            Error('Impossible de supprimer cette ligne, veuillez supprimer le bon de préparation associé.');
     end;
 
 

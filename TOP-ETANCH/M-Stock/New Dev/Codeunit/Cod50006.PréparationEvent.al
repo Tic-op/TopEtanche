@@ -15,15 +15,16 @@ codeunit 50006 PréparationEvent
     OrdrePrep : record "Ordre de preparation" ;
     Lignepréparation : Record "Ligne préparation" ;
      LocationCode: Code[20];
+     incount : integer ;
    
 
     begin 
-       
-                 OrdrePrep.setrange("document type",DocumentType);
+               incount :=  0 ;
+               /*   OrdrePrep.setrange("document type",DocumentType);
                   OrdrePrep.SetRange("Order No",documentNo);
                     if OrdrePrep.FindFirst() then
                         Error('Un bon de préparation existe déjà pour %1 Numéro %2',DocumentType ,documentNo);
-
+ */
 
 
                     
@@ -50,7 +51,7 @@ codeunit 50006 PréparationEvent
                     if SalesLine.FindFirst() then
                         repeat
                             if SalesLine."Location Code" = '' then
-                                Error('Il faut avoir un magasin dans les lignes de commande', SalesLine."No.")
+                                Error('Il faut avoir un magasin dans les lignes du document', SalesLine."No.")
 
                         until SalesLine.Next() = 0;
 
@@ -61,9 +62,11 @@ codeunit 50006 PréparationEvent
                     if DocumentType = DocumentType::Commande then 
                       SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
                     SalesLine.SetRange("Document No.",documentNo);
+                    SalesLine.SetAutoCalcFields("Preparé");
 
                     if SalesLine.FindFirst() then
-                        repeat
+                        repeat 
+                            if SalesLine."Preparé" then continue ;
                             LocationCode := SalesLine."Location Code";
                             OrdrePrep.Reset();
                              if DocumentType = DocumentType ::Facture then 
@@ -72,6 +75,7 @@ codeunit 50006 PréparationEvent
                        OrdrePrep.SetRange("Document Type", DocumentType::Commande);
                             OrdrePrep.SetRange("Order No",documentNo);
                             OrdrePrep.SetRange("Magasin", LocationCode);
+                            OrdrePrep.setrange(Statut,OrdrePrep.Statut::"Créé",OrdrePrep.Statut::"En cours");
                             if not OrdrePrep.FindFirst() then begin
                                 OrdrePrep.Init();
                                 OrdrePrep."Order No" := documentNo;
@@ -85,8 +89,10 @@ codeunit 50006 PréparationEvent
                               //  OrdrePrep."document type" := OrdrePrep."document type"::Facture;
                                 //SalesSetup.Get();
                                 OrdrePrep.Insert(true);
+                                incount+=1 ;
                             end;
                         until SalesLine.Next() = 0;
+                        if incount>0 then 
                     Message('Un bon de préparation a été créé avec succés');
                   
                         end ;
@@ -107,6 +113,7 @@ codeunit 50006 PréparationEvent
                             OrdrePrep.setrange("document type",DocumentType::Transfert);
                             OrdrePrep.SetRange("Order No",documentNo);
                             OrdrePrep.SetRange("Magasin", LocationCode);
+                               OrdrePrep.setrange(Statut,OrdrePrep.Statut::"Créé",OrdrePrep.Statut::"En cours");
                             if not OrdrePrep.FindFirst() then begin
                                 OrdrePrep.Init();
                                 OrdrePrep."Order No" := documentNo;
@@ -156,12 +163,9 @@ codeunit 50006 PréparationEvent
                        "LignePréparation"."item No.":=TransfertLine."Item No.";
                        "LignePréparation".description:=TransfertLine.Description;
                        "LignePréparation".Qty:=TransfertLine."Quantity (Base)";
-                                                           "LignePréparation".Demandeur := "OrdrePréparation".Demandeur;
-                                                           "LignePréparation"."Nom demandeur" := "OrdrePréparation"."Nom demandeur";
-
-
-
-                                                           "LignePréparation".Insert();
+                       "LignePréparation".Demandeur := "OrdrePréparation".Demandeur;
+                       "LignePréparation"."Nom demandeur" := "OrdrePréparation"."Nom demandeur";
+                       "LignePréparation".Insert();
                        until TransfertLine.next= 0 ;
 
 
@@ -186,15 +190,17 @@ codeunit 50006 PréparationEvent
                        "LignePréparation"."Bin Code":= salesL."Bin Code";
                        "LignePréparation"."item No.":=salesL."No.";
                        "LignePréparation".description:=salesL.Description;
-                                                    "LignePréparation".Demandeur := "OrdrePréparation".Demandeur;
-                                                    "LignePréparation"."Nom demandeur" := "OrdrePréparation"."Nom demandeur";
+                       "LignePréparation".Demandeur := "OrdrePréparation".Demandeur;
+                       "LignePréparation"."Nom demandeur" := "OrdrePréparation"."Nom demandeur";
 
 
                                                     // "LignePréparation".Qty:=salesL."Quantity (Base)";
-                                                    if "LignePréparation"."Source type." = "LignePréparation"."Source type."::Facture then
-                                                        "LignePréparation".Qty := salesL."Qty. to Invoice (Base)";
-                          if "LignePréparation"."Source type."= "LignePréparation"."Source type."::Commande then 
+                        if "LignePréparation"."Source type." = "LignePréparation"."Source type."::Facture then
+                        "LignePréparation".Qty := salesL."Qty. to Invoice (Base)";
+                        if "LignePréparation"."Source type."= "LignePréparation"."Source type."::Commande then 
                          "LignePréparation".Qty := salesL."Qty. to Ship (Base)";
+                         salesL.CalcFields("Preparé");
+                         if not SalesL."Preparé" then 
                         "LignePréparation".Insert();
                        until salesL.next= 0 ;
         

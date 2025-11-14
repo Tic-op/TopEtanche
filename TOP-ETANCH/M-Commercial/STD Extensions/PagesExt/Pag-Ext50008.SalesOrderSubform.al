@@ -522,16 +522,21 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
 
     begin
-        SalesH.get(Documenttype, documentno);
+       /*  SalesH.get(Documenttype, documentno);
         SalesH.CalcFields("Bon de preparations");
         if SalesH."Bon de preparations" > 0 then begin
 
-            message('Impossible de distribuer les lignes de ce document, des préparations associées existent.');
-            exit;
-        end;
+           
+        end; */
 
 
         SalesL.get(Documenttype, documentno, Lineno);
+        SalesL.CalcFields("Preparé");
+        if SalesL."Preparé" then begin 
+         message('Impossible de distribuer cette ligne, des préparations associées existent.');
+            exit;
+        end ;
+
         if not Item.get(SalesL."No.") then exit; // AM 190925
         itemdist.SetRange("Source Doc type", Documenttype);
         itemdist.setrange("Source Doc No.", documentno);
