@@ -9,7 +9,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.0.20283.0</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2025-10-22T15:30:35.2855605Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2025-11-14T15:37:46.5833500Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -43,6 +43,7 @@
                           <ReportItems>
                             <Textbox Name="Textbox18">
                               <CanGrow>true</CanGrow>
+                              <CanShrink>true</CanShrink>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -65,9 +66,9 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>0.48629in</Top>
+                              <Top>0.43073in</Top>
                               <Left>0.08326in</Left>
-                              <Height>0.17917in</Height>
+                              <Height>0.17916in</Height>
                               <Width>1.04948in</Width>
                               <Style>
                                 <Border>
@@ -103,9 +104,9 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>0.67934in</Top>
+                              <Top>0.6099in</Top>
                               <Left>0.08326in</Left>
-                              <Height>0.17222in</Height>
+                              <Height>0.16994in</Height>
                               <Width>2.2423in</Width>
                               <ZIndex>1</ZIndex>
                               <Style>
@@ -120,6 +121,7 @@
                             </Textbox>
                             <Textbox Name="Textbox20">
                               <CanGrow>true</CanGrow>
+                              <CanShrink>true</CanShrink>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -142,10 +144,10 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>0.48994in</Top>
-                              <Left>1.86633in</Left>
-                              <Height>0.17779in</Height>
-                              <Width>0.76686in</Width>
+                              <Top>0.77349in</Top>
+                              <Left>0.08326in</Left>
+                              <Height>0.13363in</Height>
+                              <Width>1.07449in</Width>
                               <ZIndex>2</ZIndex>
                               <Style>
                                 <Border>
@@ -159,6 +161,7 @@
                             </Textbox>
                             <Textbox Name="Textbox21">
                               <CanGrow>true</CanGrow>
+                              <CanShrink>true</CanShrink>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -181,7 +184,7 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>0.87934in</Top>
+                              <Top>0.921in</Top>
                               <Left>0.08326in</Left>
                               <Height>0.16667in</Height>
                               <Width>1.04948in</Width>
@@ -198,6 +201,7 @@
                             </Textbox>
                             <Textbox Name="Textbox22">
                               <CanGrow>true</CanGrow>
+                              <CanShrink>true</CanShrink>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
@@ -220,7 +224,7 @@
                                 </Paragraph>
                               </Paragraphs>
                               <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>1.07379in</Top>
+                              <Top>1.11545in</Top>
                               <Left>0.08326in</Left>
                               <Height>0.15in</Height>
                               <Width>1.21807in</Width>
@@ -308,7 +312,7 @@
                               <rd:DefaultName>Sell_to_Customer_No_</rd:DefaultName>
                               <Top>0.25902in</Top>
                               <Left>0.08326in</Left>
-                              <Height>0.2in</Height>
+                              <Height>0.15783in</Height>
                               <Width>1.76918in</Width>
                               <ZIndex>6</ZIndex>
                               <Visibility>
@@ -352,7 +356,7 @@
                               <rd:DefaultName>Textbox1</rd:DefaultName>
                               <Top>0.66589cm</Top>
                               <Left>4.74048cm</Left>
-                              <Height>0.508cm</Height>
+                              <Height>0.3929cm</Height>
                               <Width>1.94782cm</Width>
                               <ZIndex>7</ZIndex>
                               <Visibility>
@@ -423,7 +427,6 @@
                             </Border>
                           </Style>
                         </Rectangle>
-                        <rd:Selected>true</rd:Selected>
                       </CellContents>
                     </TablixCell>
                   </TablixCells>

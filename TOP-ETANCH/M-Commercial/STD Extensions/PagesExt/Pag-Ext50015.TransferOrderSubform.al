@@ -78,6 +78,8 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
                 // PromotedCategory = Process;
                 // PromotedOnly = true;
                 ApplicationArea = All;
+                  visible = false ;
+
 
                 trigger OnAction()
                 var
@@ -86,7 +88,7 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
                     TransferLine: record "Transfer Line";
                     Qtémin: decimal;
                     item: record Item;
-
+                  
                 begin
 
                     TransferHeader.get(rec."Document No.");

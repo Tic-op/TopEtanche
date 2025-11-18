@@ -47,12 +47,22 @@ tableextension 50030 TransferLine extends "Transfer Line"
             end;
         end;
     end; */  // AM 161025 Blocage lors de la validation ==> page transfer subform
+ trigger OnModify() 
+ var begin 
 
+    CalcFields("Preparé");
+      if "Preparé" then 
+            Error('Impossible de modifier cette ligne, veuillez supprimer le bon de préparation associé.');
+ end;
     trigger OnDelete()
     var
         OrdrePrep: Record "Ordre de preparation";
     begin
-      begin 
+
+          CalcFields("Preparé");
+      if "Preparé" then 
+            Error('Impossible de modifier cette ligne, veuillez supprimer le bon de préparation associé.');
+    /*   begin 
             OrdrePrep.setrange("document type",OrdrePrep."document type"::Transfert);
             OrdrePrep.SetRange("Order No", "Document No.");
             //OrdrePrep.setrange(Statut,OrdrePrep.Statut::"Créé");
@@ -60,7 +70,7 @@ tableextension 50030 TransferLine extends "Transfer Line"
                 //if OrdrePrep.Statut = OrdrePrep.Statut::"Créé" then
                 Error('Impossible de supprimer cette ligne, un bon de préparation est crée');
             end;
-        end;
+        end; */
     end;
      trigger oninsert()
     var
@@ -68,12 +78,19 @@ tableextension 50030 TransferLine extends "Transfer Line"
     begin
       begin 
             OrdrePrep.setrange("document type",OrdrePrep."document type"::Transfert);
-            OrdrePrep.SetRange("Order No", "Document No.");
+           /*  OrdrePrep.SetRange("Order No", "Document No.");
             //OrdrePrep.setrange(Statut,OrdrePrep.Statut::"Créé");
             if OrdrePrep.Findset() then begin
                 //if OrdrePrep.Statut = OrdrePrep.Statut::"Créé" then
                 Error('Impossible d''ajouter une ligne, un bon de préparation est crée');
-            end;
+            end; */
+
+
+
+              ORdreprep.setrange("Order No","Document No.");
+         ORdreprep.SetRange(Statut, ORdreprep.Statut::"Créé",ORdreprep.Statut::"En cours");
+         if ORdreprep.FindFirst() then 
+         error('veuillez préparer les préparations existantes avant d''ajouter des lignes') ;
         end;
     end;
 }

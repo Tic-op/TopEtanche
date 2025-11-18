@@ -59,7 +59,7 @@ report 50016 "BonPréparation"
                 column(Source_type_; "Source type.") { }
                 column(Source_No_; "Source No.") { }
                 column(Source_line_No_; "Source line No.") { }
-                column(Destination; Demandeur) { }
+                column(Destination; Destination) { }
                 column(CustPhone; CustPhone) { }
                 column(Bin_Code; "Bin Code") { }
                 column(item_No_; "item No.") { }
@@ -86,7 +86,9 @@ report 50016 "BonPréparation"
                         if ("Source type." = "Source type."::Commande) or ("Source type." = "Source type."::Facture) then begin
                             Customer.get(Demandeur);
                             CustPhone := Customer."Phone No.";
-                        end
+                        end;
+                    Destination := Demandeur+'  ' + "Nom demandeur" ;
+
                     end;
 
 
@@ -186,4 +188,5 @@ report 50016 "BonPréparation"
         imprimer_destination: Boolean;
         CustPhone: text;
         NumTicket: Integer;
+        Destination : text ;
 }

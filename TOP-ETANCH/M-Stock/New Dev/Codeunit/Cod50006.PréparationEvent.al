@@ -253,10 +253,12 @@ codeunit 50006 PréparationEvent
                begin 
                   OrdrePrep.setrange("document type",DocumentType);
                   OrdrePrep.SetRange("Order No",documentNo);
-        OrdrePrep.setfilter(Statut, '<>%1', OrdrePrep.Statut::"Préparé");
+                  if OrdrePrep.Count= 0 then 
+                  error('Impossible de valider ce document, générer d''abord des bons de préparation') ;
+                  OrdrePrep.setfilter(Statut, '<>%1', OrdrePrep.Statut::"Préparé");
 
                     if OrdrePrep.FindFirst()  then
-            Error('Un Ordre de préparation associé à ce document dont le statut est différent de "préparé" existe. Impossible de valider ce docment.');
+            Error('Un Ordre de préparation associé à ce document dont le statut est différent de "préparé" existe. Impossible de valider ce document.');
 
 
 
@@ -297,9 +299,8 @@ codeunit 50006 PréparationEvent
             OrdrePrep.ModifyAll("Num document validé", TransferShipmentHeader."No.", false);
 
     end;
-
-
-
+ 
+  
 
 
 

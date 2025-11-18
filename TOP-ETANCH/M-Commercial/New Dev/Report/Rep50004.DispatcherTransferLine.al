@@ -83,11 +83,11 @@ report 50004 "Dispatch Transfer Lines"
         noligne += 1;
         TransferL."Line No." := noligne;
         if QtyDemande <= dispo then begin
-            TransferL.Validate(Quantity, QtyDemande);
+           /*  TransferL.Validate(Quantity, QtyDemande);
             QtyDemande := 0;
             transferLine.Description := '*****Ligne Dispatchée*****';
             transferLine.Validate(Quantity, 0);
-            transferLine.Modify();
+            transferLine.Modify(); */
         end else begin
             TransferL.Validate(Quantity, dispo);
             QtyDemande -= dispo;
