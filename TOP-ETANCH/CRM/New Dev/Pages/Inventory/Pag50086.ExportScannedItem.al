@@ -34,6 +34,7 @@ page 50086 ExportScannedItem
                 {
                     Caption = 'CAB article';
                 }
+
                 field(quantity; Rec.Quantity)
                 {
                     Caption = 'Quantité';

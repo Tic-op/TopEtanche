@@ -146,6 +146,10 @@ table 50102 "Inventroy Line"
         {
             Caption = 'N° lot';
         }
+          field(50028; Unité; Code[10])
+        {
+           
+        }
 
     }
     keys

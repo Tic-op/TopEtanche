@@ -5,7 +5,7 @@ using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
 using Microsoft.Pricing.PriceList;
 
-page 50026 "Détail vente article"
+page 53026 "Détail vente article"
 {
     ApplicationArea = All;
     Caption = 'Détail vente article';
@@ -31,10 +31,7 @@ page 50026 "Détail vente article"
                 }
                 field("Sur Cmde Vente"; Rec."Qty. on Sales Order") { }
                 field("Sur Cmde Achat"; Rec."Qty. on Purch. Order") { }
-                Field("Sur facture Vente"; rec."Qty on invoice")
-                {
-
-                }
+                 //Field("Sur facture Vente"; rec."Qty on invoice") { } 
                 field(Tout_les_Client; Tout_les_Client)
                 {
                     Caption = 'Tout les clients';

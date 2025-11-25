@@ -79,7 +79,8 @@ tableextension 50140 CustomerExtension extends Customer
         field(50148; "Type"; Option)
         {
             Caption = 'Type';
-            OptionMembers = "Prospect","Client";
+            OptionMembers = "","Prospect","Client";
+          
 
         }
 
@@ -97,11 +98,10 @@ tableextension 50140 CustomerExtension extends Customer
                 modify();
             end;
 
-
         }
         field(50151; Seuil; Decimal)
         {
-            Caption = 'Minimum à facturer';
+             Caption = 'Minimum à facturer';
         }
         field(50152; "Customer type"; Option)
         {

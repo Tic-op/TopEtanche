@@ -79,7 +79,7 @@ table 50003 "Ordre de preparation"
         }
         field(9; "Préparateur"; Text[50])
         {
-            TableRelation = "Logistic resource" where(Magasin = field(Magasin), blocked = const(false));
+            TableRelation = "Logistic resource"where(blocked = const(false));//Magasin = field(Magasin), 
         }
         field(10; "document type"; Option)
         {

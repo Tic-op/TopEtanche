@@ -1,4 +1,5 @@
 namespace TopEtanch.TopEtanch;
+using Top.Top;
 
 page 50009 Listedesordresdepreparation
 {
@@ -53,6 +54,13 @@ page 50009 Listedesordresdepreparation
                 {
                     Caption = 'Date début préparation';
                 }
+              /*   part(lignesprep;"Lignepréparation")
+                {      EntityName = 'Ligneprep';
+                EntitySetName ='Lignesprep';
+                  
+                     SubPagelink ="Document No." = field(No);
+ 
+                } */
             }
         }
     }

@@ -73,6 +73,13 @@ table 50009 "Ligne préparation"
         {
 
         }
+         field(50011; "Identifier Code"; Code[100])
+        {
+            Caption = 'Barre Code';
+            FieldClass = FlowField;
+            CalcFormula = Lookup("Item Identifier TICOP".Code WHERE("Item No." = field("item No.")));
+            Editable = false;
+        }
     }
     keys
     {

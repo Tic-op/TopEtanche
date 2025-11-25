@@ -38,9 +38,8 @@ codeunit 50082 FindItem
                         Qty := 0;
                         if ItemUnit.Get(Item."No.", UOMCode) then
                             Qty := ItemUnit."Qty. per Unit of Measure";
-
                         Result :=
-                            'Item No: ' + Item."No." + ' | ' + 'Description: ' + Item.Description + ' | ' + 'Unité: ' + UOMCode;//'Qty: ' + Format(Qty) + ' | ' + 'Magasin: ' + ' | ' + InventoryLine."Location Code" 
+                          'Item No: ' + Item."No." + ' | ' + 'Description: ' + Item.Description + ' | ' + 'Fournisseur: ' + item."Vendor No." + ' | ' + 'Unité: ' + UOMCode + ' | ' + 'Qty/unité: ' + Format(Qty) //+ ' | ' + 'Magasin: ' + ' | ' + InventoryLine."Location Code" 
                     end else
                         Result := '-1';
                 end else

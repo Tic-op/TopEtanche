@@ -3,7 +3,7 @@ namespace TopEtanch.TopEtanch;
 using Microsoft.Warehouse.ADCS;
 using Microsoft.Inventory.Item;
 
-codeunit 50004 FindItemEmplacements
+codeunit 50004 FindItemEMP
 {
     TableNo = "Item Identifier";
 

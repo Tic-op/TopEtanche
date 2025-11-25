@@ -57,8 +57,8 @@ codeunit 50001 FindItemRec
 
     procedure FindItemReception(SalesOrderNo: Code[20]; Barcode: Code[50]; desc: Text): Text
     var
-        SalesHeader: Record "Purchase Header";
-        SalesLine: Record "Purchase Line";
+        PurchHeader: Record "Purchase Header";
+        PurchLine: Record "Purchase Line";
         ItemIdentifier: Record "Item Identifier TICOP";
         Item: Record Item;
         ItemUnit: Record "Item Unit of Measure";
@@ -96,31 +96,34 @@ codeunit 50001 FindItemRec
             end;
         end;
         if ItemNo <> '' then begin
-            if not SalesHeader.Get(SalesHeader."Document Type"::Order, SalesOrderNo) then begin
+            if not PurchHeader.Get(PurchHeader."Document Type"::Order, SalesOrderNo) then begin
                 Result := '-2';
             end
             else begin
-                SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
-                SalesLine.SetRange("Document No.", SalesOrderNo);
-                SalesLine.SetRange("No.", ItemNo);
-                if SalesLine.FindFirst() then begin
-                    if Item.Get(ItemNo) then begin
+                if Item.Get(ItemNo) then begin
+
+                    PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
+                    PurchLine.SetRange("Document No.", SalesOrderNo);
+                    PurchLine.SetRange("No.", ItemNo);
+                    if PurchLine.FindFirst() then begin
                         Qty := 0;
                         if ItemUnit.Get(Item."No.", UOMCode) then
                             Qty := ItemUnit."Qty. per Unit of Measure";
 
-                        Result :=
-                            'Item No: ' + Item."No." + ' | ' +
-                            'Description: ' + Item.Description + ' | ' +
-                            'Unité: ' + UOMCode + ' | ' +
-                            'Future dépot: ' + Item."Default depot";
+                        Result := 'Item No: ' + Item."No." + ' | ' +
+                             'Description: ' + Item.Description + 'Fournisseur: ' + ' | ' + Item."Vendor Name" + ' | ' +
+                             'Unité: ' + UOMCode + ' | ' +
+                             'Future dépot: ' + Item."Default depot" + ' | ';
                     end
                     else begin
-                        Result := '-1';
+                        Result := 'Item No: ' + Item."No." + ' | ' +
+                            'Description: ' + Item.Description + 'Fournisseur: ' + ' | ' + Item."Vendor Name" + ' | ' +
+                            'Unité: ' + UOMCode + ' | ' +
+                            'Future dépot: ' + Item."Default depot" + ' | ' + '0';
                     end;
                 end
                 else begin
-                    Result := '0';
+                    Result := '-1';
                 end;
             end;
         end;
