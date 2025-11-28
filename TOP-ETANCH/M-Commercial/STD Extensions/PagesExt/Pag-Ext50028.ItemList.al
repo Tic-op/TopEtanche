@@ -31,7 +31,7 @@ moveafter("Vendor Name";"Vendor Item No.")
             ApplicationArea = all ;
          }
     }
-    actions{
+  /*   actions{
         addfirst(Functions)
         {
             action(MAJ_VENDOR_NAME){ 
@@ -56,7 +56,7 @@ moveafter("Vendor Name";"Vendor Item No.")
 
           
         }
-    }
+    } */
  
 
 

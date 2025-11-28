@@ -1,4 +1,6 @@
 namespace Top.Top;
+using Microsoft.Inventory.Item;
+using Microsoft.Purchases.Vendor;
 
 page 50026 "Lignepréparation"
 {
@@ -91,13 +93,28 @@ page 50026 "Lignepréparation"
                 }
                 field(Identifier_Code;Rec."Identifier Code")
                 {}
+                field(Fournisseur; Vendor)
+                {
+
+                }
             }
         }
         
 
     }
      trigger OnAfterGetRecord()
+     Var  itemrec : record Item;
+          Vendorrec : record Vendor;
     begin
         rec.SetAutoCalcFields("Identifier Code");
+        itemrec.SetLoadFields("No.","Vendor No.");
+        itemrec.get(rec."item No.");
+        Vendorrec.SetLoadFields("No.",Name);
+        if Vendorrec.get(itemrec."Vendor No.")then 
+        Vendor:=Vendorrec.Name ;
     end;
+
+
+    var 
+    Vendor : Text ;
 }

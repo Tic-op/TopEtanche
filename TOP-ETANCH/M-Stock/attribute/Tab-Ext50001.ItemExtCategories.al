@@ -1,6 +1,7 @@
 namespace Top.Top;
 
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Item.Attribute;
 
 tableextension 50001 ItemExt_Categories extends Item
 {
@@ -57,6 +58,16 @@ tableextension 50001 ItemExt_Categories extends Item
                
             end;
         }
+         field(50088; "Matière category"; Code[20])
+        {
+            Caption = 'Matière';
+            DataClassification = ToBeClassified;
+             TableRelation = "Item Category"."Code" where("Parent Category" = field("Type category"),Level= const(Matière));
+            trigger OnValidate() begin 
+               validate("Item Category Code", "Matière category") ;
+               
+            end;
+        }
         field(50004; "Fiche matériaux"; Code[50])
         {
            TableRelation ="Fiche matériaux".Code;
@@ -67,4 +78,33 @@ tableextension 50001 ItemExt_Categories extends Item
             
         }
     }
+    Procedure assignattribute(attName :text[250];AttributeValue:text[250])
+    var  
+       IA : record "Item Attribute";
+       IAV : Record "Item Attribute Value";
+       IAVM : record "Item Attribute Value Mapping" ;
+
+    
+     begin 
+        IA.setrange(Name,attName);
+        IA.findfirst();
+        
+
+        Iav.setrange("Attribute Name",IA.name);
+        Iav.setrange("Attribute ID",Ia.id);
+        Iav.setrange(Value,AttributeValue);
+
+        If iav.FindFirst() then begin end/// assign the value in valuemapping 
+       else begin 
+        iav.init();
+        iav."Attribute ID":=Ia.id;/////To be completed
+        end;
+
+
+       
+       
+       ///  insert the value then assign it in value mapping 
+
+
+    end;
 }

@@ -95,21 +95,8 @@ codeunit 50007 CostPriceProfitCalculation
 
                         pricelisL.Verify();
                     end;
-
-
-
                 end;
-
-
-
-
-
-
-
-            until ParamMarge.next = 0;
-
-
-
+                until ParamMarge.next = 0;                
     end;
 
 

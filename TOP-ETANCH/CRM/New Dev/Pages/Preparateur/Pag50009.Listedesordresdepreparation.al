@@ -49,6 +49,10 @@ page 50009 Listedesordresdepreparation
                 {
                     Caption = 'Statut';
                 }
+                field(suspendu;Rec.Suspendu)
+                {
+                    Caption = 'Suspendu';
+                }
 
                 field(dateDebutPreparation; Rec."Date début préparation")
                 {

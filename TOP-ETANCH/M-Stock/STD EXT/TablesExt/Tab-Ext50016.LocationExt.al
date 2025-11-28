@@ -33,12 +33,7 @@ tableextension 50016 "Location Ext" extends Location
 
             CalcFormula = sum("Item Ledger Entry"."Operation Cost" where("Location Code" = field(code)));
         }
-        field(50003; "Qty Minimum"; Decimal)
-        {
-            Caption = 'Quantité minimum';
-
-
-        }
+     
         /*  field(50004; "tampon"; Boolean)
          {
              caption = 'Tampon';

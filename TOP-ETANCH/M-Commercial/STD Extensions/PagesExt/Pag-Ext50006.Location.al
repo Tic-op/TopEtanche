@@ -19,12 +19,7 @@ pageextension 50006 Location extends "Location Card"
             {
                 ApplicationArea = all;
             }  */
-            field("Qty Minimum"; Rec."Qty Minimum")
-            {
-                ApplicationArea = all;
-                DecimalPlaces = 0 : 3;
-
-            }
+         
             field("Dépot associé"; Rec."Dépot associé")
             {
                 Enabled = rec.Type = rec.type::"Point de vente";

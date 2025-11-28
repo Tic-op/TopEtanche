@@ -80,6 +80,7 @@ table 50009 "Ligne préparation"
             CalcFormula = Lookup("Item Identifier TICOP".Code WHERE("Item No." = field("item No.")));
             Editable = false;
         }
+
     }
     keys
     {

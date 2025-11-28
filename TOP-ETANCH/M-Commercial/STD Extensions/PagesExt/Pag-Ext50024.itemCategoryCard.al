@@ -18,12 +18,24 @@ pageextension 50024 itemCategoryCard extends "Item Category Card"
                 ApplicationArea = all;
             }
 
-            field("Default Depot"; Rec."Default Depot") { ApplicationArea = all; }
+            field("Default Depot"; Rec."Default Depot") {
+                
+                 ApplicationArea = all; 
+                 Enabled = (rec.Level= rec.Level::Type);}
            /*  field("Fiche matériaux"; Rec."Fiche matériaux")
             {
                 enabled = rec.Level = rec.Level::Type;
                 ApplicationArea = all;
             } */
+
+            field(Parent;Rec.Parent){
+                ApplicationArea= all;
+                Enabled = (rec.level<>rec.level::Famille);
+            }
+        }
+        modify("Parent Category"){
+                        Visible = false ;
+
         }
     }
     Actions

@@ -62,18 +62,20 @@ codeunit 50013 FindItem_Prep
                             Qty := ItemUnit."Qty. per Unit of Measure";
 
                         Result := 'Item No: ' + Item."No." + ' | ' +
-                             'Description: ' + Item.Description + //'Fournisseur: ' + ' | ' + Item."Vendor Name" + ' | ' +
-                             'Unité: ' + UOMCode ;
+                             'Description: ' + Item.Description + ' | '+//'Fournisseur: ' + ' | ' + Item."Vendor Name" + ' | ' +
+                             'Unité: ' + Qty.ToText() ;
                             // 'Future dépot: ' + Item."Default depot" + ' | ';
                     end
                     else begin
-                        Result := 'Item No: ' + Item."No." + ' | ' +
+                        Result := '0' ;/* 'Item No: ' + Item."No." + ' | ' +
                             'Description: ' + Item.Description + //'Fournisseur: ' + ' | ' + Item."Vendor Name" + ' | ' +
-                            'Unité: ' + UOMCode ;//' | ' +
-                           // 'Future dépot: ' + Item."Default depot" + ' | ' + '0';
+                            'Unité: ' + Qty.ToText() ;//' | ' +
+                           // 'Future dépot: ' + Item."Default depot" + ' | ' + '0'; */
                     end;
                 end
-                else begin
+                else
+                
+                begin
                     Result := '-1';
                 end;
             end;

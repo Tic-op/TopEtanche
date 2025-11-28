@@ -6,8 +6,8 @@ using Microsoft.Inventory.Item.Attribute;
 pageextension 50038 "item card catégories" extends "Item Card"
 {
     layout { 
-        addbefore("Item Category Code"){
-
+        addlast(Item){
+             group(Catégorisation){
             field("Famille Category";Rec."Famille Category"){
                 ApplicationArea = all ;
             }
@@ -24,11 +24,15 @@ pageextension 50038 "item card catégories" extends "Item Card"
             {
                 ApplicationArea = all ;
             }
+            field("Matière category";Rec."Matière category")
+            {
+                ApplicationArea= all ;
+            }
             field("Fiche matériaux";Rec."Fiche matériaux")
             {
                 ApplicationArea = all ;
             }
-            
+             }
 
 
         }

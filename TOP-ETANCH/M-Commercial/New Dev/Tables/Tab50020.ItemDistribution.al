@@ -68,13 +68,7 @@ table 50020 "Item Distribution"
             CalcFormula = Count("Transfer Header" where("Source No." = field("Source Doc No."), "Source Line No." = field("Source Line No.")));
 
         }
-        field(12; "Qty Minimum"; Decimal)
-        {
-            Caption = 'Quantité Minimum';
-            Editable = false;
-            FieldClass = FlowField;
-            CalcFormula = lookup("Location"."Qty Minimum" where("Code" = field("Location Code")));
-        }
+       
         field(13; "Stock min"; Decimal)
         {
             Caption = 'Stock min';

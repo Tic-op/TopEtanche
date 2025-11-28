@@ -17,7 +17,7 @@ tableextension 50023 itemcategoryExt extends "Item Category"
         field(50001; Level; Option)
         {
             Caption = 'Niveau catégorie';
-            OptionMembers = "",Famille,Catégorie,Produit,"Type";
+            OptionMembers = "",Famille,Catégorie,Produit,"Type",Matière;
             trigger OnValidate()
             begin
                /*  if level <> Level::Type then begin
@@ -32,6 +32,22 @@ tableextension 50023 itemcategoryExt extends "Item Category"
             TableRelation = if (Level = const("Type")) "Fiche matériaux".Code;
 
         } */
+        field(50002;Parent;Code[20])
+        {
+            TableRelation= if (Level = const(Catégorie) ) "Item Category".code where(Level= const(famille))
+              else if (Level = const(Produit) ) "Item Category".code where(Level= const(catégorie))
+              else if (Level = const("type") ) "Item Category".code where(Level= const(Produit))
+               else if (Level = const(Matière) ) "Item Category".code where(Level= const("type"));
+              
+
+              trigger OnValidate()
+              begin 
+
+                Validate("Parent Category",Parent);
+                
+              end;
+
+        }
 
 
 

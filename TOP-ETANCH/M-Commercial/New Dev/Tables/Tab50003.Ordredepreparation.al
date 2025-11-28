@@ -104,6 +104,18 @@ table 50003 "Ordre de preparation"
             else if ("document type" = const(facture)) "Sales Invoice Header" where("No." = field("Num document validé"))
             else if ("document type" = const(Transfert)) "Transfer Shipment Header" where("No." = field("Num document validé"));
         }
+        field(15; Suspendu; Boolean)
+        {
+            InitValue= false ; 
+            trigger OnValidate()
+            begin 
+              if Suspendu then 
+              begin 
+                if Statut<> Statut::"En cours" then 
+                error('impossible de suspendre une préparation qui n''est pas en cours');
+              end;
+            end;
+        }
     }
     keys
     {

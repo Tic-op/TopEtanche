@@ -45,7 +45,9 @@ page 50029 PriceListSubform
 
                 }
                 field("Minimum Quantity"; Rec."Minimum Quantity")
-                { }
+                {
+                    
+                 }
                 field("Line Discount %"; Rec."Line Discount %")
                 {
                     ToolTip = 'Specifies the line discount percentage for the product.';
