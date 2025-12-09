@@ -50,6 +50,7 @@ report 50002 BL
             {
 
             }
+        
 
             column(External_Document_No_; "External Document No.")
             { }
@@ -102,6 +103,7 @@ report 50002 BL
                 { }
                 column(Remise; Remise)
                 { }
+                
 
                 column(totalremise; totalremise)
                 { }

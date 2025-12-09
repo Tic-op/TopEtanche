@@ -4,7 +4,7 @@ using Microsoft.Inventory.Item;
 
 codeunit 50008 "Attribut management"
 {
-     [EventSubscriber(ObjectType::Table,Database::"Item Attribute",OnAfterInsertEvent,'',false,false)]
+   //  [EventSubscriber(ObjectType::Table,Database::"Item Attribute",OnAfterInsertEvent,'',false,false)]
      Procedure insertdefaultvalue(var Rec: Record "Item Attribute")
      var IAV : record "Item Attribute Value" ; 
      cu : codeunit "Item Attribute Management";
@@ -44,8 +44,8 @@ codeunit 50008 "Attribut management"
         
 
      end;
- [EventSubscriber(ObjectType::Table,Database::"Item Attribute value",OnAfterInsertEvent,'',false,false)] 
- procedure testuniquenullvalue(var Rec: Record "Item Attribute Value")
+ //[EventSubscriber(ObjectType::Table,Database::"Item Attribute value",OnAfterInsertEvent,'',false,false)] 
+ procedure testuniquenullvalue(var Rec: Record "Item Attribute Value") // useless now 01122
  var iav ,iavdefault : record "Item Attribute Value" ;
       ia : record "Item Attribute" ;
       
@@ -77,7 +77,7 @@ codeunit 50008 "Attribut management"
      begin
        IAV.get(rec."Item Attribute ID",rec."Item Attribute Value ID")  ;
         rec."Valeur attribut" := Iav.value;
-       rec.Modify(true);
+    //   rec.Modify(true);
    
    end;
     [EventSubscriber(ObjectType::Table,Database::"Item Attribute Value Mapping",OnAfterValidateEvent,"Item Attribute Value ID",false,false)] 
@@ -105,7 +105,7 @@ codeunit 50008 "Attribut management"
      ItemAttributeValueMapping."Valeur attribut" := ItemAttributeValue.Value ;
 
   end;  
-   Procedure généraliserAttributPardefaut(var item :record item) 
+   Procedure généraliserAttributPardefaut(var item :record item) //useless now 011225
    var 
    IaVm : record "Item Attribute Value Mapping" ;
 
@@ -121,7 +121,7 @@ codeunit 50008 "Attribut management"
 
 
    end;
-     Procedure généraliservaleurpardefaut(var Rec: Record "Item Attribute Value Mapping")
+     Procedure généraliservaleurpardefaut(var Rec: Record "Item Attribute Value Mapping") //useless now 011225
      var IAV : record "Item Attribute Value" ;
      IAVMAPPING : record "Item Attribute Value Mapping" ;
      item : record Item ;
@@ -159,33 +159,50 @@ codeunit 50008 "Attribut management"
       itemreal : Record item ;
       Pagetrie : page "item list attribut sort" ;
       iav : record "Item Attribute Value" ;
+      Ia : record "Item Attribute" ;
+      ValeurnumVar : decimal ;
      
 
      
       begin 
+           Ia.get(AttID);
          IAVM.setrange("Item Attribute ID",AttID);
          IAVM.SetRange("Table ID",27);
          Iavm.setfilter("No.",itemrec.GetFilter("No."));
-         message(Itemrec.GetFilter("No."));
+        // message(Itemrec.GetFilter("No."));
          IAVM.SetCurrentKey("Valeur attribut");
-         Message(IAVM.count.ToText());
+        // Message(IAVM.count.ToText());
          if Iavm.findfirst() then 
          repeat 
           itemreal.get(IAVM."No.");
+          itemtemp.Init();
           itemtemp:=itemreal ;
         /*   iav.get(iavm."Item Attribute ID",IAVM."Item Attribute Value ID");
           Iavm."Valeur attribut" := iav.Value ;
           Message(Iav.Value); */
           itemtemp."Valeur attribut":= Iavm."Valeur attribut" ;
+          if (ia.Type = ia.type ::Decimal) or (ia.type = ia.type ::Integer) then begin 
+            if Evaluate(ValeurnumVar,iavm."Valeur attribut") then 
+             itemtemp."Valeur Attribut Numérique" :=ValeurnumVar;
+
+          end ;
+         
+        
 
           //IAVM."Valeur attribut" ;
            //iavm.Modify();
           itemtemp.insert();
-         
-
+        
          until iavm.next=0 ;
+        
+         /*   Pagetrie.Setrecord(itemtemp);
+         if (ia.Type = ia.type ::Decimal) or (ia.type = ia.type ::Integer) then  
+         Pagetrie.Setnumerique(true);
+         Pagetrie.setcaption(Ia.Name);
+        
+          Pagetrie.Run(); */
         message(itemtemp.Count.ToText());
-        Page.RunModal(50042,itemtemp)
+       Page.RunModal(50042,itemtemp); // To be continued
             
             
 

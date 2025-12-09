@@ -9,6 +9,7 @@ using Microsoft.CRM.Contact;
 using Microsoft.Sales.History;
 using Microsoft.Sales.Document;
 using Microsoft.Bank.Payment;
+using Microsoft.Sales.Setup;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Intrastat;
 
@@ -90,8 +91,10 @@ tableextension 50140 CustomerExtension extends Customer
             Caption = 'Type de facturation';
             OptionMembers = "","Contre remboursement","Fact. Mensuelle","Fact. Plafond","Commande Totale";
             trigger OnValidate()
+            var salessetup : record "Sales & Receivables Setup";
             begin
-
+          /*         Salessetup.Get();
+        If Not Salessetup."PEC Type facturation" then exit ; */
 
                 "Combine Shipments" := (("Type de facturation" = "Type de facturation"::"Commande Totale") AND ("Type de facturation" = "Type de facturation"::"Fact. Mensuelle"));
                 if "Type de facturation" <> "Type de facturation"::"Fact. Plafond" then Seuil := 0;

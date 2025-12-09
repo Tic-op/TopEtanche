@@ -23,7 +23,7 @@ page 50037 "Affectation type"
            {
            TableRelation = "Item Category"."Code" where("Parent Category" = const(''),Level= const(Famille));
            } 
-            field("catégory";"catégory")
+            field("catégorie";"catégory")
            {
              TableRelation = "Item Category"."Code" where(Level= const(Catégorie)); 
             trigger OnLookup(var Text: Text): Boolean
@@ -81,9 +81,9 @@ page 50037 "Affectation type"
         "type":= ItemCat.code;
         //exit(true);
     end;}
-     field(Matière;Matière)
+     field(Matériau;Matériau)
            {
-             TableRelation = "Item Category"."Code" where(Level= const(Matière)); 
+             TableRelation = "Item Category"."Code" where(Level= const(Matériau)); 
                            trigger OnLookup(var Text: Text): Boolean
     var
         ItemCat: Record "Item Category";
@@ -95,7 +95,7 @@ page 50037 "Affectation type"
         PageLookup.Editable:= false ; 
         if PageLookup.RunModal() = Action::LookupOK then
             PageLookup.GetRecord(ItemCat);
-        Matière:= ItemCat.code;
+        Matériau:= ItemCat.code;
         //exit(true);
     end;
              
@@ -132,7 +132,7 @@ page 50037 "Affectation type"
                 {
                     ToolTip = 'Specifies the value of the Type field.', Comment = '%';
                 }
-                field("Matière category";Rec."Matière category")
+                field("Matériau category";Rec."Matériau category")
                     {
 
                     }
@@ -153,16 +153,20 @@ page 50037 "Affectation type"
             Image = Apply;
                Trigger OnAction() 
                var begin 
-                  Rec.FindFirst() ;
+                rec.SetCurrentKey("No.");
+                 
                   If confirm('Cette action va affecter %1 article, veuillez confirmer pour appliquer ces changement',false,rec.count) then 
+                  begin 
+                   Rec.Findset(true) ;
                   repeat
                   REC.validate("Famille Category",famille);
                   REC.Validate("Catégorie Category","catégory");
                   rec.validate("Produit Category",Produit);
                   rec.validate("Type category",type);
-                  rec.Validate("Matière category","Matière");
+                  rec.Validate("Matériau category","Matériau");
                   rec.Modify()
                   until rec.Next()=0 ;
+                  end;
 
                   
 
@@ -173,7 +177,7 @@ page 50037 "Affectation type"
           }
 
     }
-    var famille,catégory, "type" , Produit,Matière : code [20];
+    var famille,catégory, "type" , Produit,Matériau : code [20];
         
      
 }

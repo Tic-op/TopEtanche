@@ -46,7 +46,14 @@ page 50042 "item list attribut sort"
                     ApplicationArea = All;
                 }
                  field("Valeur attribut";Rec."Valeur attribut"){
+                   // Visible = Not Numerique ;
             editable= false ;
+            CaptionClass = ''+ Captiontext ;
+          }
+          field("Valeur Attribut Numérique";Rec."Valeur Attribut Numérique")
+          {  
+           // Visible = Numerique ;
+             editable= false ;
             CaptionClass = ''+ Captiontext ;
           }
                
@@ -68,11 +75,28 @@ page 50042 "item list attribut sort"
      Captiontext := Caption ;
 
     end;
+    Procedure Setnumerique( num : Boolean)
+    begin 
+     Numerique := Num ;
+
+    end;
+    Procedure SetView ( ITemTemp :Record Item temporary)
+    begin 
+/* 
+          Rec.Copy(ItemTemp);
+          //Itemtemp.findfirst;
+          REc.findfirst;
+          repeat
+          rec:=itemtemp;
+          Rec.Insert();
+          until rec.Next()=0 ; */
+    end;
 
 
 
     var 
     Captiontext : text ;
+    Numerique : Boolean ;
 
    
     }

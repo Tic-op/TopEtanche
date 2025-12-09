@@ -25,5 +25,10 @@ tableextension 50010 SalesSetup extends "Sales & Receivables Setup"
             DataClassification = ToBeClassified;
 
         }
+      /*   Field(50003;"PEC Type facturation";Boolean)
+        {
+            Caption= 'Prise en considération du type facturation';
+            DataClassification= ToBeClassified;
+        } */
     }
 }

@@ -132,5 +132,13 @@ permissionset 50000 GeneratedPermission
         page "Stock min d'un article par mag"=X,
         page "Valeur Stock"=X,
         page xxxdeleteItem=X,
-        page "XXXX Yasser"=X;
+        page "XXXX Yasser"=X,
+        tabledata "Item Attributes Buffer"=RIMD,
+        table "Item Attributes Buffer"=X,
+        report BLPageComplete=X,
+        codeunit FindItem_Prep=X,
+        page "Affectation type"=X,
+        page "Affectation Valeur attribut"=X,
+        page "Lignepréparation"=X,
+        page listeattribut=X;
 }

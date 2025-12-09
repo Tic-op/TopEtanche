@@ -16,6 +16,7 @@ pageextension 50024 itemCategoryCard extends "Item Category Card"
             field(Level; Rec.Level)
             {
                 ApplicationArea = all;
+                enabled = rec.Parent='';
             }
 
             field("Default Depot"; Rec."Default Depot") {
@@ -30,7 +31,7 @@ pageextension 50024 itemCategoryCard extends "Item Category Card"
 
             field(Parent;Rec.Parent){
                 ApplicationArea= all;
-                Enabled = (rec.level<>rec.level::Famille);
+                Enabled = ((rec.level<>rec.level::Famille)and (Rec.level <> 0));
             }
         }
         modify("Parent Category"){

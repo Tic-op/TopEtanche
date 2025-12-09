@@ -2,6 +2,7 @@ namespace TOPETANCH.TOPETANCH;
 
 using Microsoft.Sales.Customer;
 using Microsoft.Foundation.Company;
+using Microsoft.Sales.Setup;
 using DefaultPublisher.SalesManagement;
 
 report 50104 "ClientMinimumàFacturer"
@@ -32,8 +33,10 @@ report 50104 "ClientMinimumàFacturer"
 
 
             trigger OnAfterGetRecord()
-            begin
-                if "Type de facturation" <> "Type de facturation"::"Fact. Plafond"
+            var Salessetup : Record "Sales & Receivables Setup";
+            begin // Salessetup.Get();
+       
+                if ("Type de facturation" <> "Type de facturation"::"Fact. Plafond")// and (Salessetup."PEC Type facturation")
                 then
                     CurrReport.Skip();
 

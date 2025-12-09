@@ -152,7 +152,7 @@ tableextension 50132 SalesHeader extends "Sales Header"
                 CustomerRec: Record Customer;
                 GLSetup: Record "General Ledger Setup";
             begin
-
+                
                 "Stamp Amount" := 0;
                 GLSetup.get;
 

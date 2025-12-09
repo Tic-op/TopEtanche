@@ -58,13 +58,13 @@ tableextension 50001 ItemExt_Categories extends Item
                
             end;
         }
-         field(50088; "Matière category"; Code[20])
+         field(50088; "Matériau category"; Code[20])
         {
-            Caption = 'Matière';
+            Caption = 'Matériau';
             DataClassification = ToBeClassified;
-             TableRelation = "Item Category"."Code" where("Parent Category" = field("Type category"),Level= const(Matière));
+             TableRelation = "Item Category"."Code" where("Parent Category" = field("Type category"),Level= const(Matériau));
             trigger OnValidate() begin 
-               validate("Item Category Code", "Matière category") ;
+               validate("Item Category Code", "Matériau category") ;
                
             end;
         }
@@ -77,12 +77,36 @@ tableextension 50001 ItemExt_Categories extends Item
         {
             
         }
+        Field(50106;"Valeur Attribut Numérique";decimal)
+        {
+
+        }
+
+      field(70000; DynAttr1; Text[250]) { DataClassification = ToBeClassified; }
+        field(70001; DynAttr2; Text[250]) { DataClassification = ToBeClassified; }
+        field(70002; DynAttr3; Text[250]) { DataClassification = ToBeClassified; }
+        field(70003; DynAttr4; Text[250]) { DataClassification = ToBeClassified; }
+        field(70004; DynAttr5; Text[250]) { DataClassification = ToBeClassified; }
+        field(70005; DynAttr6; Text[250]) { DataClassification = ToBeClassified; }
+        field(70006; DynAttr7; Text[250]) { DataClassification = ToBeClassified; }
+        field(70007; DynAttr8; Text[250]) { DataClassification = ToBeClassified; }
+        field(70008; DynAttr9; Text[250]) { DataClassification = ToBeClassified; }
+        field(70009; DynAttr10; Text[250]) { DataClassification = ToBeClassified; }
+    }
+    keys {
+/* 
+        Key(Vendorrefkey; "Vendor Item No."){
+        }
+        key (Descriptionkey;Description){} */
+
     }
     Procedure assignattribute(attName :text[250];AttributeValue:text[250])
     var  
        IA : record "Item Attribute";
        IAV : Record "Item Attribute Value";
        IAVM : record "Item Attribute Value Mapping" ;
+       tries : Integer ;
+       
 
     
      begin 
@@ -94,17 +118,81 @@ tableextension 50001 ItemExt_Categories extends Item
         Iav.setrange("Attribute ID",Ia.id);
         Iav.setrange(Value,AttributeValue);
 
-        If iav.FindFirst() then begin end/// assign the value in valuemapping 
-       else begin 
+        If iav.FindFirst() then //IAV Existant
+        
+         begin
+           
+
+         
+           IAVM.init();
+           Iavm.validate("Table ID",27);
+           IAVM.validate("No.","No.");
+           IAVM.validate("Item Attribute ID",IAV."Attribute ID");
+           IAVM.Validate("Item Attribute Value ID",IAV.ID);
+          if not IAVM.insert(true) then begin 
+            IAVM.Validate("Item Attribute Value ID",IAV.ID);
+       IAVM.modify(true);
+          end
+             
+          end
+          
+          
+          
+          
+          
+       else
+       
+       
+       
+       //IAV Non existant 
+       
+        begin
+            iav.reset();
         iav.init();
-        iav."Attribute ID":=Ia.id;/////To be completed
+        iav.validate("Attribute ID",Ia.id);
+      //  iav.validate("Attribute Name",ia.Name);
+       // Iav.validate(Value,AttributeValue);
+        tries := 0 ;
+        if not iav.insert(true) then 
+        repeat 
+        iav.ID+=1;
+        tries +=1 ;
+        until ((iav.Insert(true))or (tries > 100000));
+       if tries <= 100000 then begin 
+            Iav.validate(Value,AttributeValue);
+           IAV.Modify(true);
+           IAVM.init();
+           Iavm.validate("Table ID",27);
+           IAVM.validate("No.","No.");
+           IAVM.validate("Item Attribute ID",IAV."Attribute ID");
+           IAVM.Validate("Item Attribute Value ID",IAV.ID);
+          if not IAVM.insert(true) then begin 
+            IAVM.Validate("Item Attribute Value ID",IAV.ID);
+       IAVM.modify(true);
+          end
+
+
+       end
+          
+          
+
+
+
+
+
+
         end;
 
 
-       
+      //Commit();
        
        ///  insert the value then assign it in value mapping 
 
 
     end;
+
+
+
+
+   
 }

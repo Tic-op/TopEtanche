@@ -18,16 +18,38 @@ page 50110 "Select Attribute Dialog"
                 TableRelation = "Item Attribute" ;
                 
                 ToolTip = 'Choisis l’attribut sur lequel tu veux trier les articles.';
+
+                  trigger OnLookup(var Text: Text): Boolean
+    var
+        Itematt: Record "Item Attribute";
+        PageLookup: Page "Item Attributes";
+    begin
+      
+        PageLookup.SetTableView(itematt);
+        PageLookup.LookupMode:=true;
+        PageLookup.Editable:= false ; 
+        if PageLookup.RunModal() = Action::LookupOK then
+            PageLookup.GetRecord(Itematt);
+        SelectedAttribute:= itematt.id;
+        Name := Itematt.Name ;
+        //exit(true);
+    end; 
             }
-            field(Libéllé;GetLabel()){
+            field(Libéllé;Name)
+            {
+                ApplicationArea= all ;
+               // Caption = 'Nom de l''attribut';
                 Editable = false ;
             }
+           /*  field(Libéllé;GetLabel()){
+                Editable = false ;
+            } */
         }
     }
 
     var
         SelectedAttribute: Integer ; //Text[100];
-
+           Name : text[250];
     procedure GetSelectedAttribute(): integer
     var IA : Record "Item Attribute";
     begin

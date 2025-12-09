@@ -331,7 +331,10 @@ codeunit 50052 SalesEvents
     procedure MinimumAfacturer(var SalesHeader: Record "Sales Header")
     var
         Customer: Record Customer;
-    begin
+        Salessetup : Record "Sales & Receivables Setup";
+    begin 
+       /*  Salessetup.Get();
+        If Not Salessetup."PEC Type facturation" then exit ; */
 
         if customer.get(SalesHeader."Sell-to Customer No.") then begin
             if Customer."Type de facturation" = Customer."Type de facturation"::"Fact. Plafond" then begin

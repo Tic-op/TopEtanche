@@ -30,6 +30,7 @@ page 50082 FindItems
                 {
                     Caption = 'Code';
                 }
+                
                 field(itemNo; Rec."Item No.")
                 {
                     Caption = 'Item No.';

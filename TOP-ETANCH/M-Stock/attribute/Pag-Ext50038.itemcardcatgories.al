@@ -24,13 +24,14 @@ pageextension 50038 "item card catégories" extends "Item Card"
             {
                 ApplicationArea = all ;
             }
-            field("Matière category";Rec."Matière category")
+            field("Matériau category";Rec."Matériau category")
             {
                 ApplicationArea= all ;
             }
             field("Fiche matériaux";Rec."Fiche matériaux")
             {
                 ApplicationArea = all ;
+                visible=false ;
             }
              }
 
@@ -49,7 +50,7 @@ pageextension 50038 "item card catégories" extends "Item Card"
         {
             ApplicationArea= all;
               Promoted = true ;
-              //visible=false ;
+              visible=false ;
                 PromotedCategory = Process ;
             trigger OnAction() var IAVM : Record "Item Attribute Value Mapping";
                   ia : record "Item Attribute Value" ;
@@ -64,6 +65,7 @@ pageextension 50038 "item card catégories" extends "Item Card"
             ApplicationArea= all ;
             Promoted = true ;
             PromotedCategory = process ;
+            Visible = false ;
             trigger OnAction() 
             var Cu : codeunit "Attribut management" ;
             begin 
@@ -78,6 +80,7 @@ pageextension 50038 "item card catégories" extends "Item Card"
                 Image = Import;
                 Promoted = true ;
                 PromotedCategory = Process ;
+                visible= false ;
             
                 trigger OnAction()
                 var

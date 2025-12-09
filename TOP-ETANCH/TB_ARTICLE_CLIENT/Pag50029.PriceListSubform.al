@@ -40,6 +40,18 @@ page 50029 PriceListSubform
                {
                    ToolTip = 'Specifies the value of the Line Amount field.', Comment = '%';
                } */
+/*                field("Asset Type"; Rec."Asset Type")
+                {
+                    ToolTip = 'Specifies the type of the product.';
+                }
+                field("Asset No."; Rec."Asset No.")
+                {
+                    ToolTip = 'Specifies the identifier of the product. If no product is selected, the price and discount values will apply to all products of the selected product type for which those values are not specified. For example, if you choose Item as the product type but do not specify a specific item, the price will apply to all items for which a price is not specified.';
+                } */
+                field("Source Type";Rec."Source Type"){}
+                field("Source No.";Rec."Source No."){
+                    
+                }
                 field("Unit Price";Rec."Unit Price")
                 {
 

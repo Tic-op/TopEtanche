@@ -12,7 +12,10 @@ pageextension 50023 ItemCategory extends "Item Categories"
         {
             field(Level; Rec.Level) { ApplicationArea = all; }
 
-            field("Default Depot"; Rec."Default Depot") { ApplicationArea = all; }
+            field("Default Depot"; Rec."Default Depot") { 
+                enabled= rec.Level=rec.level::Type;
+                
+                ApplicationArea = all; }
            
         }
       

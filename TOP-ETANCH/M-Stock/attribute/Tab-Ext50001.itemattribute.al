@@ -69,7 +69,7 @@ tableextension 50004 "item attribute Mapping" extends "Item Attribute Value Mapp
      begin
        IAV.get("Item Attribute ID","Item Attribute Value ID")  ;
         "Valeur attribut" := Iav.value;
-        Modify();
+       // Modify();
     end;
    
 
