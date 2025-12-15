@@ -33,6 +33,7 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
             {
                 ApplicationArea = all;
                 Enabled = not PartiallyShipped;
+                visible = false ;
                 trigger OnValidate()
                 begin
                     /*    if rec.PartiallyShipped() then

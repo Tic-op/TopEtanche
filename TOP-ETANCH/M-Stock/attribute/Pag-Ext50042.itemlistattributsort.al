@@ -30,6 +30,7 @@ page 50042 "item list attribut sort"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Numéro de l’article.';
+                    TableRelation = Item;
                 }
                 field(Description; rec.Description)
                 {
@@ -40,9 +41,15 @@ page 50042 "item list attribut sort"
                 {
                     ApplicationArea = All;
                 }
+                field ("Type category";Rec."Type category")
+                {
+                    ApplicationArea=all ;
+                    Caption = 'Type' ;
+                }
                
                 field("Item Category Code"; rec."Item Category Code")
-                {
+                {   
+                    Caption='Code materiaux';
                     ApplicationArea = All;
                 }
                  field("Valeur attribut";Rec."Valeur attribut"){
@@ -69,6 +76,8 @@ page 50042 "item list attribut sort"
     begin 
         if Captiontext<>'' then 
         CurrPage.Caption('Articles triés par '+ Captiontext );
+        REc.SetCurrentKey("Valeur Attribut Numérique");
+        Rec.FindFirst();
     end;
     procedure setcaption(Caption : text) 
     begin 

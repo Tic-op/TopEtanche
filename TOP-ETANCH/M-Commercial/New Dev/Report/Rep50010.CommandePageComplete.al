@@ -1,34 +1,34 @@
 namespace Top.Top;
 
-using Microsoft.Sales.History;
-using Microsoft.Inventory.Item;
+using Microsoft.Sales.Document;
 using Microsoft.Foundation.Company;
 using Pharmatec_Ticop.Pharmatec_Ticop;
+using Microsoft.Inventory.Item;
 
-report 50009 FacturePageComplete
-{ ApplicationArea = all ;
-    Caption = 'Facture';
+report 50010 CommandePageComplete
+{    ApplicationArea = all ;
+    Caption = 'Commande vente';
     DefaultLayout = RDLC;
-    RDLCLayout = 'Facture_Top copy.rdl';
+    RDLCLayout = 'Commande_Top.rdl';
     dataset
     {
-        dataitem(SalesInvoiceHeader;"Sales Invoice Header")
+        dataitem(SalesHeader; "Sales Header")
         { 
-          //  DataItemTableView = where ("Document Type"= const("Sales Document Type"::Quote));
+            DataItemTableView = where ("Document Type"= const("Sales Document Type"::Order));
             
             Column(No_;"No."){}
           Column(Posting_Date;"Posting Date"){}
           Column(Document_Date;"Document Date"){}
-         // Column(Quote_Valid_Until_Date;"Quote Valid Until Date"){}
-         // Column(Promised_Delivery_Date;"Promised Delivery Date"){}
-        Column(Order_No_;"Order No."){}
+          Column(Quote_Valid_Until_Date;"Quote Valid Until Date"){}
+          Column(Promised_Delivery_Date;SalesHeader."Requested Delivery Date"){}
+          column(External_Document_No_;"External Document No."){}
 
           Column (No_Client;"Sell-to Customer No."){}
           Column (Nom_Client;"Sell-to Customer Name"){}
           Column(Address_Client;"Sell-to Address"){}
           Column (MF_Client;"VAT Registration No.") {}
-          Column(Tel_Client;"Sell-to Phone No."){}
-          Column(Mail_Client;"Sell-to E-Mail"){}
+          Column(Tel_Client;SalesHeader."Sell-to Phone No."){}
+          Column(Mail_Client;SalesHeader."Sell-to E-Mail"){}
           Column(TotalBrut;TotalBrut){}
           Column(Totalremise;Totalremise){}
           Column(TotalHT;TotalHT){}
@@ -50,11 +50,11 @@ report 50009 FacturePageComplete
 
           // End Companyinf
 
-             dataitem("Salesinvoiceline";"Sales Invoice Line")
+             dataitem("Sales Line";"Sales Line")
              {    DataItemLink = "Document No." = FIELD("No.");
-                DataItemLinkReference = SalesInvoiceHeader; 
+                DataItemLinkReference = SalesHeader; 
                  UseTemporary = true;
-             // DataItemTableView= where (Type=filter(<> '%1'),"Quantity (Base)" = filter(>0));
+               DataItemTableView= where (Type = const ("Sales Line Type"::Item));//,"Quantity (Base)" = filter(>0));
 
                 column("Code";VendorItemCode) {}
                 column(Description;Description){}
@@ -72,8 +72,6 @@ report 50009 FacturePageComplete
                       VendorItemCode := '';
                     if item.get("No.") then 
                     VendorItemCode := item."Vendor Item No.";
-                      If type = type::" " then 
-                      VendorItemCode := '>>>>>>>>>>'
                  end;
 
 
@@ -81,26 +79,26 @@ report 50009 FacturePageComplete
              
              trigger OnAfterGetRecord()
              var 
-             SalesinvLines,SIL : record "Sales Invoice Line" ;
+             SalesLines,SIL : record "Sales Line" ;
              CUTextMontant : Codeunit "Montant Toute Lettres";
              SE : codeunit SalesEvents ;
              
              
              begin 
-            //  SalesinvLines.setrange("Document Type","Document Type");
-              SalesinvLines.SetRange("Document No.","No.");
-              SalesinvLines.CalcSums("Line Amount","Line Discount Amount","Amount Including VAT",Amount,"VAT Base Amount");
-              Totalremise := SalesinvLines."Line Discount Amount";
-              TotalHT:=SalesinvLines."VAT Base Amount";
+              SalesLines.setrange("Document Type","Document Type");
+              SalesLines.SetRange("Document No.","No.");
+              SalesLines.CalcSums("Line Amount","Line Discount Amount","Amount Including VAT",Amount);
+              Totalremise := SalesLines."Line Discount Amount";
+              TotalHT:=SalesLines."Line Amount";
               TotalBrut:=TotalHT-Totalremise;
-              TotalTva := SalesinvLines."Amount Including VAT" - TotalHT ;
+              TotalTva := SalesLines."Amount Including VAT" - TotalHT ;
               Timbre := "Stamp Amount";
-              NetaPayer := SalesinvLines."Amount Including VAT"+timbre ;
+              NetaPayer := SalesLines."Amount Including VAT"+timbre ;
               CUTextMontant."Montant en texte"(txtMntTLettres,NetaPayer);
 
-              /*    "No. Printed" += 1;
-                Modify(); */
-                //SE.ArchiveDevis("No.");
+                 "No. Printed" += 1;
+                Modify();
+                SE.ArchiveDevis("No.");
 
 
                   Clear(SIL);
@@ -111,10 +109,10 @@ report 50009 FacturePageComplete
                 j := SIL.count;
 
                 repeat
-                    "Salesinvoiceline".init;
+                    "Sales Line".init;
 
-                   "Salesinvoiceline" := SIL;
-                     "Salesinvoiceline".Insert();
+                     "Sales Line" := SIL;
+                     "Sales Line".Insert();
 
                     line := SIL."Line No.";
                 until SIL.next = 0;
@@ -122,13 +120,13 @@ report 50009 FacturePageComplete
 
 
                 // IF j MOD 30 <> 0 then 
-                for temp_i := j MOD 34 to 22 do begin
+                for temp_i := j MOD 32 to 21 do begin
                     line += 11;
-                    "Salesinvoiceline".Init();
-                    "Salesinvoiceline"."Document No." := "No.";
-                   "Salesinvoiceline"."Line No." := line;
-                     "Salesinvoiceline".Type :=  "Salesinvoiceline".Type::Item;
-                     "Salesinvoiceline".insert(false);
+                     "Sales Line".Init();
+                     "Sales Line"."Document No." := "No.";
+                     "Sales Line"."Line No." := line;
+                     "Sales Line".Type :=  "Sales Line".Type::Item;
+                     "Sales Line".insert(false);
                 end;
 
 
@@ -169,5 +167,4 @@ report 50009 FacturePageComplete
     i , temp_i,J ,Line : integer ;
     txtMntTLettres : text ;
     Companyinf : Record "Company Information" ;
-   
 }

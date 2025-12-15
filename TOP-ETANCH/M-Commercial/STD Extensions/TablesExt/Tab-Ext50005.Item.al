@@ -185,6 +185,18 @@ tableextension 50005 Itemext extends Item
                     "Unité de Dépot" := "Base Unit of Measure";
             end;
         }
+        modify("Vendor No.")
+        {
+            Trigger OnAfterValidate()
+            var vendor : Record Vendor ;
+              begin 
+                Vendor.get("Vendor No.");
+                "Vendor Name":=vendor.name;
+              
+                Modify(false);
+                 
+              end;
+        }
 
     }
     keys
@@ -326,7 +338,17 @@ tableextension 50005 Itemext extends Item
         VenteAnnéeRoulante := RecLItem."Qty vendue";
     end;
 
-
+    Procedure CalcDisponibilitéWithResetFilters(locationCode: Code[25]; binCode: Code[25]) : Decimal;
+    var DispoReset : decimal ;
+    Begin 
+          DispoReset:= CalcDisponibilité(locationCode, binCode);
+          setfilter("Location Filter",'');
+          SetFilter("Bin Filter",'');
+          CalcFields("Qty. to ship on order line", "Inventory in Warehouse", "Qty on invoice",Inventory);
+          exit(DispoReset); ///To be verified
+    
+    
+    End;
     procedure CalcDisponibilité(locationCode: Code[25]; binCode: Code[25]): Decimal
     var
         Location: Record Location;
@@ -350,12 +372,14 @@ tableextension 50005 Itemext extends Item
             if binCode <> '' then begin
                 SetFilter("Bin Filter", binCode);
                 CalcFields("Qty. to ship on order line", "Inventory in Warehouse", "Qty on invoice");
+                
                 exit("Inventory in Warehouse" - "Qty. to ship on order line" - "Qty on invoice");
             end
 
             else begin
 
                 CalcFields("Inventory", "Qty. to ship on order line", "Qty on invoice");
+                
                 exit("Inventory" - "Qty. to ship on order line" - "Qty on invoice");
 
             end;
@@ -397,7 +421,8 @@ tableextension 50005 Itemext extends Item
 
 
             end;
-
+             
+              
             exit(dispo - SL."Qty. to Ship (Base)" - SLFAct."Quantity (Base)");
         end;
     end;

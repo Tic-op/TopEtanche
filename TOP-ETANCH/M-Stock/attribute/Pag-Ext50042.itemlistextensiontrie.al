@@ -6,12 +6,13 @@ pageextension 50042 "item list extension trie" extends "Item List"
 {
 
      actions {
-          addlast(processing){
-          Action(trier)
+          addafter(ClearAttributes){
+          Action(Trier)
             {
-
+                 PromotedCategory = Category10 ;
                 ApplicationArea = all;
                 Promoted = true ;
+                Image = SortAscending;
 
                 trigger OnAction() 
 
@@ -40,5 +41,39 @@ pageextension 50042 "item list extension trie" extends "Item List"
 
                 end;
                 end ;
-            } }
+            } 
+              Action(Affectation){
+
+                Caption= 'Affectation des valeurs attributs';
+                PromotedCategory = Category10 ;
+                ApplicationArea = all;
+                Promoted = true ;
+                Image = Allocate;
+                Trigger OnAction() 
+                begin 
+                    Page.Run(50038);
+
+                end;
+              }
+               Action(Categorisation){
+
+                Caption= 'Catégorisation des articles';
+                PromotedCategory = Category10 ;
+                ApplicationArea = all;
+                Promoted = true ;
+                Image = Category;
+                Trigger OnAction() 
+                begin 
+                    Page.Run(50037);
+
+                end;
+              }
+            
+            
+            }
+           
+
+
+
+
 }}

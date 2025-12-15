@@ -86,7 +86,7 @@ pageextension 50139 CustomerCard extends "customer Card"
             }
         }
 
-        addafter("SIREN No.")
+        addafter("Encours Restant")
         {
             field("Type de facturation"; Rec."Type de facturation")
             {

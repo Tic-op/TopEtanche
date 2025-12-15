@@ -78,7 +78,7 @@ tableextension 50001 ItemExt_Categories extends Item
             
         }
         Field(50106;"Valeur Attribut Numérique";decimal)
-        {
+        {  DecimalPlaces = 0:2 ;
 
         }
 
@@ -98,6 +98,7 @@ tableextension 50001 ItemExt_Categories extends Item
         Key(Vendorrefkey; "Vendor Item No."){
         }
         key (Descriptionkey;Description){} */
+        key(Attributekey;"Valeur Attribut Numérique","Valeur attribut"){}
 
     }
     Procedure assignattribute(attName :text[250];AttributeValue:text[250])

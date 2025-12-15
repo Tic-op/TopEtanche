@@ -227,11 +227,20 @@ codeunit 50006 PréparationEvent
                [EventSubscriber(ObjectType::Codeunit,Codeunit::"Sales-Post",OnBeforePostSalesDoc,'',false,false)]
                Procedure CheckPréparationSalesHeader(var SalesHeader: Record "Sales Header")
                var Ordreprep : record "Ordre de preparation" ;
+               SalesLineToChecknotFromBL : record "Sales Line";
                 begin 
                   if (SalesHeader."Document Type" = "Sales Document Type" ::Invoice)
                   then 
-                   
+                  begin
+                    SalesLineToChecknotFromBL.setrange("Document Type","Sales Document Type"::Invoice);
+                    SalesLineToChecknotFromBL.setrange("Document No.",SalesHeader."No.");
+                    SalesLineToChecknotFromBL.setrange(type,"Sales Line Type"::Item);
+                    SalesLineToChecknotFromBL.setrange("Shipment No.",'');
+                    SalesLineToChecknotFromBL.setrange("Shipment Line No.",0);
+
+                    If SalesLineToChecknotFromBL.Count >0 then 
                    "CheckPréparation"(Ordreprep."document type"::Facture,SalesHeader."No.");
+                    end;
                   
                    if (SalesHeader."Document Type" = "Sales Document Type" ::Order)
                   then 

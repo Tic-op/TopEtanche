@@ -61,10 +61,12 @@ page 50005 "Bon de preparation"
                     ToolTip = 'Specifies the value of the Date début préparation field.', Comment = '%';
 
                     ApplicationArea = all;
+                    editable =false ;
                 }
                 field("Date fin préparation"; Rec."Date fin préparation")
                 {
                     ApplicationArea = all;
+                    Editable= false ;
                 }
                 field(Printed; Rec.Printed)
                 {

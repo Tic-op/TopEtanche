@@ -288,6 +288,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
     trigger OnModify()
     var
         OrdrePrep: Record "Ordre de preparation";
+       
     begin
        /*  if "Document Type" = "Document Type"::Order then begin
             OrdrePrep.SetRange("Order No", "Document No.");

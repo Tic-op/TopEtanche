@@ -140,5 +140,8 @@ permissionset 50000 GeneratedPermission
         page "Affectation type"=X,
         page "Affectation Valeur attribut"=X,
         page "Lignepréparation"=X,
-        page listeattribut=X;
+        page listeattribut=X,
+        report CommandePageComplete=X,
+        report DevisPageComplete=X,
+        report FacturePageComplete=X;
 }

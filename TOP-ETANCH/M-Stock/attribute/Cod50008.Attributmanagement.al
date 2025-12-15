@@ -201,8 +201,8 @@ codeunit 50008 "Attribut management"
          Pagetrie.setcaption(Ia.Name);
         
           Pagetrie.Run(); */
-        message(itemtemp.Count.ToText());
-       Page.RunModal(50042,itemtemp); // To be continued
+       // message(itemtemp.Count.ToText());
+       Page.RunModal(50042,itemtemp); 
             
             
 

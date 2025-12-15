@@ -159,7 +159,7 @@ tableextension 50140 CustomerExtension extends Customer
     var
         contact: record contact;
     begin
-        contact.findfirst;
+        if contact.findfirst then 
         repeat
             contact.UpdateCustomerNo();
 

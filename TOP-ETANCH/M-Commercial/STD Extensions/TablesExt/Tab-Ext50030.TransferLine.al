@@ -49,10 +49,12 @@ tableextension 50030 TransferLine extends "Transfer Line"
     end; */  // AM 161025 Blocage lors de la validation ==> page transfer subform
  trigger OnModify() 
  var begin 
-
-    CalcFields("Preparé");
-      if "Preparé" then 
+IF (REc."Quantity (Base)" <> xRec."Quantity (Base)") Or (rec."Transfer-To Bin Code"<> xrec."Transfer-To Bin Code") Or (rec."Transfer-to Code" <> Xrec."Transfer-to Code") then 
+begin 
+    CalcFields("Preparé","statut ligne préparation");
+      if "Preparé"  then 
             Error('Impossible de modifier cette ligne, veuillez supprimer le bon de préparation associé.');
+ end;
  end;
     trigger OnDelete()
     var

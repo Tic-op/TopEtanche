@@ -9,7 +9,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.0.20283.0</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2025-12-11T14:38:14.0453945Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2025-12-11T13:30:50.6098301Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -1561,7 +1561,7 @@
                         </TablixMember>
                         <TablixMember>
                           <Visibility>
-                            <Hidden>=(Fields!VAT__.Value) =0</Hidden>
+                            <Hidden>=(Fields!VAT__.Value)=0</Hidden>
                           </Visibility>
                         </TablixMember>
                       </TablixMembers>
@@ -2295,32 +2295,22 @@
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value> Devis  </Value>
+                          <Value>Commande</Value>
                           <Style>
                             <FontSize>20pt</FontSize>
                             <FontWeight>Bold</FontWeight>
                           </Style>
                         </TextRun>
-                        <TextRun>
-                          <Value xml:space="preserve">    </Value>
-                          <Style>
-                            <FontSize>20pt</FontSize>
-                          </Style>
-                        </TextRun>
-                        <TextRun>
-                          <Value xml:space="preserve">   </Value>
-                          <Style />
-                        </TextRun>
                       </TextRuns>
                       <Style>
-                        <TextAlign>Left</TextAlign>
+                        <TextAlign>Center</TextAlign>
                       </Style>
                     </Paragraph>
                   </Paragraphs>
                   <rd:DefaultName>Textbox1</rd:DefaultName>
                   <Top>0.17787cm</Top>
                   <Height>1.15562cm</Height>
-                  <Width>2.87042cm</Width>
+                  <Width>4.215cm</Width>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -2338,10 +2328,6 @@
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value xml:space="preserve">  </Value>
-                          <Style />
-                        </TextRun>
-                        <TextRun>
                           <Value>Numéro :  </Value>
                           <Style>
                             <FontWeight>Bold</FontWeight>
@@ -2358,10 +2344,10 @@
                     </Paragraph>
                   </Paragraphs>
                   <rd:DefaultName>Textbox3</rd:DefaultName>
-                  <Top>0.14315cm</Top>
-                  <Left>2.94098cm</Left>
+                  <Top>0.17787cm</Top>
+                  <Left>4.32789cm</Left>
                   <Height>0.6cm</Height>
-                  <Width>4.7225cm</Width>
+                  <Width>3.39555cm</Width>
                   <ZIndex>1</ZIndex>
                   <Style>
                     <Border>
@@ -2380,10 +2366,6 @@
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value xml:space="preserve">  </Value>
-                          <Style />
-                        </TextRun>
-                        <TextRun>
                           <Value>Date :  </Value>
                           <Style>
                             <FontWeight>Bold</FontWeight>
@@ -2401,11 +2383,49 @@
                     </Paragraph>
                   </Paragraphs>
                   <rd:DefaultName>Textbox3</rd:DefaultName>
-                  <Top>0.81315cm</Top>
-                  <Left>2.94098cm</Left>
+                  <Top>0.83256cm</Top>
+                  <Left>4.32789cm</Left>
                   <Height>0.52034cm</Height>
-                  <Width>4.66075cm</Width>
+                  <Width>3.39555cm</Width>
                   <ZIndex>2</ZIndex>
+                  <Style>
+                    <Border>
+                      <Style>None</Style>
+                    </Border>
+                    <PaddingLeft>2pt</PaddingLeft>
+                    <PaddingRight>2pt</PaddingRight>
+                    <PaddingTop>2pt</PaddingTop>
+                    <PaddingBottom>2pt</PaddingBottom>
+                  </Style>
+                </Textbox>
+                <Textbox Name="Textbox6">
+                  <CanGrow>true</CanGrow>
+                  <KeepTogether>true</KeepTogether>
+                  <Paragraphs>
+                    <Paragraph>
+                      <TextRuns>
+                        <TextRun>
+                          <Value>Origine:</Value>
+                          <Style>
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
+                        </TextRun>
+                        <TextRun>
+                          <Value>=Fields!External_Document_No_.Value</Value>
+                          <Style>
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
+                        </TextRun>
+                      </TextRuns>
+                      <Style />
+                    </Paragraph>
+                  </Paragraphs>
+                  <rd:DefaultName>Textbox3</rd:DefaultName>
+                  <Top>1.49401cm</Top>
+                  <Left>4.32789cm</Left>
+                  <Height>0.57326cm</Height>
+                  <Width>3.39555cm</Width>
+                  <ZIndex>3</ZIndex>
                   <Style>
                     <Border>
                       <Style>None</Style>
@@ -2420,8 +2440,8 @@
               <KeepTogether>true</KeepTogether>
               <Top>4.17724cm</Top>
               <Left>1.31974cm</Left>
-              <Height>1.45168cm</Height>
-              <Width>7.78694cm</Width>
+              <Height>2.23475cm</Height>
+              <Width>8.02507cm</Width>
               <ZIndex>1</ZIndex>
               <Style>
                 <Border>
@@ -2429,78 +2449,6 @@
                 </Border>
               </Style>
             </Rectangle>
-            <Textbox Name="Textbox6">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value> Délai de livraison : </Value>
-                      <Style />
-                    </TextRun>
-                    <TextRun>
-                      <Value>=Fields!Promised_Delivery_Date.Value</Value>
-                      <Style>
-                        <Format>dd/MM/yyyy</Format>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style />
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox6</rd:DefaultName>
-              <Top>5.70653cm</Top>
-              <Left>1.31974cm</Left>
-              <Height>0.6cm</Height>
-              <Width>7.78694cm</Width>
-              <ZIndex>2</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
-            <Textbox Name="Textbox7">
-              <CanGrow>true</CanGrow>
-              <KeepTogether>true</KeepTogether>
-              <Paragraphs>
-                <Paragraph>
-                  <TextRuns>
-                    <TextRun>
-                      <Value> Validité : </Value>
-                      <Style />
-                    </TextRun>
-                    <TextRun>
-                      <Value>=Fields!Quote_Valid_Until_Date.Value</Value>
-                      <Style>
-                        <Format>dd/MM/yyyy</Format>
-                      </Style>
-                    </TextRun>
-                  </TextRuns>
-                  <Style />
-                </Paragraph>
-              </Paragraphs>
-              <rd:DefaultName>Textbox7</rd:DefaultName>
-              <Top>6.34181cm</Top>
-              <Left>1.31974cm</Left>
-              <Height>0.55425cm</Height>
-              <Width>7.78694cm</Width>
-              <ZIndex>3</ZIndex>
-              <Style>
-                <Border>
-                  <Style>None</Style>
-                </Border>
-                <PaddingLeft>2pt</PaddingLeft>
-                <PaddingRight>2pt</PaddingRight>
-                <PaddingTop>2pt</PaddingTop>
-                <PaddingBottom>2pt</PaddingBottom>
-              </Style>
-            </Textbox>
             <Image Name="Image1">
               <Source>Database</Source>
               <Value>=First(Fields!CompanyPicture.Value, "DataSet_Result")</Value>
@@ -2510,7 +2458,7 @@
               <Left>15.2793cm</Left>
               <Height>3.28343cm</Height>
               <Width>4.91815cm</Width>
-              <ZIndex>4</ZIndex>
+              <ZIndex>2</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -2714,7 +2662,7 @@
               <Left>1.31974cm</Left>
               <Height>3.58979cm</Height>
               <Width>13.33437cm</Width>
-              <ZIndex>5</ZIndex>
+              <ZIndex>3</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -2760,7 +2708,7 @@
               <Left>18.27829cm</Left>
               <Height>0.59405cm</Height>
               <Width>1.61123cm</Width>
-              <ZIndex>6</ZIndex>
+              <ZIndex>4</ZIndex>
               <Style>
                 <Border>
                   <Style>None</Style>
@@ -2868,6 +2816,9 @@ End Function
         </Field>
         <Field Name="Promised_Delivery_Date">
           <DataField>Promised_Delivery_Date</DataField>
+        </Field>
+        <Field Name="External_Document_No_">
+          <DataField>External_Document_No_</DataField>
         </Field>
         <Field Name="No_Client">
           <DataField>No_Client</DataField>

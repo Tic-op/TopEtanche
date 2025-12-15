@@ -14,7 +14,15 @@ addafter("Vendor No.")
     }
     
 }       
-moveafter("Vendor Name";"Vendor Item No.")    
+addafter(InventoryField)
+{
+    field(Disponibilité;rec."CalcDisponibilitéWithResetFilters"('','')){
+        visible=true;
+        ApplicationArea=all;
+        DecimalPlaces = 0:3 ;
+    }  
+}
+moveafter("No.";"Vendor Item No.")    
            modify ("Substitutes Exist") {
             Visible= false ;
            } 
@@ -28,26 +36,31 @@ moveafter("Vendor Name";"Vendor Item No.")
          }
          modify("Vendor Item No."){
             visible= true;
+           // Caption= 'Code fournisseur';
             ApplicationArea = all ;
          }
+         modify("Cost is Adjusted"){
+            Visible=false ; 
+         }
     }
-  /*   actions{
+  actions{
         addfirst(Functions)
         {
-            action(MAJ_VENDOR_NAME){ 
+            action(MAJ_DESCRIPTION){ 
                 ApplicationArea = all;
                 Promoted = true ;
+                visible=false ;
                  trigger OnAction()
                   var 
-    vendor : Record Vendor ;
+   Descriptionmodified : Text[100];
     
     begin 
-    if REc.FindSet() then 
-    vendor.SetLoadFields("No.",Name);
-    repeat 
-    if vendor.get(rec."Vendor No.")then begin  rec."Vendor Name" := vendor.name;
-    rec.Modify();end
+    if REc.Findfirst() then 
    
+    repeat 
+    Descriptionmodified:= rec.Description ;
+    rec.Validate(Description,Descriptionmodified.Replace('.',','));
+    rec.Modify();
     until rec.next=0 ;
 
     end;
@@ -56,7 +69,11 @@ moveafter("Vendor Name";"Vendor Item No.")
 
           
         }
-    } */
+    } 
+    trigger OnAfterGetRecord()
+      var begin 
+       
+      end;
  
 
 

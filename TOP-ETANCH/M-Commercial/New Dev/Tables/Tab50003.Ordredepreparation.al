@@ -26,10 +26,10 @@ table 50003 "Ordre de preparation"
 
                 If (Statut = Statut::"En cours") and (xrec.Statut = Statut::"Créé") then begin
                     "Date début préparation" := CurrentDateTime;
-
                 end;
                 If (Statut = Statut::"Préparé") then begin
                     "Date fin préparation" := CurrentDateTime;
+                
 
                 end;
 

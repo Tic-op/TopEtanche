@@ -90,8 +90,9 @@ page 50038 "Affectation Valeur attribut"
             begin 
                 if not AffectationParArticle then 
                 Clear(DynCaption);
-                Clear(DynShow);
+               // Clear(DynShow);
                 clear(Attributdictionnary);
+                AttributesCount:=0 ;
                 CurrPage.Update();
                 
             end;
@@ -414,6 +415,7 @@ rec.ModifyAll(DynAttr10, '');
                   end;
                    Clear(Attributdictionnary);
                 Clear(DynCaption);
+                AttributesCount:=0 ;
                end
                end ;
 
@@ -501,13 +503,13 @@ rec.ModifyAll(DynAttr10, '');
 
         exit (DynCaption[I]);
     end;
-
+/* 
     Procedure getvisibility(I :Integer): Boolean
     begin 
 
 
         exit (DynShow[I]);
-    end;
+    end; */
     var famille,catégory, "type" , Produit,Matériau : code [20];
         
       AttributeValue ,attribut: text[250];
@@ -517,7 +519,7 @@ rec.ModifyAll(DynAttr10, '');
      Attributdictionnary :  Dictionary of [Integer,text];
 
      DynCaption: array[10] of Text[100];
-      DynShow: array[10] of Boolean; 
+     // DynShow: array[10] of Boolean; 
 
 
 }

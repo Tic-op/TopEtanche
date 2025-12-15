@@ -158,7 +158,7 @@ codeunit 50052 SalesEvents
         CheckCustomerCredit(SalesHeader);
 
     end;
-
+    
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Blanket Sales Order to Order", OnBeforeCreateSalesHeader, '', false, false)]
     Procedure AffecterSoucheBL(var OrderSalesHeader: Record "Sales Header")
     var
@@ -199,6 +199,8 @@ codeunit 50052 SalesEvents
 
         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
         SalesLine.SetRange("Document No.", SalesHeader."No.");
+        SalesLine.setfilter("Shipment Line No.",'> %1',0);//
+        SalesLine.SetFilter("Shipment No.",'<> %1','');// Extraire ligne expédition Pad de control disponibilité ;
         SalesLine.SetRange(Type, SalesLine.Type::Item);
 
         if SalesLine.FindFirst() then
