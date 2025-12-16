@@ -32,6 +32,7 @@ pageextension 50044 ResourceCardExt extends "Resource Card"
                 PromotedOnly = true;
                 PromotedCategory = Process;
                 ApplicationArea = All;
+                Visible=false ;
                 /* trigger OnAction()
                 var
                     test: Codeunit "TEST-ISRA";

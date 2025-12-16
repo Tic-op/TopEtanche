@@ -49,15 +49,7 @@ pageextension 50139 CustomerCard extends "customer Card"
                 ShowMandatory = true;
 
             }
-            field("Cause du blockage"; Rec."Cause du blocage")
 
-            {
-                ApplicationArea = All;
-                trigger OnValidate()
-                begin
-                    CurrPage.update();
-                end;
-            }
             field(Public; Rec.Public)
             {
                 ApplicationArea = All;
@@ -79,10 +71,35 @@ pageextension 50139 CustomerCard extends "customer Card"
             {
                 ApplicationArea = all;
                 Editable = false;
-                /*  trigger OnDrillDown()
-                 begin
-                     rec.ShowCalcRestant;
-                 end; */
+                trigger OnDrillDown()
+                begin
+                    rec.ShowCalcRestant;
+                end;
+            }
+            field("Risque financier"; Rec."Encours_Financier")
+            {
+                ApplicationArea = all;
+                StyleExpr = CreditColor;
+                Editable = false;
+
+                trigger OnDrillDown()
+                begin
+                    rec.ShowEncours_Financier;
+                end;
+
+
+            }
+            field("Cause du blockage"; Rec."Cause du blocage")
+
+            {
+
+                ApplicationArea = All;
+
+                trigger OnValidate()
+                begin
+                    CurrPage.Update();
+
+                end;
             }
         }
 
@@ -147,5 +164,15 @@ pageextension 50139 CustomerCard extends "customer Card"
     }
 
 
+    trigger OnAfterGetRecord()
 
+    begin
+        if rec.Encours_Financier() > Rec."Credit Limit (LCY)" then
+            CreditColor := 'Unfavorable'
+        else
+            CreditColor := 'Favorable';
+    end;
+
+    var
+        CreditColor: Text;
 }

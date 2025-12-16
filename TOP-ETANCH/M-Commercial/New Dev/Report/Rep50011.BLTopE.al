@@ -1,33 +1,35 @@
 namespace Top.Top;
 
-using Microsoft.Sales.Document;
+using Microsoft.Sales.History;
+using Microsoft.Inventory.Item;
 using Microsoft.Foundation.Company;
 using Pharmatec_Ticop.Pharmatec_Ticop;
-using Microsoft.Inventory.Item;
 
-report 50008 DevisPageComplete
-{    ApplicationArea = all ;
-    Caption = 'Devis';
+report 50011 "BLTop-E"
+{
+    ApplicationArea = all ;
+    Caption = 'Expédition vente enregistrée';
     DefaultLayout = RDLC;
-    RDLCLayout = 'Devis_Top.rdl';
+    RDLCLayout = 'BL-Top-E.rdl';
     dataset
     {
-        dataitem(SalesHeader; "Sales Header")
+        dataitem(SalesSHipmentHeader;"Sales Shipment Header")
         { 
-            DataItemTableView = where ("Document Type"= const("Sales Document Type"::Quote));
+          //  DataItemTableView = where ("Document Type"= const("Sales Document Type"::Quote));
             
             Column(No_;"No."){}
           Column(Posting_Date;"Posting Date"){}
           Column(Document_Date;"Document Date"){}
-          Column(Quote_Valid_Until_Date;"Quote Valid Until Date"){}
-          Column(Promised_Delivery_Date;SalesHeader."Requested Delivery Date"){}
+         // Column(Quote_Valid_Until_Date;"Quote Valid Until Date"){}
+         // Column(Promised_Delivery_Date;"Promised Delivery Date"){}
+        Column(Order_No_;"Order No."){}
 
           Column (No_Client;"Sell-to Customer No."){}
           Column (Nom_Client;"Sell-to Customer Name"){}
           Column(Address_Client;"Sell-to Address"){}
           Column (MF_Client;"VAT Registration No.") {}
-          Column(Tel_Client;SalesHeader."Sell-to Phone No."){}
-          Column(Mail_Client;SalesHeader."Sell-to E-Mail"){}
+          Column(Tel_Client;"Sell-to Phone No."){}
+          Column(Mail_Client;"Sell-to E-Mail"){}
           Column(TotalBrut;TotalBrut){}
           Column(Totalremise;Totalremise){}
           Column(TotalHT;TotalHT){}
@@ -49,11 +51,11 @@ report 50008 DevisPageComplete
 
           // End Companyinf
 
-             dataitem("Sales Line";"Sales Line")
+             dataitem("SalesShipmentLine";"Sales Shipment Line")
              {    DataItemLink = "Document No." = FIELD("No.");
-                DataItemLinkReference = SalesHeader; 
+                DataItemLinkReference = SalesSHipmentHeader; 
                  UseTemporary = true;
-               //DataItemTableView= where (Type = const ("Sales Line Type"::Item));//,"Quantity (Base)" = filter(>0));
+             // DataItemTableView= where (Type=filter(<> '%1'),"Quantity (Base)" = filter(>0));
 
                 column("Code";VendorItemCode) {}
                 column(Description;Description){}
@@ -61,7 +63,7 @@ report 50008 DevisPageComplete
                 Column(PU_HT;"Unit Price"){}
                 column(Remise_Ligne;"Line Discount %"){}
                 Column(PU_TTC;"Unit Price"*(1-"Line Discount %"/100)*(1+"VAT %"/100)){}
-                Column(MontantHT;"Line Amount"){}
+                Column(MontantHT;"Quantity (Base)"*"Unit Price"*(1-"Line Discount %"/100)){}
                 Column(VAT__;"VAT %") {}
                 
 
@@ -71,6 +73,8 @@ report 50008 DevisPageComplete
                       VendorItemCode := '';
                     if item.get("No.") then 
                     VendorItemCode := item."Vendor Item No.";
+                      If type = type::" " then 
+                      VendorItemCode := '>>>>>>>>>>'
                  end;
 
 
@@ -78,40 +82,55 @@ report 50008 DevisPageComplete
              
              trigger OnAfterGetRecord()
              var 
-             SalesLines,SIL : record "Sales Line" ;
+             SalesishipLinesTotaux,SIL : record "Sales Shipment Line" ;
              CUTextMontant : Codeunit "Montant Toute Lettres";
              SE : codeunit SalesEvents ;
              
              
              begin 
-              SalesLines.setrange("Document Type","Document Type");
-              SalesLines.SetRange("Document No.","No.");
-              SalesLines.CalcSums("Line Amount","Line Discount Amount","Amount Including VAT",Amount);
-              Totalremise := SalesLines."Line Discount Amount";
-              TotalHT:=SalesLines."Line Amount";
+            //  SalesishipLines.setrange("Document Type","Document Type");
+              SalesishipLinesTotaux.SetRange("Document No.","No.");
+             // SalesishipLines.CalcSums("Line Amount","Line Discount Amount","Amount Including VAT",Amount,"VAT Base Amount");
+            
+             SalesishipLinesTotaux.FindFirst();
+             repeat
+             Totalremise += SalesishipLinesTotaux."Quantity (Base)"*SalesishipLinesTotaux."Unit Price"*
+               SalesishipLinesTotaux."Line Discount %"/100;
+             TotalHT+= SalesishipLinesTotaux."Quantity (Base)"*SalesishipLinesTotaux."Unit Price"*
+               (1-SalesishipLinesTotaux."Line Discount %"/100);
+              TotalBrut+=  SalesishipLinesTotaux."Quantity (Base)"*SalesishipLinesTotaux."Unit Price";
+              TotalTva+=  SalesishipLinesTotaux."Quantity (Base)"*SalesishipLinesTotaux."Unit Price"*
+               (1-SalesishipLinesTotaux."Line Discount %"/100)*(SalesishipLinesTotaux."VAT %"/100);
+              NetaPayer+= SalesishipLinesTotaux."Quantity (Base)"*SalesishipLinesTotaux."Unit Price"*
+               (1-SalesishipLinesTotaux."Line Discount %"/100)*(1+SalesishipLinesTotaux."VAT %"/100);
+
+
+             until SalesishipLinesTotaux.Next()=0 ;
+             /*  Totalremise := SalesishipLines."Line Discount Amount";
+              TotalHT:=SalesishipLines."VAT Base Amount";
               TotalBrut:=TotalHT-Totalremise;
-              TotalTva := SalesLines."Amount Including VAT" - TotalHT ;
-              Timbre := "Stamp Amount";
-              NetaPayer := SalesLines."Amount Including VAT"+timbre ;
+              TotalTva := SalesishipLines."Amount Including VAT" - TotalHT ;
+              //Timbre := "Stamp Amount";
+              NetaPayer := SalesishipLines."Amount Including VAT"+timbre ; */
               CUTextMontant."Montant en texte"(txtMntTLettres,NetaPayer);
 
-                 "No. Printed" += 1;
-                Modify();
-                SE.ArchiveDevis("No.");
+              /*    "No. Printed" += 1;
+                Modify(); */
+                //SE.ArchiveDevis("No.");
 
 
                   Clear(SIL);
                 ;
                 SIL.SetRange("Document No.", "No.");
-               // SIL.SetRange(Type, SIL.Type::Item); 
+                //SIL.SetRange(Type, SIL.Type::Item); 151225
                 SIL.FindSet();
                 j := SIL.count;
 
                 repeat
-                    "Sales Line".init;
+                    "SalesShipmentLine".init;
 
-                     "Sales Line" := SIL;
-                     "Sales Line".Insert();
+                   "SalesShipmentLine" := SIL;
+                     "SalesShipmentLine".Insert();
 
                     line := SIL."Line No.";
                 until SIL.next = 0;
@@ -119,13 +138,13 @@ report 50008 DevisPageComplete
 
 
                 // IF j MOD 30 <> 0 then 
-                for temp_i := j MOD 32 to 21 do begin
+                for temp_i := j MOD 34 to 22 do begin
                     line += 11;
-                     "Sales Line".Init();
-                     "Sales Line"."Document No." := "No.";
-                     "Sales Line"."Line No." := line;
-                     "Sales Line".Type :=  "Sales Line".Type::Item;
-                     "Sales Line".insert(false);
+                    "SalesShipmentLine".Init();
+                    "SalesShipmentLine"."Document No." := "No.";
+                   "SalesShipmentLine"."Line No." := line;
+                     "SalesShipmentLine".Type :=  "SalesShipmentLine".Type::Item;
+                     "SalesShipmentLine".insert(false);
                 end;
 
 
@@ -166,4 +185,5 @@ report 50008 DevisPageComplete
     i , temp_i,J ,Line : integer ;
     txtMntTLettres : text ;
     Companyinf : Record "Company Information" ;
+  
 }

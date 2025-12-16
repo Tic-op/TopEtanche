@@ -230,6 +230,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
             {
                 Caption = 'Distribution Article';
                 ApplicationArea = All;
+                 ShortcutKey = 'Alt+G';
                 Image = Bin;
                 Enabled = (rec."Quantity Shipped" = 0) and not Lignecomptoir;
 
@@ -249,6 +250,24 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
                     // else
                     // Error('Un magasin est déja affecter à cette ligne');
                 end;
+            }}
+            addlast("&Line"){
+              action(Tableau_de_Bord)
+            {
+                
+                ApplicationArea = All;
+                Image = Bin;
+                visible = true;
+               Promoted = false; ShortcutKey = 'Alt+B';
+                trigger OnAction()
+                 var
+                item: record Item;
+
+            begin
+                item.SetLoadFields("No.");
+                if item.get(rec."No.") then
+                    item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer Name", rec."VAT %");
+            end;
             }
 
         }

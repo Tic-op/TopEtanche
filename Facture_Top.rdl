@@ -9,7 +9,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.0.20283.0</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2025-12-09T13:51:51.5077051Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2025-12-15T14:19:08.7486547Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -1351,7 +1351,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Fields!MontantHT.Value*(1+Fields!VAT__.Value/100)</Value>
+                                      <Value>=Fields!MontantHT.Value*(Fields!VAT__.Value/100)</Value>
                                       <Style>
                                         <FontSize>8pt</FontSize>
                                       </Style>
@@ -1519,7 +1519,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>=Sum(Fields!MontantHT.Value*(1+Fields!VAT__.Value/100))</Value>
+                                      <Value>=Sum(Fields!MontantHT.Value*(Fields!VAT__.Value/100))</Value>
                                       <Style>
                                         <FontSize>8pt</FontSize>
                                         <Format>#,0.000;(#,0.000)</Format>
@@ -1599,7 +1599,7 @@
                         </TablixMember>
                         <TablixMember>
                           <Visibility>
-                            <Hidden>=IIF(Len(Fields!VAT__.Value) &gt; 0, False, True)</Hidden>
+                            <Hidden>=(Fields!VAT__.Value)=0</Hidden>
                           </Visibility>
                         </TablixMember>
                       </TablixMembers>

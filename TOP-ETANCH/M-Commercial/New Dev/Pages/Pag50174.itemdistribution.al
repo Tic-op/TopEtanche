@@ -3,7 +3,7 @@ page 50174 "itemdistribution"
 {
     ApplicationArea = All;
     Caption = 'item distribution';
-    PageType = Document;
+    PageType = ListPlus;//151225
     SourceTable = "Item Distribution";
     //SourceTableTemporary = true;
     DeleteAllowed = false;
@@ -25,10 +25,11 @@ page 50174 "itemdistribution"
                     DecimalPlaces = 0 : 3;
                     ApplicationArea = all;
                 }
-                field("Affectée"; "quantité affectée")
+                field("Affectée"; "quantité totale"-"quantité affectée")
                 {
                     Enabled = false;
                     Editable = false;
+                    Caption='Restant';
                     decimalPlaces = 0 : 3;
                     ApplicationArea = all;
 

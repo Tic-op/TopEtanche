@@ -54,7 +54,7 @@ report 50010 CommandePageComplete
              {    DataItemLink = "Document No." = FIELD("No.");
                 DataItemLinkReference = SalesHeader; 
                  UseTemporary = true;
-               DataItemTableView= where (Type = const ("Sales Line Type"::Item));//,"Quantity (Base)" = filter(>0));
+             //  DataItemTableView= where (Type = const ("Sales Line Type"::Item));//,"Quantity (Base)" = filter(>0));
 
                 column("Code";VendorItemCode) {}
                 column(Description;Description){}
@@ -104,7 +104,7 @@ report 50010 CommandePageComplete
                   Clear(SIL);
                 ;
                 SIL.SetRange("Document No.", "No.");
-                SIL.SetRange(Type, SIL.Type::Item);
+               // SIL.SetRange(Type, SIL.Type::Item); 151225
                 SIL.FindSet();
                 j := SIL.count;
 

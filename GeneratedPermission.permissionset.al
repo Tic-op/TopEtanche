@@ -143,5 +143,10 @@ permissionset 50000 GeneratedPermission
         page listeattribut=X,
         report CommandePageComplete=X,
         report DevisPageComplete=X,
-        report FacturePageComplete=X;
+        report FacturePageComplete=X,
+        tabledata "Retenue à la source"=RIMD,
+        table "Retenue à la source"=X,
+        report "BLTop-E"=X,
+        codeunit FinanceEvents=X,
+        page "Retenue à la source Card"=X;
 }

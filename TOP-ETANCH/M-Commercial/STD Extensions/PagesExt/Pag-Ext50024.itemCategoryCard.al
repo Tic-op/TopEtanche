@@ -48,6 +48,8 @@ pageextension 50024 itemCategoryCard extends "Item Category Card"
             {
                 ApplicationArea = all;
                 Caption = 'supprimer mapping';
+                visible=false;
+
                 trigger onaction()
                 var
                     iavmap: Record "Item Attribute Value Mapping";

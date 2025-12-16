@@ -196,7 +196,7 @@ report 50007 BLPageComplete
                 Clear(SIL);
                 ;
                 SIL.SetRange("Document No.", "No.");
-                SIL.SetRange(Type, SIL.Type::Item);
+               // SIL.SetRange(Type, SIL.Type::Item);
                 SIL.FindSet();
                 j := SIL.count;
 

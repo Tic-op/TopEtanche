@@ -302,6 +302,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 Caption = 'Distribution Article';
                 ApplicationArea = All;
                 Image = Bin;
+                ShortcutKey = 'Alt+G';
                 Enabled = (rec."Quantity Shipped" = 0) and not Lignecomptoir;
 
                 trigger OnAction()
@@ -320,52 +321,24 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                     // else
                     // Error('Un magasin est déja affecter à cette ligne');
                 end;
-            }
-            action("delete all")
+            }}
+            addlast("&Line"){
+            action(Tableau_de_Bord)
             {
-                Caption = 'Supprimer ligne résérvation';
+                
                 ApplicationArea = All;
                 Image = Bin;
-                visible = false;
+                visible = true;
+               Promoted = false; ShortcutKey = 'Alt+B';
                 trigger OnAction()
-                var
-                    SL: record "Sales Line";
-                    RE: record "Reservation Entry";
-                    inv: Record "Inventroy Line";
-                    ship: record "Sales Shipment Header";
-                    wh: record "Warehouse Entry";
-                    Cu: Codeunit SalesEvents;
-                    item: record item;
-                    cuv: Codeunit VerificationStock;
-                    OP: Record "Ordre de preparation";
-                    Binc: Record "Bin Content";
+                 var
+                item: record Item;
 
-                begin
-                    /* Sl.SetRange("Document No.", rec."Document No.");
-                    Sl.DeleteAll(true); */
-                    // RE.DeleteAll(true);
-                    //inv.DeleteAll();
-                    cu.DeleteReservationEntry(Rec);
-                    Binc.findfirst();
-                    repeat
-                        Binc."Disponibilité" := item."CalcDisponibilité"(Binc."Location Code", Binc."Bin Code");
-                        Binc.modify();
-
-                    until Binc.next = 0;
-                    /*     item.findfirst();
-                        repeat
-                            if item."Unité de Dépot" = '' then
-                                item."Unité de Dépot" := item."Base Unit of Measure";
-                            item.Modify();
-
-                        until item.next = 0; */
-
-                    //Cuv.FusionLigneCommande(rec."Document Type", rec."Document No.");
-                    /*  OP.SetFilter("document type", '');
-                     OP.ModifyAll("document type", 'Commande');
-  */
-
-                end;
+            begin
+                item.SetLoadFields("No.");
+                if item.get(rec."No.") then
+                    item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer Name", rec."VAT %");
+            end;
             }
 
         }
@@ -518,7 +491,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
         item: record item;
         SalesL: record "Sales Line";
         SalesH: Record "Sales Header";
-
+      
 
 
     begin
@@ -528,7 +501,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
            
         end; */
-
+     
 
         SalesL.get(Documenttype, documentno, Lineno);
         SalesL.CalcFields("Preparé");
@@ -536,7 +509,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
          message('Impossible de distribuer cette ligne, des préparations associées existent.');
             exit;
         end ;
-
+        
         if not Item.get(SalesL."No.") then exit; // AM 190925
         itemdist.SetRange("Source Doc type", Documenttype);
         itemdist.setrange("Source Doc No.", documentno);
@@ -558,6 +531,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
                 if location."Bin Mandatory" then begin
                     BinC.setrange("Location Code", location.Code);
+                   BinC.setrange("Item No.",item."No.");//151225
 
                     if BinC.FindFirst() then
                         repeat
@@ -576,6 +550,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
 
                                 itemdist."Source Doc No." := documentno;
                                 itemdist."Source Line No." := Lineno;
+                               
                                 if itemdist.insert() then;
 
                             end

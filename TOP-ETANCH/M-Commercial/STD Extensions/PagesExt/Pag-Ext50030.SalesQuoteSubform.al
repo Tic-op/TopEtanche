@@ -106,6 +106,28 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
 
         }
     }
+    actions { 
+        addlast("&Line"){
+          action(Tableau_de_Bord)
+            {
+                
+                ApplicationArea = All;
+                Image = Bin;
+                visible = true;
+               Promoted = false; ShortcutKey = 'Alt+B';
+                trigger OnAction()
+                 var
+                item: record Item;
+
+            begin
+                item.SetLoadFields("No.");
+                if item.get(rec."No.") then
+                    item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer Name", rec."VAT %");
+            end;
+            }
+    
+    }
+    }
     procedure PreparationTransfert(Documenttype: enum "Sales Document Type"; documentno: Code[20]; Lineno: integer)
     Var
         itemdist: record "Item Distribution";

@@ -48,6 +48,7 @@ codeunit 50006 PréparationEvent
                       SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
 
                     SalesLine.SetRange("Document No.", documentNo);
+                    SalesLine.setrange(type,"Sales Line Type"::Item);
                     if SalesLine.FindFirst() then
                         repeat
                             if SalesLine."Location Code" = '' then
@@ -62,6 +63,7 @@ codeunit 50006 PréparationEvent
                     if DocumentType = DocumentType::Commande then 
                       SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
                     SalesLine.SetRange("Document No.",documentNo);
+                    SalesLine.setrange(type,"Sales Line Type"::Item);
                     SalesLine.SetAutoCalcFields("Preparé");
 
                     if SalesLine.FindFirst() then

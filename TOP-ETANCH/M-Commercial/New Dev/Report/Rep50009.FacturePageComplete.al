@@ -9,7 +9,7 @@ report 50009 FacturePageComplete
 { ApplicationArea = all ;
     Caption = 'Facture';
     DefaultLayout = RDLC;
-    RDLCLayout = 'Facture_Top copy.rdl';
+    RDLCLayout = 'Facture_Top.rdl';
     dataset
     {
         dataitem(SalesInvoiceHeader;"Sales Invoice Header")
@@ -106,7 +106,7 @@ report 50009 FacturePageComplete
                   Clear(SIL);
                 ;
                 SIL.SetRange("Document No.", "No.");
-                SIL.SetRange(Type, SIL.Type::Item);
+                //SIL.SetRange(Type, SIL.Type::Item); 151225
                 SIL.FindSet();
                 j := SIL.count;
 
