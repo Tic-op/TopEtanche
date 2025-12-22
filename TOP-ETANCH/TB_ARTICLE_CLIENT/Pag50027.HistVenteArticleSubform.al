@@ -27,10 +27,11 @@ page 50027 HistVenteArticleSubform
                 field("Customer No"; Rec."Customer No")
                 {
                     ToolTip = 'Specifies the value of the No client field.', Comment = '%';
+                    Visible = not Factbox;
                 }
                 field("Customer Name"; Rec."Customer Name")
                 {
-
+                           Visible = not Factbox;
                 }
                
                 field("Document Type"; Rec."Document Type")
@@ -40,6 +41,7 @@ page 50027 HistVenteArticleSubform
                 field("Document No"; Rec."Document No")
                 {
                     ToolTip = 'Specifies the value of the No document field.', Comment = '%';
+                    visible = not Factbox ;
                 }
                 field("Date"; Rec."Date Document")
                 {
@@ -568,8 +570,14 @@ page 50027 HistVenteArticleSubform
     begin
         item := item0;
     end;
+     Procedure ISFactbox(Factboxvisibility : Boolean);
+     begin 
+     Factbox := Factboxvisibility ;
+
+     end;
     var Item : record Item;
         Customer : Record Customer ;
+        Factbox : Boolean ;
 
 
 }

@@ -14,7 +14,7 @@ table 50008 HistVenteArticle
         {
             Caption = 'Type document';
             OptionMembers = "","Expédition","Facture","Devis","Facture validée","Commande Pré-BL";
-        }
+            OptionCaption = ' ,BL,FV,Devis,FV+,CV';        }
         field(5; "Document No"; Code[20])
         {
             Caption = 'No document';

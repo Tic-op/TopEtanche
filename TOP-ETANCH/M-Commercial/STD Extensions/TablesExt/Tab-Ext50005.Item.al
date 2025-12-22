@@ -418,18 +418,10 @@ tableextension 50005 Itemext extends Item
                 SLFAct.SetRange("No.", "No.");
                 SLFAct.setfilter("Quantity (Base)", '>%1', 0);
                 SLFAct.CalcSums("Quantity (Base)");
-
-
             end;
-             
-              
             exit(dispo - SL."Qty. to Ship (Base)" - SLFAct."Quantity (Base)");
         end;
     end;
-
-
-
-
     procedure CalcStock(ItemNo: code[25]; locationCode: code[25]; binCode: code[25]): Decimal
     var
         Item: Record Item;

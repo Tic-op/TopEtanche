@@ -44,6 +44,7 @@ page 50005 "Bon de preparation"
                 {
                     ToolTip = 'Specifies the value of the Statut field.', Comment = '%';
                     ApplicationArea = all;
+                    Enabled=rec."Préparateur"<>'';
                 }
                 field("Préparateur"; Rec."Préparateur")
                 {
@@ -77,7 +78,7 @@ page 50005 "Bon de preparation"
 
             }
             Part(Lignepréparation; "Lignes préparations Subform")
-            {
+            {    Enabled=rec."Préparateur"<>'';
                 SubPageLink = "Document No." = field(No);
 
 

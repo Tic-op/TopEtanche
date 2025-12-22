@@ -8,9 +8,9 @@ using PHARMATEC.PHARMATEC;
 using TopEtanch.TopEtanch;
 
 pageextension 50034 Salesinvoice extends "Sales Invoice"
-{ InsertAllowed = false ;
+{ //InsertAllowed = false ;
 
-layout
+    layout
     {
         modify("Campaign No.") { visible = false; }
         modify("Responsibility Center") { visible = false; }
@@ -75,18 +75,21 @@ layout
                         ListBonPre.Run();
                     end;
                 }
-} } }
- actions
-    {  addafter("Test Report")
-      
+            }
+        }
+    }
+    actions
+    {
+        addafter("Test Report")
+
         {
- action("Bon de préparation")
+            action("Bon de préparation")
             {
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedOnly = true;
                 ApplicationArea = All;
-                Image = ItemGroup ;
+                Image = ItemGroup;
 
                 Caption = 'Générer bon de préparation';
 
@@ -158,20 +161,21 @@ layout
                 end;
 
             }
-             action(imprimer_ticket) { 
-                 Promoted = true;
+            action(imprimer_ticket)
+            {
+                Promoted = true;
                 PromotedCategory = Process;
                 PromotedOnly = true;
                 ApplicationArea = All;
-                Image = PrintVoucher ;
-                 visible = false; //AM useless
+                Image = PrintVoucher;
+                visible = false; //AM useless
 
-                 Caption = 'Imprimer Tickets';
-                trigger OnAction() 
-                var 
-                SalesInvoiceH : record "Sales Header" ;
+                Caption = 'Imprimer Tickets';
+                trigger OnAction()
+                var
+                    SalesInvoiceH: record "Sales Header";
 
-                
+
                 begin
                     SalesInvoiceH.get(rec."Document Type", rec."No.");
                     report.runmodal(50028, true, true, SalesInvoiceH);
@@ -185,9 +189,10 @@ layout
 
             }
 
-        
 
-}   
 
-   
-}}
+        }
+
+
+    }
+}

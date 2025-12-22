@@ -14,7 +14,7 @@ using Microsoft.Foundation.NoSeries;
 
 pageextension 50130 ExtSalesOrder extends "Sales Order"
 {
-    InsertAllowed = false;
+    // InsertAllowed = false;
     layout
     {
         addafter("Posting Date")
@@ -207,6 +207,8 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
         }
 
     }
+
+
     actions
     {
         addbefore(Post)
@@ -413,7 +415,4 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
         }
 
     }
-
-
-
 }

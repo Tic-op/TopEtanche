@@ -19,7 +19,7 @@ pageextension 50031 "Sales Quote List" extends "Sales Quotes"
         }
         modify(MakeOrder)
         {
-            // Caption = 'générer expédition vente'; // AM à faire
+            Caption = 'générer expédition vente'; // AM à faire
             enabled = rec."Type de facturation" <> rec."Type de facturation"::"Contre remboursement";
             trigger OnAfterAction()
             var

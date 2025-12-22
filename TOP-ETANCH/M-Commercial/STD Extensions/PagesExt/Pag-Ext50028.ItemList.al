@@ -49,7 +49,7 @@ moveafter("No.";"Vendor Item No.")
             action(MAJ_DESCRIPTION){ 
                 ApplicationArea = all;
                 Promoted = true ;
-                visible=false ;
+                visible=true ;
                  trigger OnAction()
                   var 
    Descriptionmodified : Text[100];
@@ -58,8 +58,8 @@ moveafter("No.";"Vendor Item No.")
     if REc.Findfirst() then 
    
     repeat 
-    Descriptionmodified:= rec.Description ;
-    rec.Validate(Description,Descriptionmodified.Replace('.',','));
+    Descriptionmodified:= rec."Vendor Item No." ;
+    rec.Validate("Vendor Item No.",Descriptionmodified.Replace('.',','));
     rec.Modify();
     until rec.next=0 ;
 

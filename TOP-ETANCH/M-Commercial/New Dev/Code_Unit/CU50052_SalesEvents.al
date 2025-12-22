@@ -66,21 +66,21 @@ codeunit 50052 SalesEvents
                         InvSalesLine.SetRange("Document No.", SalesHeader."No.");
                         InvSalesLine.setrange(Type, InvSalesLine.Type::Item);
                         if InvSalesLine.FindFirst() then
-                             repeat begin
- 
-                                 // message('%1', InvSalesLine."Blanket Order No.");
-                                 salesLine.setrange("Document Type", salesLine."Document Type"::"Blanket Order");
-                                 salesLine.setrange("Document No.", InvSalesLine."Blanket Order No.");
-                                 //salesLine.setrange("Sales Document Type"::"Blanket Order", salesLine."Blanket Order No.");
-                                 //  commandecadre.SetAutoCalcFields(commandecadre."Completely Shipped");
-                                 //Error('%1', salesLine.count);
-                                 salesLine.SetRange("Completely Shipped", false);
-                                 //Error('%1', salesLine.count);
-                                 if salesLine.findfirst then
-                                     // if not commandecadre."Completely Shipped" then
-                                     error('La commande n''est pas totalement livrée');
- 
-                             end;
+                            repeat begin
+
+                                // message('%1', InvSalesLine."Blanket Order No.");
+                                salesLine.setrange("Document Type", salesLine."Document Type"::"Blanket Order");
+                                salesLine.setrange("Document No.", InvSalesLine."Blanket Order No.");
+                                //salesLine.setrange("Sales Document Type"::"Blanket Order", salesLine."Blanket Order No.");
+                                //  commandecadre.SetAutoCalcFields(commandecadre."Completely Shipped");
+                                //Error('%1', salesLine.count);
+                                salesLine.SetRange("Completely Shipped", false);
+                                //Error('%1', salesLine.count);
+                                if salesLine.findfirst then
+                                    // if not commandecadre."Completely Shipped" then
+                                    error('La commande n''est pas totalement livrée');
+
+                            end;
                             until InvSalesLine.next = 0;
                     end;
                 end;
@@ -140,6 +140,7 @@ codeunit 50052 SalesEvents
     var
         seriesMgt: Codeunit "No. Series";
         SalesSetup: record "Sales & Receivables Setup";
+
     begin
         SalesSetup.get();
         if not SalesSetup."Utiliser Pré-Facture" then exit;
@@ -158,7 +159,7 @@ codeunit 50052 SalesEvents
         CheckCustomerCredit(SalesHeader);
 
     end;
-    
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Blanket Sales Order to Order", OnBeforeCreateSalesHeader, '', false, false)]
     Procedure AffecterSoucheBL(var OrderSalesHeader: Record "Sales Header")
     var
@@ -199,8 +200,8 @@ codeunit 50052 SalesEvents
 
         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
         SalesLine.SetRange("Document No.", SalesHeader."No.");
-        SalesLine.setfilter("Shipment Line No.",'> %1',0);//
-        SalesLine.SetFilter("Shipment No.",'<> %1','');// Extraire ligne expédition Pad de control disponibilité ;
+        SalesLine.setfilter("Shipment Line No.", '%1', 0);//
+        SalesLine.SetFilter("Shipment No.", '%1', '');// Extraire ligne expédition Pad de control disponibilité ;
         SalesLine.SetRange(Type, SalesLine.Type::Item);
 
         if SalesLine.FindFirst() then
@@ -249,11 +250,12 @@ codeunit 50052 SalesEvents
     begin
         CheckBlocage(SalesHeader);
         CheckApprobation(SalesHeader);
-        ControlSource(SalesHeader);//Momentary
+        //  ControlSource(SalesHeader);//Momentary
         StampEvent(SalesHeader);
 
 
     end;
+
     procedure CheckBlocage(var SalesHeader: Record "Sales Header")
     var
         Customer: record Customer;
@@ -330,13 +332,14 @@ codeunit 50052 SalesEvents
 
 
     end;
+
     procedure MinimumAfacturer(var SalesHeader: Record "Sales Header")
     var
         Customer: Record Customer;
-        Salessetup : Record "Sales & Receivables Setup";
-    begin 
-       /*  Salessetup.Get();
-        If Not Salessetup."PEC Type facturation" then exit ; */
+        Salessetup: Record "Sales & Receivables Setup";
+    begin
+        /*  Salessetup.Get();
+         If Not Salessetup."PEC Type facturation" then exit ; */
 
         if customer.get(SalesHeader."Sell-to Customer No.") then begin
             if Customer."Type de facturation" = Customer."Type de facturation"::"Fact. Plafond" then begin

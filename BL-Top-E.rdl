@@ -9,7 +9,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.0.20283.0</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2025-12-15T16:13:35.9230634Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2025-12-16T15:20:23.3803296Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -887,7 +887,7 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>Arrêté la présente factureà la somme de :</Value>
+                        <Value>Arrêté à la somme de :</Value>
                         <Style />
                       </TextRun>
                     </TextRuns>
@@ -2264,7 +2264,7 @@
                     </Paragraph>
                   </Paragraphs>
                   <rd:DefaultName>Textbox3</rd:DefaultName>
-                  <Top>1.09862cm</Top>
+                  <Top>1.03512cm</Top>
                   <Left>0.36569cm</Left>
                   <Height>0.6cm</Height>
                   <Width>4.56375cm</Width>
@@ -2302,7 +2302,7 @@
                     </Paragraph>
                   </Paragraphs>
                   <rd:DefaultName>Textbox3</rd:DefaultName>
-                  <Top>1.7339cm</Top>
+                  <Top>1.6704cm</Top>
                   <Left>0.36569cm</Left>
                   <Height>0.52034cm</Height>
                   <Width>4.56375cm</Width>
@@ -2342,7 +2342,7 @@
                     </Paragraph>
                   </Paragraphs>
                   <rd:DefaultName>Textbox3</rd:DefaultName>
-                  <Top>2.32832cm</Top>
+                  <Top>2.26482cm</Top>
                   <Left>0.36569cm</Left>
                   <Height>0.52034cm</Height>
                   <Width>4.56375cm</Width>
@@ -2362,7 +2362,7 @@
               <KeepTogether>true</KeepTogether>
               <Top>4.21202cm</Top>
               <Left>1.20004cm</Left>
-              <Height>3.00741cm</Height>
+              <Height>2.90527cm</Height>
               <Width>8.9511cm</Width>
               <ZIndex>1</ZIndex>
               <Style>

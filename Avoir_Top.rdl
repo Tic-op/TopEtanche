@@ -9,7 +9,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.0.20283.0</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2025-12-16T15:18:35.5944676Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2025-12-16T15:19:53.4109341Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -887,7 +887,7 @@
                   <Paragraph>
                     <TextRuns>
                       <TextRun>
-                        <Value>Arrêté la présente facture à la somme de :</Value>
+                        <Value>Arrêté à la somme de :</Value>
                         <Style />
                       </TextRun>
                     </TextRuns>
@@ -2312,21 +2312,11 @@
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value> Facture  </Value>
+                          <Value> Avoir</Value>
                           <Style>
                             <FontSize>20pt</FontSize>
                             <FontWeight>Bold</FontWeight>
                           </Style>
-                        </TextRun>
-                        <TextRun>
-                          <Value xml:space="preserve">    </Value>
-                          <Style>
-                            <FontSize>20pt</FontSize>
-                          </Style>
-                        </TextRun>
-                        <TextRun>
-                          <Value xml:space="preserve">   </Value>
-                          <Style />
                         </TextRun>
                       </TextRuns>
                       <Style>

@@ -138,34 +138,38 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
 
         DispPage: Page "itemdistribution";
         item: record item;
+        BaseSortie : decimal ;
 
 
     begin
         SalesL.get(Documenttype, documentno, Lineno);
-        itemdist.SetRange("Source Doc type", Documenttype);
+       // itemdist.SetRange("Source Doc type", Documenttype); 
         itemdist.setrange("Source Doc No.", documentno);
         itemdist.setrange("Source Line No.", Lineno);
-        // itemdist.DeleteAll(); 
-        if itemdist.FindFirst() then
+        itemdist.DeleteAll(); 
+        /* if itemdist.FindFirst() then
             repeat
                 itemdist.delete();
-            until itemdist.next = 0;
+            until itemdist.next = 0; */
 
         if not item.Get(SalesL."No.") then exit; //AM190925
-
+         location.SetFilter(Code, '<>%1', SalesL."Location Code");
         location.SetRange("Use As In-Transit", false);
-        location.SetFilter(Code, '<>%1', SalesL."Location Code");
+       
 
-        if location.findfirst() then
+        if location.findset() then  
+            
             repeat
-
+                   BaseSortie :=item."CalcQuantitéBaseSortie"(location.Code);
                 if location."Bin Mandatory" then begin
                     BinC.setrange("Location Code", location.Code);
+                    BinC.SetRange("Item No.",SalesL."No.");
 
-                    if BinC.FindFirst() then
+                    if BinC.Findset() then
                         repeat
                             Dispo := item."CalcDisponibilité"(location.code, binc."Bin Code");
-                            if item."CalcDisponibilité"(location.code, binc."Bin Code") > 0 then begin
+                            if Dispo >0 //item."CalcDisponibilité"(location.code, binc."Bin Code") > 0 
+                            then begin
                                 itemdist.INIT();
                                 itemdist.validate(Item, SalesL."No.");
                                 itemdist.validate("Location Code", location.code);
@@ -173,8 +177,8 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
 
                                 itemdist.Qty := dispo;
 
-                                item.get(SalesL."No.");
-                                itemdist."Qté Base Sortie" := item."CalcQuantitéBaseSortie"(location.Code);
+                                //item.get(SalesL."No.");
+                               itemdist."Qté Base Sortie" := BaseSortie ;
                                 itemdist."Source Doc type" := SalesL."Document Type";
 
                                 itemdist."Source Doc No." := SalesL."Document No.";
@@ -185,18 +189,19 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
                         until BinC.Next() = 0
                 end
                 else
-
-                    if item."CalcDisponibilité"(location.code, '') > 0 then begin
+                begin 
+                      Dispo:= item."CalcDisponibilité"(location.code, '') ;
+                    if Dispo > 0 then begin
                         //   Message('%1', location.Code);
                         itemdist.INIT();
                         itemdist.Item := SalesL."No.";
                         itemdist."Location Code" := location.code;
                         itemdist."Bin Code" := '';
 
-                        itemdist.Qty := item."CalcDisponibilité"(location.code, '');
+                        itemdist.Qty := dispo;
 
-                        item.get(SalesL."No.");
-                        itemdist."Qté Base Sortie" := item."CalcQuantitéBaseSortie"(location.Code);
+                        //item.get(SalesL."No.");
+                        itemdist."Qté Base Sortie" := BaseSortie ;
                         itemdist."Source Doc type" := SalesL."Document Type";
 
                         itemdist."Source Doc No." := SalesL."Document No.";
@@ -205,7 +210,11 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
                         if itemdist.insert() then;
 
                     end;
+                    end;
+                    
             until location.next() = 0;
+            
+Commit();
 
 
         DispPage.SetDoc(SalesL."Document Type", SalesL."Document No.", SalesL."Line No.", SalesL."Qty. to Ship");
@@ -215,10 +224,11 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
         itemdist.SetRange("Source Doc No.", SalesL."Document No.");
         itemdist.SetRange("Source Line No.", SalesL."Line No.");
         DispPage.SetTableView(itemdist);
-
+         
         DispPage.Run();
 
     end;
+
 
 
 
