@@ -6,7 +6,7 @@ using Microsoft.Purchases.History;
 using Microsoft.Purchases.RoleCenters;
 using Microsoft.Sales.Document;
 
-tableextension 50024 PurchaseLineExt extends "Purchase Line"
+tableextension 50024 PurchaseLineExtt extends "Purchase Line"
 
 {
 
@@ -64,17 +64,17 @@ tableextension 50024 PurchaseLineExt extends "Purchase Line"
             FieldClass = FlowField;
             CalcFormula = Sum("Purchase Line".Quantity WHERE("Document Type" = CONST(Order), "No." = FIELD("No."), "Blanket Order No." = FIELD("Document No."), "Blanket Order Line No." = field("Line No.")));
         }
-        field(50006; "Tariff No."; Code[20])
-        {
-            Caption = 'Nomencalture Produit';
-            DataClassification = ToBeClassified;
-        }
-        field(50007; "Country region origin code"; Code[20])
-        {
-            DataClassification = ToBeClassified;
-            Caption = 'No Origine';
-            TableRelation = "Country/Region";
-        }
+        /*  field(50006; "Tariff No."; Code[20])
+         {
+             Caption = 'Nomencalture Produit';
+             DataClassification = ToBeClassified;
+         }
+         field(50007; "Country region origin code"; Code[20])
+         {
+             DataClassification = ToBeClassified;
+             Caption = 'No Origine';
+             TableRelation = "Country/Region";
+         } */
 
         /////////////********* DOP CHB
         field(50008; "DOP sur Commande"; Decimal)
@@ -179,7 +179,6 @@ tableextension 50024 PurchaseLineExt extends "Purchase Line"
             Restant := Quantity - "Qty commandée"// - "A commander";
             //     Modify();
         end;
-
         /*   if "Document Type" = "Document Type"::"Order" then begin
               if PL.get(PL."Document Type"::"Blanket Order", "Blanket Order No.", "Blanket Order Line No.") then begin
                   PL.CalcFields("Qty commandée");

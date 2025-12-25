@@ -8,6 +8,10 @@ pageextension 50065 Salesordersubformforfactbox extends "Sales Order Subform"
     var
     begin
 
-        CurrPage.Update(false);
+        //CurrPage.Update(false);
     end;
+
+
+
+
 }

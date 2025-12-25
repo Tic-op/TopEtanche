@@ -10,14 +10,14 @@ pageextension 50017 PurchaseOrderSubformExt extends "Purchase Order Subform"
     {
         addafter(Description)
         {
-            field("Tariff No."; Rec."Tariff No.")
-            {
-                ApplicationArea = all;
-            }
-            field("Country region origin code"; Rec."Country region origin code")
-            {
-                ApplicationArea = all;
-            }
+            /*   field("Tariff No."; Rec."Tariff No.")
+              {
+                  ApplicationArea = all;
+              }
+              field("Country region origin code"; Rec."Country region origin code")
+              {
+                  ApplicationArea = all;
+              } */
             /*  field("DOP No."; Rec."DOP No.")  //IS 070822025
              {
                  ApplicationArea = all;

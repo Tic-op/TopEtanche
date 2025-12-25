@@ -36,6 +36,14 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
 
              end;
          } */
+        Modify("No.")
+        {
+            trigger OnAfterValidate()
+            begin
+
+                ControlDisponibilitéSaleslines();
+            end;
+        }
 
         modify("Qty. to Ship")
         {
@@ -211,10 +219,21 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
         modify("Quantity")
         {
             trigger OnAfterValidate()
+
+            //"ControlDisponibilitéSaleslines"();
             var
+                disp: decimal;
             begin
-                "ControlDisponibilitéSaleslines"();
+                if ("Document Type" = "Sales Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice) then begin
+                    if "Location Code" = '' then
+                        disp := GetDisponibilite(true)
+                    else
+                        disp := GetDisponibilite(false);
+                    if disp + xRec."Quantity (Base)" < "Quantity (Base)" then
+                        error('Quantité non disponible.');
+                end;
             end;
+
         }
         modify("Bin Code")
         {
@@ -288,6 +307,12 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
 
 
 
+    trigger OnafterModify()
+    begin
+        //  "ControlDisponibilitéSaleslines"(); /// ????
+
+
+    end;
 
     trigger OnModify()
     var
@@ -300,6 +325,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
                  //if OrdrePrep.Statut = OrdrePrep.Statut::"Créé" then
                  Error('Impossible de modifier cette ligne, veuillez supprimer le bon de préparation associé.');
              end; */
+        // "ControlDisponibilitéSaleslines"();
 
         CalcFields("Preparé");
         if "Preparé" then
@@ -496,14 +522,16 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
 
     Procedure ControlDisponibilitéSaleslines()
     var
+        disp: decimal;
     begin
-        if ("Document Type" = "Sales Document Type"::Invoice) or ("Document Type" = "Sales Document Type"::Invoice) then begin
-
-            if GetDisponibilite(false) < 0 then
+        if ("Document Type" = "Sales Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice) then begin
+            if "Location Code" = '' then
+                disp := GetDisponibilite(true)
+            else
+                disp := GetDisponibilite(false);
+            if disp /*+ xRec."Quantity (Base)"*/ < "Quantity (Base)" then
                 error('Quantité non disponible.');
         end;
-
-
     end;
 
     procedure GetDisponibilite(Total: boolean): Decimal

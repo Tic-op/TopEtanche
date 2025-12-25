@@ -34,7 +34,60 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
         modify("Reserved Quantity Outbnd.") { visible = false; }
         modify("Reserved Quantity Shipped") { visible = false; }
 
+        addafter(Description)
+        {
+            field("Disponibilité globale"; rec.GetDisponibilite(true))
+            {
+                ApplicationArea = all;
+                visible = true;
+                DecimalPlaces = 0 : 3;
+                Editable = false;
+                trigger OnDrillDown()
+                var
+                    Location: record Location;
+                    Bin: record Bin;
+                    Textmessage: text;
+                    item: Record item;
 
+                begin
+                    if item.get(rec."Item No.") then begin
+                        Location.findset();
+                        Textmessage := '';
+                        repeat
+                            if (location.Type = location.type::Casse) or (Location.type = location.type::Tampon) then continue;
+                            Textmessage := Textmessage + Location.Code + '------' + item."CalcDisponibilité"(Location.code, '').ToText() + '\';
+                            if location."Bin Mandatory" then begin
+                                Bin.SetRange("Location Code", Location.code);
+                                if bin.FindFirst() then
+                                    repeat
+                                        Textmessage := Textmessage + '>>>>' + Bin.Code + '------' + item."CalcDisponibilité"(Location.code, bin.code).ToText() + '\';
+
+
+                                    until bin.next = 0;
+
+
+                            end
+
+
+
+
+
+                        until location.next = 0;
+                        Message(Textmessage);
+                    end
+
+
+                end;
+            }
+            field("Disponibilité"; rec.GetDisponibilite(false))
+            {
+                ApplicationArea = all;
+                Visible = true;
+                DecimalPlaces = 0 : 3;
+                editable = false;
+            }
+
+        }
 
     }
     actions
@@ -78,7 +131,7 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
                 // PromotedCategory = Process;
                 // PromotedOnly = true;
                 ApplicationArea = All;
-                  visible = false ;
+                visible = false;
 
 
                 trigger OnAction()
@@ -88,7 +141,7 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
                     TransferLine: record "Transfer Line";
                     Qtémin: decimal;
                     item: record Item;
-                  
+
                 begin
 
                     TransferHeader.get(rec."Document No.");
@@ -143,6 +196,7 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
             Error('Impossible de modifier cette ligne, un bon de préparation associé existe, penser à supprimer le bon de préparation');
         end;
     end;
+
     procedure lastlineNo(): integer
     var
         transferL: record "Transfer Line";

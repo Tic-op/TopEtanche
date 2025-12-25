@@ -87,7 +87,7 @@ report 50016 "BonPréparation"
                             Customer.get(Demandeur);
                             CustPhone := Customer."Phone No.";
                         end;
-                    Destination := Demandeur+'  ' + "Nom demandeur" ;
+                        Destination := Demandeur + '  ' + "Nom demandeur";
 
                     end;
 
@@ -188,5 +188,5 @@ report 50016 "BonPréparation"
         imprimer_destination: Boolean;
         CustPhone: text;
         NumTicket: Integer;
-        Destination : text ;
+        Destination: text;
 }

@@ -10,22 +10,32 @@ pageextension 50062 "Sales Quote Fact Boxes" extends "Sales Quote"
     {
         addlast(factboxes)
         {
+
             part(historique; HistVenteArticleSubform)
             {
-                SubPageLink = "Customer No" = field("Sell-to Customer No.");
-                //Provider =SalesLines;
-                //   UpdatePropagation=both ;
+                visible = false;
+                Provider = SalesLines;
+                SubPageLink = "Customer No" = field("Sell-to Customer No."), "Item No" = field("No.");
+
                 Caption = 'Historique article-Client';
+                //   UpdatePropagation=both ;
                 ApplicationArea = all;
 
             }
+
+
+
         }
+
+
+
     }
-    trigger OnAfterGetRecord()
+    trigger OnAfterGetcurrRecord()
     var
         SalesLine: Record "Sales Line";
         Cust: Record Customer;
         item: record Item;
+        History: Record 50008;
     begin
         CurrPage.historique.page.ISFactbox(true);
         CurrPage.SalesLines.Page.GetRecord(SalesLine);
@@ -36,12 +46,14 @@ pageextension 50062 "Sales Quote Fact Boxes" extends "Sales Quote"
             CurrPage.historique.page.Setitem(item);
 
             CurrPage.historique.page.InsertValues(true);
-            CurrPage.historique.page.Update(true);
+            //  CurrPage.historique.page.Update(true);
+            CurrPage.historique.page.Activate();
 
-            // CurrPage.Update(false);
+            //CurrPage.Update(false);
         end
 
     end;
+
 
 
 

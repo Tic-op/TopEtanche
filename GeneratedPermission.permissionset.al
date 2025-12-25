@@ -46,7 +46,6 @@ permissionset 50000 GeneratedPermission
         report "BonPréparation" = X,
         report "Calcul Stock" = X,
         report "ClientMinimumàFacturer" = X,
-        report Demo = X,
         report DevisReport = X,
         report "Dispatch Sales Order Lines" = X,
         report "Dispatch Transfer Lines" = X,
@@ -150,5 +149,17 @@ permissionset 50000 GeneratedPermission
         codeunit FinanceEvents = X,
         page "Retenue à la source Card" = X,
         report AvoirTop = X,
-        report RetourTopE = X;
+        report RetourTopE = X,
+        report "Transfer Shipment Report " = X,
+        tabledata DroitDouaneLedgerEntry = RIMD,
+        tabledata "Import Folder" = RIMD,
+        table DroitDouaneLedgerEntry = X,
+        table "Import Folder" = X,
+        report "Synthèse Importation" = X,
+        codeunit PurchaseEvents = X,
+        page "Droit douane ledger entry" = X,
+        page "Import folder card" = X,
+        page "Import Folder List" = X,
+        page "Mettre à jour le document" = X,
+        page "Statistic Import Folder" = X;
 }

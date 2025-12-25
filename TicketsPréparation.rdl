@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner" xmlns:am="http://schemas.microsoft.com/sqlserver/reporting/authoringmetadata">
+  <rd:ReportUnitType>Cm</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
   <am:AuthoringMetadata>
     <am:CreatedBy>
       <am:Name>MSRB</am:Name>
@@ -7,18 +9,18 @@
     </am:CreatedBy>
     <am:UpdatedBy>
       <am:Name>MSRB</am:Name>
-      <am:Version>15.0.20283.0</am:Version>
+      <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2025-11-14T15:37:46.5833500Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2025-12-22T14:05:48.4529355Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="DataSource">
+      <rd:SecurityType>None</rd:SecurityType>
       <ConnectionProperties>
         <DataProvider>SQL</DataProvider>
         <ConnectString />
       </ConnectionProperties>
-      <rd:SecurityType>None</rd:SecurityType>
       <rd:DataSourceID>c7b17fdb-256f-473e-914f-fad7f2b69997</rd:DataSourceID>
     </DataSource>
   </DataSources>
@@ -39,9 +41,11 @@
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
+                        <rd:Selected>true</rd:Selected>
                         <Rectangle Name="Rectangle2">
                           <ReportItems>
                             <Textbox Name="Textbox18">
+                              <rd:DefaultName>Textbox18</rd:DefaultName>
                               <CanGrow>true</CanGrow>
                               <CanShrink>true</CanShrink>
                               <KeepTogether>true</KeepTogether>
@@ -49,7 +53,7 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>N° Article:</Value>
+                                      <Value>N°:</Value>
                                       <Style>
                                         <FontSize>7pt</FontSize>
                                         <FontWeight>Bold</FontWeight>
@@ -61,36 +65,10 @@
                                         <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>0.43073in</Top>
-                              <Left>0.08326in</Left>
-                              <Height>0.17916in</Height>
-                              <Width>1.04948in</Width>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox19">
-                              <CanGrow>true</CanGrow>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
                                     <TextRun>
-                                      <Value>Description: </Value>
+                                      <Value> - </Value>
                                       <Style>
-                                        <FontSize>6pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
@@ -102,35 +80,12 @@
                                   </TextRuns>
                                   <Style />
                                 </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>0.6099in</Top>
-                              <Left>0.08326in</Left>
-                              <Height>0.16994in</Height>
-                              <Width>2.2423in</Width>
-                              <ZIndex>1</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox20">
-                              <CanGrow>true</CanGrow>
-                              <CanShrink>true</CanShrink>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>Quantité:          </Value>
+                                      <Value>Qté : </Value>
                                       <Style>
                                         <FontSize>7pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
@@ -139,38 +94,10 @@
                                         <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>0.77349in</Top>
-                              <Left>0.08326in</Left>
-                              <Height>0.13363in</Height>
-                              <Width>1.07449in</Width>
-                              <ZIndex>2</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox21">
-                              <CanGrow>true</CanGrow>
-                              <CanShrink>true</CanShrink>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
                                     <TextRun>
-                                      <Value>Magasin: </Value>
+                                      <Value> - </Value>
                                       <Style>
-                                        <FontSize>6pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
+                                        <FontSize>7pt</FontSize>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
@@ -179,38 +106,10 @@
                                         <FontSize>6pt</FontSize>
                                       </Style>
                                     </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>0.921in</Top>
-                              <Left>0.08326in</Left>
-                              <Height>0.16667in</Height>
-                              <Width>1.04948in</Width>
-                              <ZIndex>3</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox22">
-                              <CanGrow>true</CanGrow>
-                              <CanShrink>true</CanShrink>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
                                     <TextRun>
-                                      <Value>Emplacement: </Value>
+                                      <Value xml:space="preserve">   </Value>
                                       <Style>
                                         <FontSize>6pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
@@ -223,12 +122,10 @@
                                   <Style />
                                 </Paragraph>
                               </Paragraphs>
-                              <rd:DefaultName>Textbox18</rd:DefaultName>
-                              <Top>1.11545in</Top>
+                              <Top>0.38906in</Top>
                               <Left>0.08326in</Left>
-                              <Height>0.15in</Height>
-                              <Width>1.21807in</Width>
-                              <ZIndex>4</ZIndex>
+                              <Height>0.30758in</Height>
+                              <Width>2.54993in</Width>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -240,128 +137,54 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="No_">
+                              <rd:DefaultName>No_</rd:DefaultName>
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>Préparation N°:</Value>
+                                      <Value>=Fields!Destination.Value</Value>
                                       <Style>
-                                        <FontSize>8pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
+                                        <FontSize>6pt</FontSize>
+                                        <FontWeight>Normal</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
                                       <Value xml:space="preserve"> </Value>
                                       <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                    <TextRun>
-                                      <Value>=Fields!Document_No_.Value</Value>
-                                      <Style>
-                                        <FontSize>8pt</FontSize>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>No_</rd:DefaultName>
-                              <Top>0.06735in</Top>
-                              <Left>0.08326in</Left>
-                              <Height>0.17778in</Height>
-                              <Width>1.87508in</Width>
-                              <ZIndex>5</ZIndex>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Sell_to_Customer_No_">
-                              <CanGrow>true</CanGrow>
-                              <CanShrink>true</CanShrink>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>Déstiné à :</Value>
-                                      <Style>
                                         <FontSize>6pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                    <TextRun>
-                                      <Value>=Fields!Destination.Value</Value>
-                                      <Style>
-                                        <FontSize>6pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                  </TextRuns>
-                                  <Style />
-                                </Paragraph>
-                              </Paragraphs>
-                              <rd:DefaultName>Sell_to_Customer_No_</rd:DefaultName>
-                              <Top>0.25902in</Top>
-                              <Left>0.08326in</Left>
-                              <Height>0.15783in</Height>
-                              <Width>1.76918in</Width>
-                              <ZIndex>6</ZIndex>
-                              <Visibility>
-                                <Hidden>=IIF(Len(Fields!Destination.Value) &gt;=1 ,false,true)</Hidden>
-                              </Visibility>
-                              <Style>
-                                <Border>
-                                  <Style>None</Style>
-                                </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
-                                <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
-                                <PaddingBottom>2pt</PaddingBottom>
-                              </Style>
-                            </Textbox>
-                            <Textbox Name="Textbox1">
-                              <CanGrow>true</CanGrow>
-                              <CanShrink>true</CanShrink>
-                              <KeepTogether>true</KeepTogether>
-                              <Paragraphs>
-                                <Paragraph>
-                                  <TextRuns>
-                                    <TextRun>
-                                      <Value>TEL: </Value>
-                                      <Style>
-                                        <FontSize>6pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
+                                        <FontWeight>Normal</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
                                       <Value>=Fields!CustPhone.Value</Value>
                                       <Style>
                                         <FontSize>6pt</FontSize>
-                                        <FontWeight>Bold</FontWeight>
+                                        <FontWeight>Normal</FontWeight>
+                                      </Style>
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style />
+                                </Paragraph>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value>=Fields!Document_No_.Value</Value>
+                                      <Style>
+                                        <FontSize>6pt</FontSize>
+                                        <FontWeight>Normal</FontWeight>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
                                   <Style />
                                 </Paragraph>
                               </Paragraphs>
-                              <rd:DefaultName>Textbox1</rd:DefaultName>
-                              <Top>0.66589cm</Top>
-                              <Left>4.74048cm</Left>
-                              <Height>0.3929cm</Height>
-                              <Width>1.94782cm</Width>
-                              <ZIndex>7</ZIndex>
-                              <Visibility>
-                                <Hidden>=IIF(Len(Fields!CustPhone.Value) &gt;=1 ,false,true)</Hidden>
-                              </Visibility>
+                              <Top>0.06735in</Top>
+                              <Left>0.08326in</Left>
+                              <Height>0.29394in</Height>
+                              <Width>2.22966in</Width>
+                              <ZIndex>1</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -373,6 +196,7 @@
                               </Style>
                             </Textbox>
                             <Textbox Name="Textbox2">
+                              <rd:DefaultName>Textbox2</rd:DefaultName>
                               <CanGrow>true</CanGrow>
                               <KeepTogether>true</KeepTogether>
                               <Paragraphs>
@@ -400,12 +224,11 @@
                                   <Style />
                                 </Paragraph>
                               </Paragraphs>
-                              <rd:DefaultName>Textbox2</rd:DefaultName>
                               <Top>0.21434cm</Top>
-                              <Left>5.23455cm</Left>
+                              <Left>6.01592cm</Left>
                               <Height>0.381cm</Height>
                               <Width>0.67238cm</Width>
-                              <ZIndex>8</ZIndex>
+                              <ZIndex>2</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
@@ -506,8 +329,6 @@ End Function
 </Code>
   <Language>=User!Language</Language>
   <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
-  <rd:ReportUnitType>Cm</rd:ReportUnitType>
-  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
   <DataSets>
     <DataSet Name="DataSet_Result">
       <Fields>
