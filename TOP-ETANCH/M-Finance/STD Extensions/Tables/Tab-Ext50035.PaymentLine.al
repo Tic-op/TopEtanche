@@ -144,6 +144,10 @@ tableextension 50035 "Payment Line" extends "Payment Line"
 
 
         }
+        field(50007; "Facture Caisse"; Code[20])
+        {
+
+        }
         Field(50102; "Banque Entête"; code[25])
 
         {
@@ -159,6 +163,10 @@ tableextension 50035 "Payment Line" extends "Payment Line"
 
 
         }
+    }
+    keys
+    {
+        key(facture; "Facture caisse") { }
     }
     procedure CalculRS()
     var

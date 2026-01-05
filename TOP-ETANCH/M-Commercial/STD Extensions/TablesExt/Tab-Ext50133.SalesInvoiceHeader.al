@@ -1,6 +1,7 @@
 namespace Pharmatec_Ticop.Pharmatec_Ticop;
 
 using Microsoft.Sales.History;
+using Microsoft.Bank.Payment;
 
 tableextension 50133 SalesInvoiceHeader extends "Sales Invoice Header"
 {
@@ -16,5 +17,6 @@ tableextension 50133 SalesInvoiceHeader extends "Sales Invoice Header"
             OptionMembers = "comptoir","Top Etanchéité","Transporteur Externe";
 
         }
+
     }
 }

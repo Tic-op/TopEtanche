@@ -172,11 +172,12 @@ tableextension 50005 Itemext extends Item
 
             DecimalPlaces = 0 : 3;
         }
-        field(50201;"Prix minimal";decimal){
+        field(50201; "Prix minimal"; decimal)
+        {
 
-            
+
         }
-        
+
         modify("Base Unit of Measure")
         {
             trigger OnAfterValidate()
@@ -188,21 +189,24 @@ tableextension 50005 Itemext extends Item
         modify("Vendor No.")
         {
             Trigger OnAfterValidate()
-            var vendor : Record Vendor ;
-              begin 
+            var
+                vendor: Record Vendor;
+            begin
                 Vendor.get("Vendor No.");
-                "Vendor Name":=vendor.name;
-              
+                "Vendor Name" := vendor.name;
+
                 Modify(false);
-                 
-              end;
+
+            end;
         }
 
     }
     keys
     {
 
-        //key(KeyOrigin; "Item Origin") { }
+        key(RorderQty; "Reorder Quantity") { }
+        key(BudgQty; "Budget Quantity") { }
+
 
     }
 
@@ -338,17 +342,19 @@ tableextension 50005 Itemext extends Item
         VenteAnnéeRoulante := RecLItem."Qty vendue";
     end;
 
-    Procedure CalcDisponibilitéWithResetFilters(locationCode: Code[25]; binCode: Code[25]) : Decimal;
-    var DispoReset : decimal ;
-    Begin 
-          DispoReset:= CalcDisponibilité(locationCode, binCode);
-          setfilter("Location Filter",'');
-          SetFilter("Bin Filter",'');
-          CalcFields("Qty. to ship on order line", "Inventory in Warehouse", "Qty on invoice",Inventory);
-          exit(DispoReset); ///To be verified
-    
-    
+    Procedure CalcDisponibilitéWithResetFilters(locationCode: Code[25]; binCode: Code[25]): Decimal;
+    var
+        DispoReset: decimal;
+    Begin
+        DispoReset := CalcDisponibilité(locationCode, binCode);
+        setfilter("Location Filter", '');
+        SetFilter("Bin Filter", '');
+        CalcFields("Qty. to ship on order line", "Inventory in Warehouse", "Qty on invoice", Inventory);
+        exit(DispoReset); ///To be verified
+
+
     End;
+
     procedure CalcDisponibilité(locationCode: Code[25]; binCode: Code[25]): Decimal
     var
         Location: Record Location;
@@ -372,37 +378,37 @@ tableextension 50005 Itemext extends Item
             if binCode <> '' then begin
                 SetFilter("Bin Filter", binCode);
                 CalcFields("Qty. to ship on order line", "Inventory in Warehouse", "Qty on invoice");
-                
+
                 exit("Inventory in Warehouse" - "Qty. to ship on order line" - "Qty on invoice");
             end
 
             else begin
 
                 CalcFields("Inventory", "Qty. to ship on order line", "Qty on invoice");
-                
+
                 exit("Inventory" - "Qty. to ship on order line" - "Qty on invoice");
 
             end;
         end
         else begin
             dispo := 0;
-        //ALL Locations
-        Location.Reset();
-        if Location.FindFirst() then begin
-            repeat
-                if (Location.Type <> Location.Type::Tampon) and (Location.Type <> Location.Type::Casse) and (NOT Location."Use As In-Transit") then begin
-                    SetFilter("Location Filter", Location.Code);
-                    CalcFields("Inventory", "Qty. to ship on order line", "Qty on invoice");
-                    // message('Qty to ship %1 , Location Filter %2 ,Bin filter ; % 3', "Qty. to ship on order line", "Location Filter", "Bin Filter", "No.");
-                    //  message('Qty to ship %1', Item."Qty. to ship on order line");
-                    dispo += "Inventory" - "Qty. to ship on order line" - "Qty on invoice";
+            //ALL Locations
+            Location.Reset();
+            if Location.FindFirst() then begin
+                repeat
+                    if (Location.Type <> Location.Type::Tampon) and (Location.Type <> Location.Type::Casse) and (NOT Location."Use As In-Transit") then begin
+                        SetFilter("Location Filter", Location.Code);
+                        CalcFields("Inventory", "Qty. to ship on order line", "Qty on invoice");
+                        // message('Qty to ship %1 , Location Filter %2 ,Bin filter ; % 3', "Qty. to ship on order line", "Location Filter", "Bin Filter", "No.");
+                        //  message('Qty to ship %1', Item."Qty. to ship on order line");
+                        dispo += "Inventory" - "Qty. to ship on order line" - "Qty on invoice";
 
-                    // message(' location filter %1 Quantity %2', "Location Filter", Inventory - "Qty. to ship on order line");
+                        // message(' location filter %1 Quantity %2', "Location Filter", Inventory - "Qty. to ship on order line");
 
-                    filtremagasin := GetFilters();
-                    // message(filtremagasin + '     %1       %2     ', Item."Inventory" - Item."Qty. to ship on order line", dispo);
-                end;
-            until Location.Next() = 0;
+                        filtremagasin := GetFilters();
+                        // message(filtremagasin + '     %1       %2     ', Item."Inventory" - Item."Qty. to ship on order line", dispo);
+                    end;
+                until Location.Next() = 0;
             end;
             begin
                 SL.setrange("Document Type", "Sales Document Type"::Order);
@@ -422,6 +428,7 @@ tableextension 50005 Itemext extends Item
             exit(dispo - SL."Qty. to Ship (Base)" - SLFAct."Quantity (Base)");
         end;
     end;
+
     procedure CalcStock(ItemNo: code[25]; locationCode: code[25]; binCode: code[25]): Decimal
     var
         Item: Record Item;
@@ -450,7 +457,7 @@ tableextension 50005 Itemext extends Item
 
     end;
 
-   
+
 
     /*  procedure CalculEcoulement(Datefirst: Date; Datelast: Date; Methode_calculVMJ: option "VMJ Effective","VMJ sur période"; BoolCalcul: Boolean): decimal
      var

@@ -8,8 +8,8 @@ using Microsoft.Inventory.Item;
 pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
 {
     layout
-    { 
-         modify("No.")
+    {
+        modify("No.")
         {
             trigger OnDrillDown()
             var
@@ -48,27 +48,30 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
 
 
         movebefore("Location Code"; Quantity)
-        
-        
-        addafter("Location Code"){
 
 
-        field("Bin Code";Rec."Bin Code"){
-               visible = true;
-               ApplicationArea = all ;
-            trigger OnValidate()
-            begin
-                //ControlDisponibilité();
-                if (rec."Bin Code" = '') then error('Emplacement obligatoire dans ce magasin');
+        addafter("Location Code")
+        {
 
-            end;
+
+            field("Bin Code"; Rec."Bin Code")
+            {
+                visible = true;
+                ApplicationArea = all;
+                trigger OnValidate()
+                begin
+                    //ControlDisponibilité();
+                    if (rec."Bin Code" = '') then error('Emplacement obligatoire dans ce magasin');
+
+                end;
 
 
             }
 
         }
         addafter(Description)
-        {     field("DisponibilitéGlobal"; rec.GetDisponibilite(true))
+        {
+            field("DisponibilitéGlobal"; rec.GetDisponibilite(true))
             {
                 Caption = 'Disponibilité Globale';
                 DecimalPlaces = 0 : 0;
@@ -106,27 +109,56 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
 
         }
     }
-    actions { 
-        addlast("&Line"){
-          action(Tableau_de_Bord)
+    actions
+    {
+        addlast("&Line")
+        {
+            action(Tableau_de_Bord)
             {
-                
+
                 ApplicationArea = All;
                 Image = Bin;
                 visible = true;
-               Promoted = false; ShortcutKey = 'Alt+B';
+                Promoted = false;
+                ShortcutKey = 'Alt+B';
                 trigger OnAction()
-                 var
-                item: record Item;
+                var
+                    item: record Item;
 
-            begin
-                item.SetLoadFields("No.");
-                if item.get(rec."No.") then
-                    item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer Name", rec."VAT %");
-            end;
+                begin
+                    item.SetLoadFields("No.");
+                    if item.get(rec."No.") then
+                        item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer Name", rec."VAT %");
+                end;
             }
-    
-    }
+            Action(Recherche_Ticop)
+
+            {
+                ShortcutKey = 'Alt+W';
+                ApplicationArea = all;
+                Image = AddWatch;
+                trigger OnAction()
+                var
+                    RS: Page "Usual Search";
+                    SalesHeader: Record "Sales Header";
+
+                begin
+                    SalesHeader.Get(Rec."Document Type", Rec."Document No.");
+                    SalesHeader.TestField(Status, SalesHeader.Status::Open);
+                    RS.initvar(SalesHeader."Document Type", SalesHeader."No.");
+                    //RS.Run();
+                    rs.RunModal();
+
+                    // Page.RunModal(50029);
+                    CurrPage.Update();
+
+
+
+                end;
+            }
+
+
+        }
     }
     procedure PreparationTransfert(Documenttype: enum "Sales Document Type"; documentno: Code[20]; Lineno: integer)
     Var
@@ -138,37 +170,36 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
 
         DispPage: Page "itemdistribution";
         item: record item;
-        BaseSortie : decimal ;
+        BaseSortie: decimal;
 
 
     begin
         SalesL.get(Documenttype, documentno, Lineno);
-       // itemdist.SetRange("Source Doc type", Documenttype); 
+        // itemdist.SetRange("Source Doc type", Documenttype); 
         itemdist.setrange("Source Doc No.", documentno);
         itemdist.setrange("Source Line No.", Lineno);
-        itemdist.DeleteAll(); 
+        itemdist.DeleteAll();
         /* if itemdist.FindFirst() then
             repeat
                 itemdist.delete();
             until itemdist.next = 0; */
 
         if not item.Get(SalesL."No.") then exit; //AM190925
-         location.SetFilter(Code, '<>%1', SalesL."Location Code");
+        location.SetFilter(Code, '<>%1', SalesL."Location Code");
         location.SetRange("Use As In-Transit", false);
-       
 
-        if location.findset() then  
-            
+
+        if location.findset() then
             repeat
-                   BaseSortie :=item."CalcQuantitéBaseSortie"(location.Code);
+                BaseSortie := item."CalcQuantitéBaseSortie"(location.Code);
                 if location."Bin Mandatory" then begin
                     BinC.setrange("Location Code", location.Code);
-                    BinC.SetRange("Item No.",SalesL."No.");
+                    BinC.SetRange("Item No.", SalesL."No.");
 
                     if BinC.Findset() then
                         repeat
                             Dispo := item."CalcDisponibilité"(location.code, binc."Bin Code");
-                            if Dispo >0 //item."CalcDisponibilité"(location.code, binc."Bin Code") > 0 
+                            if Dispo > 0 //item."CalcDisponibilité"(location.code, binc."Bin Code") > 0 
                             then begin
                                 itemdist.INIT();
                                 itemdist.validate(Item, SalesL."No.");
@@ -178,7 +209,7 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
                                 itemdist.Qty := dispo;
 
                                 //item.get(SalesL."No.");
-                               itemdist."Qté Base Sortie" := BaseSortie ;
+                                itemdist."Qté Base Sortie" := BaseSortie;
                                 itemdist."Source Doc type" := SalesL."Document Type";
 
                                 itemdist."Source Doc No." := SalesL."Document No.";
@@ -188,9 +219,8 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
                             end
                         until BinC.Next() = 0
                 end
-                else
-                begin 
-                      Dispo:= item."CalcDisponibilité"(location.code, '') ;
+                else begin
+                    Dispo := item."CalcDisponibilité"(location.code, '');
                     if Dispo > 0 then begin
                         //   Message('%1', location.Code);
                         itemdist.INIT();
@@ -201,7 +231,7 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
                         itemdist.Qty := dispo;
 
                         //item.get(SalesL."No.");
-                        itemdist."Qté Base Sortie" := BaseSortie ;
+                        itemdist."Qté Base Sortie" := BaseSortie;
                         itemdist."Source Doc type" := SalesL."Document Type";
 
                         itemdist."Source Doc No." := SalesL."Document No.";
@@ -210,11 +240,11 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
                         if itemdist.insert() then;
 
                     end;
-                    end;
-                    
+                end;
+
             until location.next() = 0;
-            
-Commit();
+
+        Commit();
 
 
         DispPage.SetDoc(SalesL."Document Type", SalesL."Document No.", SalesL."Line No.", SalesL."Qty. to Ship");
@@ -224,7 +254,7 @@ Commit();
         itemdist.SetRange("Source Doc No.", SalesL."Document No.");
         itemdist.SetRange("Source Line No.", SalesL."Line No.");
         DispPage.SetTableView(itemdist);
-         
+
         DispPage.Run();
 
     end;

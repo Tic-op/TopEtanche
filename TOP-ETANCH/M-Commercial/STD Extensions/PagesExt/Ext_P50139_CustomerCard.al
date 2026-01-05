@@ -150,11 +150,13 @@ pageextension 50139 CustomerCard extends "customer Card"
                 begin
                     Customer.setfilter("no.", rec."no.");
 
-                    report.runmodal(50010, true, true, Customer);
+                    report.runmodal(50018, true, true, Customer);
+
 
                 end;
 
             }
+
 
         }
         modify("Report Statement")
@@ -162,6 +164,11 @@ pageextension 50139 CustomerCard extends "customer Card"
             Visible = false;
         }
     }
+
+
+
+
+
 
 
     trigger OnAfterGetRecord()

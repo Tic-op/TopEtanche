@@ -5,6 +5,7 @@ using Microsoft.Warehouse.Structure;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
+using Top.Top;
 
 pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subform"
 {
@@ -70,12 +71,12 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
         addafter("Location Code")
         {
             field("Bin Code"; Rec."Bin Code")
-                     {
-                         Visible = not Lignecomptoir;
-                         ApplicationArea = all;
-                         Editable = true;
-                         Enabled = editBinBool and not Lignecomptoir;
-                     } // **********IS 22/05/2025 */
+            {
+                Visible = not Lignecomptoir;
+                ApplicationArea = all;
+                Editable = true;
+                Enabled = editBinBool and not Lignecomptoir;
+            } // **********IS 22/05/2025 */
 
             /*  field(Disponibilité; "Disponibilité")
              {
@@ -182,6 +183,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
             {
                 Caption = 'Dispatch';
                 ApplicationArea = All;
+                visible = false;
                 Image = Bin;
                 Enabled = (rec."Quantity Shipped" = 0) and not Lignecomptoir;
 
@@ -230,7 +232,7 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
             {
                 Caption = 'Distribution Article';
                 ApplicationArea = All;
-                 ShortcutKey = 'Alt+G';
+                ShortcutKey = 'Alt+G';
                 Image = Bin;
                 Enabled = (rec."Quantity Shipped" = 0) and not Lignecomptoir;
 
@@ -250,25 +252,54 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
                     // else
                     // Error('Un magasin est déja affecter à cette ligne');
                 end;
-            }}
-            addlast("&Line"){
-              action(Tableau_de_Bord)
+            }
+        }
+        addlast("&Line")
+        {
+            action(Tableau_de_Bord)
             {
-                
+
                 ApplicationArea = All;
                 Image = Bin;
                 visible = true;
-               Promoted = false; ShortcutKey = 'Alt+B';
+                Promoted = false;
+                ShortcutKey = 'Alt+B';
                 trigger OnAction()
-                 var
-                item: record Item;
+                var
+                    item: record Item;
 
-            begin
-                item.SetLoadFields("No.");
-                if item.get(rec."No.") then
-                    item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer Name", rec."VAT %");
-            end;
+                begin
+                    item.SetLoadFields("No.");
+                    if item.get(rec."No.") then
+                        item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer Name", rec."VAT %");
+                end;
             }
+            Action(Recherche_Ticop)
+
+            {
+                ShortcutKey = 'Alt+W';
+                ApplicationArea = all;
+                Image = AddWatch;
+                trigger OnAction()
+                var
+                    RS: Page "Usual Search";
+                    SalesHeader: Record "Sales Header";
+
+                begin
+                    SalesHeader.Get(Rec."Document Type", Rec."Document No.");
+                    SalesHeader.TestField(Status, SalesHeader.Status::Open);
+                    RS.initvar(SalesHeader."Document Type", SalesHeader."No.");
+                    //RS.Run();
+                    rs.RunModal();
+
+                    // Page.RunModal(50029);
+                    CurrPage.Update();
+
+
+
+                end;
+            }
+
 
         }
     }
@@ -329,49 +360,49 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
         item: record item;
         SalesL: record "Sales Line";
         SalesH: Record "Sales Header";
-        BaseSortie : decimal ;
-      
+        BaseSortie: decimal;
+
 
 
     begin
-       /*  SalesH.get(Documenttype, documentno);
-        SalesH.CalcFields("Bon de preparations");
-        if SalesH."Bon de preparations" > 0 then begin
+        /*  SalesH.get(Documenttype, documentno);
+         SalesH.CalcFields("Bon de preparations");
+         if SalesH."Bon de preparations" > 0 then begin
 
-           
-        end; */
-     
+
+         end; */
+
 
         SalesL.get(Documenttype, documentno, Lineno);
         SalesL.CalcFields("Preparé");
-        if SalesL."Preparé" then begin 
-         message('Impossible de distribuer cette ligne, des préparations associées existent.');
+        if SalesL."Preparé" then begin
+            message('Impossible de distribuer cette ligne, des préparations associées existent.');
             exit;
-        end ;
-        
+        end;
+
         if not Item.get(SalesL."No.") then exit; // AM 190925
         //itemdist.SetRange("Source Doc type", Documenttype);
         itemdist.setrange("Source Doc No.", documentno);
         itemdist.setrange("Source Line No.", Lineno);
-        itemdist.DeleteAll(); 
-       /*  if itemdist.FindFirst() then
-            repeat
-                itemdist.delete();
-            until itemdist.next = 0; */
-      
+        itemdist.DeleteAll();
+        /*  if itemdist.FindFirst() then
+             repeat
+                 itemdist.delete();
+             until itemdist.next = 0; */
+
         //may be we ll add new filters
 
         if SalesL."Location Code" <> '' then
             location.setrange(Code, SalesL."Location Code");
-              location.SetRange("Use As In-Transit", false);
+        location.SetRange("Use As In-Transit", false);
 
 
         if location.findfirst() then
             repeat
-                 BaseSortie := item."CalcQuantitéBaseSortie"(location.Code);
+                BaseSortie := item."CalcQuantitéBaseSortie"(location.Code);
                 if location."Bin Mandatory" then begin
                     BinC.setrange("Location Code", location.Code);
-                   BinC.setrange("Item No.",item."No.");//151225
+                    BinC.setrange("Item No.", item."No.");//151225
 
                     if BinC.FindFirst() then
                         repeat
@@ -385,22 +416,21 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
                                 itemdist.Qty := dispo;
 
                                 item.get(SalesL."No.");
-                                itemdist."Qté Base Sortie" :=BaseSortie ;
+                                itemdist."Qté Base Sortie" := BaseSortie;
                                 itemdist."Source Doc type" := Documenttype;
 
                                 itemdist."Source Doc No." := documentno;
                                 itemdist."Source Line No." := Lineno;
-                               
+
                                 if itemdist.insert() then;
 
                             end
                         until BinC.Next() = 0
                 end
-                else
-                begin   
-                    Dispo:= item."CalcDisponibilité"(location.code, '') ;
-                      
-                    if Dispo >0  then begin
+                else begin
+                    Dispo := item."CalcDisponibilité"(location.code, '');
+
+                    if Dispo > 0 then begin
 
                         itemdist.INIT();
                         //
@@ -415,16 +445,16 @@ pageextension 50045 BlanketSalesOrderSubform extends "Blanket Sales Order Subfor
                         itemdist.Qty := dispo;
 
                         item.get(rec."No.");
-                        itemdist."Qté Base Sortie" := BaseSortie ;
+                        itemdist."Qté Base Sortie" := BaseSortie;
 
 
                         if itemdist.insert() then;
 
                     end;
-                     end;
+                end;
             until location.next() = 0;
 
-Commit();
+        Commit();
 
         DispPage.SetDoc(Documenttype, documentno, Lineno, SalesL."Qty. to Ship");
         DispPage.initvalue(0);
@@ -606,7 +636,7 @@ Commit();
          DispPage.Run();
 
      end;*/
-     procedure PreparationTransfert(Documenttype: enum "Sales Document Type"; documentno: Code[20]; Lineno: integer)
+    procedure PreparationTransfert(Documenttype: enum "Sales Document Type"; documentno: Code[20]; Lineno: integer)
     Var
         itemdist: record "Item Distribution";
         location: record Location;
@@ -616,37 +646,36 @@ Commit();
 
         DispPage: Page "itemdistribution";
         item: record item;
-        BaseSortie : decimal ;
+        BaseSortie: decimal;
 
 
     begin
         SalesL.get(Documenttype, documentno, Lineno);
-       // itemdist.SetRange("Source Doc type", Documenttype); 
+        // itemdist.SetRange("Source Doc type", Documenttype); 
         itemdist.setrange("Source Doc No.", documentno);
         itemdist.setrange("Source Line No.", Lineno);
-        itemdist.DeleteAll(); 
+        itemdist.DeleteAll();
         /* if itemdist.FindFirst() then
             repeat
                 itemdist.delete();
             until itemdist.next = 0; */
 
         if not item.Get(SalesL."No.") then exit; //AM190925
-         location.SetFilter(Code, '<>%1', SalesL."Location Code");
+        location.SetFilter(Code, '<>%1', SalesL."Location Code");
         location.SetRange("Use As In-Transit", false);
-       
 
-        if location.findset() then  
-            
+
+        if location.findset() then
             repeat
-                   BaseSortie :=item."CalcQuantitéBaseSortie"(location.Code);
+                BaseSortie := item."CalcQuantitéBaseSortie"(location.Code);
                 if location."Bin Mandatory" then begin
                     BinC.setrange("Location Code", location.Code);
-                    BinC.SetRange("Item No.",SalesL."No.");
+                    BinC.SetRange("Item No.", SalesL."No.");
 
                     if BinC.Findset() then
                         repeat
                             Dispo := item."CalcDisponibilité"(location.code, binc."Bin Code");
-                            if Dispo >0 //item."CalcDisponibilité"(location.code, binc."Bin Code") > 0 
+                            if Dispo > 0 //item."CalcDisponibilité"(location.code, binc."Bin Code") > 0 
                             then begin
                                 itemdist.INIT();
                                 itemdist.validate(Item, SalesL."No.");
@@ -656,7 +685,7 @@ Commit();
                                 itemdist.Qty := dispo;
 
                                 //item.get(SalesL."No.");
-                               itemdist."Qté Base Sortie" := BaseSortie ;
+                                itemdist."Qté Base Sortie" := BaseSortie;
                                 itemdist."Source Doc type" := SalesL."Document Type";
 
                                 itemdist."Source Doc No." := SalesL."Document No.";
@@ -666,9 +695,8 @@ Commit();
                             end
                         until BinC.Next() = 0
                 end
-                else
-                begin 
-                      Dispo:= item."CalcDisponibilité"(location.code, '') ;
+                else begin
+                    Dispo := item."CalcDisponibilité"(location.code, '');
                     if Dispo > 0 then begin
                         //   Message('%1', location.Code);
                         itemdist.INIT();
@@ -679,7 +707,7 @@ Commit();
                         itemdist.Qty := dispo;
 
                         //item.get(SalesL."No.");
-                        itemdist."Qté Base Sortie" := BaseSortie ;
+                        itemdist."Qté Base Sortie" := BaseSortie;
                         itemdist."Source Doc type" := SalesL."Document Type";
 
                         itemdist."Source Doc No." := SalesL."Document No.";
@@ -688,11 +716,11 @@ Commit();
                         if itemdist.insert() then;
 
                     end;
-                    end;
-                    
+                end;
+
             until location.next() = 0;
-            
-Commit();
+
+        Commit();
 
 
         DispPage.SetDoc(SalesL."Document Type", SalesL."Document No.", SalesL."Line No.", SalesL."Qty. to Ship");
@@ -702,7 +730,7 @@ Commit();
         itemdist.SetRange("Source Doc No.", SalesL."Document No.");
         itemdist.SetRange("Source Line No.", SalesL."Line No.");
         DispPage.SetTableView(itemdist);
-         
+
         DispPage.Run();
 
     end;

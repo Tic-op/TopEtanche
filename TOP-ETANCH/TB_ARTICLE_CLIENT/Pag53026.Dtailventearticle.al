@@ -14,7 +14,7 @@ page 53026 "Détail vente article"
     ModifyAllowed = false;
     InsertAllowed = false;
     DeleteAllowed = false;
-    
+
     layout
     {
         area(Content)
@@ -22,16 +22,18 @@ page 53026 "Détail vente article"
             group(General)
             {
                 Caption = 'General';
-              Field(Inventory;Rec.Inventory){}
-              field("Unit Price";Rec."Unit Price"){}
+                Field(Inventory; Rec.Inventory) { }
+                field("Unit Price"; Rec."Unit Price") { }
                 field(CalcVAT; round(Rec."Unit Price" * (1 + VAT_Rate / 100)))
                 {
                     Editable = false;
                     Caption = 'Prix TTC';
                 }
+                field("Unit Cost"; Rec."Unit Cost") { editable = false; }
+                Field("Last Direct Cost"; Rec."Last Direct Cost") { Editable = false; }
                 field("Sur Cmde Vente"; Rec."Qty. on Sales Order") { }
                 field("Sur Cmde Achat"; Rec."Qty. on Purch. Order") { }
-                 //Field("Sur facture Vente"; rec."Qty on invoice") { } 
+                //Field("Sur facture Vente"; rec."Qty on invoice") { } 
                 field(Tout_les_Client; Tout_les_Client)
                 {
                     Caption = 'Tout les clients';
@@ -42,7 +44,7 @@ page 53026 "Détail vente article"
                     end;
 
                 }
-                
+
             }
             Grid(HIST)
             {
@@ -67,11 +69,11 @@ page 53026 "Détail vente article"
             }
 
             Part(Prices; PriceListSubform)
-                {
-                    SubPageLink = "Product No." = field("no.");
+            {
+                SubPageLink = "Product No." = field("no.");
                 // SubPageView = where("Price Includes VAT" = const(false));
                 Caption = 'Liste des prix';
-                }
+            }
 
             /*      Grid(LocationPart)
                   {
@@ -109,8 +111,8 @@ page 53026 "Détail vente article"
     Procedure SetCustomer(Cust: Record Customer)
     begin
 
-        Customer := Cust ; 
-     end;
+        Customer := Cust;
+    end;
 
     Procedure Setitem(Item0: record Item; VAT_Rate0: Decimal)
     begin

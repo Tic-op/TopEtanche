@@ -8,7 +8,7 @@ page 50025 "XXXX Yasser"
     Caption = 'XXXX Yasser';
     PageType = List;
     SourceTable = "Purchase Line";
-    UsageCategory = Administration;
+    //   UsageCategory = Administration;
 
     layout
     {

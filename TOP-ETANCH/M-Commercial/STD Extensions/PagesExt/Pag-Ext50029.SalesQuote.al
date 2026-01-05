@@ -47,6 +47,28 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
         modify("Responsibility Center") { visible = false; }
         modify("Assigned User ID") { visible = false; }
         modify("Currency Code") { visible = false; }
+        /*  modify("Sell-to Customer Name")
+         {
+
+             trigger OnAfterValidate()
+             var
+                 RS: Page "Usual Search";
+                 SalesHeader: Record "Sales Header";
+
+             begin
+                 if SalesHeader.Get(Rec."Document Type", Rec."No.") then begin
+                     SalesHeader.TestField(Status, SalesHeader.Status::Open);
+                     RS.initvar(SalesHeader."Document Type", SalesHeader."No.");
+                     //RS.Run();
+                     RS.RunModal();
+
+                     // Page.RunModal(50029);
+                     CurrPage.Update();
+
+                 end
+
+             end;
+         } */
 
 
     }
@@ -66,7 +88,8 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
 
         }
         modify(MakeOrder)
-        {     Caption= 'générer expédition vente';
+        {
+            Caption = 'générer expédition vente';
             Enabled = rec."Type de facturation" <> rec."Type de facturation"::"Contre remboursement"; //AM à faire
 
 
@@ -77,7 +100,7 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
                 SE.ArchiveDevis(rec."No.");
             end;
         }
-       
+
 
         addlast(Processing)
         {

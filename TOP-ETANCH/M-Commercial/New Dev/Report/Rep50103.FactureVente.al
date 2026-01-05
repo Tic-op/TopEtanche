@@ -8,6 +8,7 @@ using Microsoft.Purchases.Vendor;
 using Microsoft.Sales.Customer;
 using Microsoft.CRM.Team;
 using Microsoft.Foundation.Company;
+using Microsoft.Bank.Payment;
 
 report 50103 FactureVente
 {
@@ -30,7 +31,7 @@ report 50103 FactureVente
             {
 
             }
-            column(VAT_Registration_No_; "VAT Registration No.") { }
+            column(VAT_Registration_No_; Cust."VAT Registration No.") { }
 
             column(Sell_to_Address; "Sell-to Address" + ' ' + "Bill-to Address 2" + ' ' + "Sell-to City")
             {
@@ -86,6 +87,7 @@ report 50103 FactureVente
             column(MontantNetHeader; MontantNetHeader) { }
             column(txtMntTLettres; txtMntTLettres) { }
 
+            column(PaiementText; PaiementText) { }
 
 
 
@@ -169,8 +171,9 @@ report 50103 FactureVente
 
                 trigger OnAfterGetRecord()
                 VAR
-                    CUST: Record Customer;
                 begin
+
+
 
                     /* if SalesinvoiceL."No." = '' then
                          CurrReport.Skip();*/
@@ -200,7 +203,8 @@ report 50103 FactureVente
                             if item.get("No.") then
                                 reference := item."Vendor Item No.";
                         end
-                        else reference := "No.";
+                        else
+                            reference := "No.";
                     end
                 end;
             }
@@ -208,7 +212,8 @@ report 50103 FactureVente
             trigger OnAfterGetRecord()
             var
                 SalesP: record "Salesperson/Purchaser";
-                Cust: record Customer;
+                PL: Record "Payment Line";
+                PC: Record "Payment Class";
 
             begin
                 companyInfo.get;
@@ -224,6 +229,30 @@ report 50103 FactureVente
                 MontantNetHeader := "Sales Invoice Header"."Amount Including VAT"; //+ "Sales Invoice Header"."Stamp Amount";
                 MontTlettre."Montant en texte"(txtMntTLettres, MontantNetHeader);
 
+
+                PL.SetCurrentKey("Facture caisse");
+                PL.SetRange("Facture caisse", "No.");
+                PL.SetFilter("Status No.", '%1|%2', 0, 10000);
+                PL.SetRange("Account No.", "Bill-to Customer No.");
+
+                if PL.FindFirst() then
+                    repeat
+                        PC.get(PL."Payment Class");
+                        if PC."Type caisse" = PC."Type caisse"::"Espèce" then
+                            PaiementText += ' -ES ' + format(PL."Credit Amount");
+                        if PC."Type caisse" = PC."Type caisse"::Retenue then
+                            PaiementText += ' -RS ' + format(PL."Credit Amount");
+                        if PC."Type caisse" = PC."Type caisse"::TPE then
+                            PaiementText += ' -CR ' + format(PL."Credit Amount");
+                        if PC."Type caisse" = PC."Type caisse"::"Chèque" then
+                            PaiementText += ' -CHQ N° ' + PL."External Document No." + ' ' + PL."Bank Account Name" + ' ' + format(PL."Credit Amount");
+                        if PC."Type caisse" = PC."Type caisse"::"Traite" then
+                            PaiementText += ' -TR N° ' + PL."External Document No." + ' du ' + format(PL."Due Date") + ' ' + PL."Bank Account Name" + ' ' + format(PL."Credit Amount");
+                    until PL.Next() = 0;
+
+
+                if PaiementText <> '' then
+                    PaiementText := 'Payé par ' + ' ' + PaiementText;
             end;
         }
 
@@ -341,4 +370,7 @@ report 50103 FactureVente
 
         TotalNet: Decimal;
         vendorref: Boolean;
+        Cust: record Customer;
+        PaiementText: Text;
+
 }

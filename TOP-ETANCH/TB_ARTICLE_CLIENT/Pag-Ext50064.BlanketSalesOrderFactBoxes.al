@@ -1,4 +1,4 @@
-namespace Top.Top;
+/* namespace Top.Top;
 
 using Microsoft.Sales.Document;
 using Microsoft.Inventory.Item;
@@ -56,3 +56,4 @@ pageextension 50064 "Blanket Sales Order Fact Boxes" extends "Blanket Sales Orde
 
 }
 
+ */

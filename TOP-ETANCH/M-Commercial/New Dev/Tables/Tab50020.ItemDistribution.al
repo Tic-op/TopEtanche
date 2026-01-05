@@ -49,6 +49,19 @@ table 50020 "Item Distribution"
         {
             Caption = 'Quantité à affecter';
             MinValue = 0;
+
+            trigger OnValidate()
+            var
+                location: Record Location;
+            begin
+                location.get("Location Code");
+                if location."Use As In-Transit" then
+                    error('Impossible de modifier récupérer de ce magasin car c''est un TRANSIT');
+                if location.Type = location.Type::Casse then
+                    error('Impossible de modifier récupérer de ce magasin car c''est un Casse');
+                if location.Type = location.Type::Tampon then
+                    error('Impossible de modifier récupérer de ce magasin car c''est un Tampon');
+            end;
         }
         field(9; "Qté Base Sortie"; decimal)
         {
@@ -68,7 +81,7 @@ table 50020 "Item Distribution"
             CalcFormula = Count("Transfer Header" where("Source No." = field("Source Doc No."), "Source Line No." = field("Source Line No.")));
 
         }
-       
+
         field(13; "Stock min"; Decimal)
         {
             Caption = 'Stock min';

@@ -1,6 +1,7 @@
 namespace Pharmatec.Pharmatec;
 
 using Microsoft.Sales.Document;
+using Top.Top;
 using Microsoft.Warehouse.Ledger;
 using Microsoft.Inventory.Tracking;
 using Microsoft.Sales.Pricing;
@@ -279,6 +280,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                 ApplicationArea = All;
                 Image = Bin;
                 Enabled = (rec."Quantity Shipped" = 0) and not Lignecomptoir;
+                visible = false;
 
                 /* trigger OnAction()
 
@@ -294,6 +296,7 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                     Itemdist: record "Item Distribution";
                     SH: record "Sales Header";
                     SL: record "Sales Line";
+
 
                 begin
 
@@ -360,6 +363,31 @@ pageextension 50008 "Sales Order Subform" extends "Sales Order Subform"
                     item.SetLoadFields("No.");
                     if item.get(rec."No.") then
                         item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer Name", rec."VAT %");
+                end;
+            }
+            Action(Recherche_Ticop)
+
+            {
+                ShortcutKey = 'Alt+W';
+                ApplicationArea = all;
+                Image = AddWatch;
+                trigger OnAction()
+                var
+                    RS: Page "Usual Search";
+                    SalesHeader: Record "Sales Header";
+
+                begin
+                    SalesHeader.Get(Rec."Document Type", Rec."Document No.");
+                    SalesHeader.TestField(Status, SalesHeader.Status::Open);
+                    RS.initvar(SalesHeader."Document Type", SalesHeader."No.");
+                    //RS.Run();
+                    rs.RunModal();
+
+                    // Page.RunModal(50029);
+                    CurrPage.Update();
+
+
+
                 end;
             }
 

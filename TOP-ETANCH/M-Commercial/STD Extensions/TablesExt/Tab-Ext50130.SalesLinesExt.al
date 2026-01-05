@@ -224,6 +224,9 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
             var
                 disp: decimal;
             begin
+                if "Shipment No." <> '' then exit;
+                if (type <> type::Item) then
+                    exit;
                 if ("Document Type" = "Sales Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice) then begin
                     if "Location Code" = '' then
                         disp := GetDisponibilite(true)
@@ -239,6 +242,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
         {
             trigger OnAfterValidate()
             begin
+
                 "ControlDisponibilitéSaleslines"();
             end;
         }
@@ -524,6 +528,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
     var
         disp: decimal;
     begin
+        if "Shipment No." <> '' then exit;
         if ("Document Type" = "Sales Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice) then begin
             if "Location Code" = '' then
                 disp := GetDisponibilite(true)

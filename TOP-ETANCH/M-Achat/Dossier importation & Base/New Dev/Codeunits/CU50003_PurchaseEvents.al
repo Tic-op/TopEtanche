@@ -323,6 +323,9 @@ codeunit 50113 PurchaseEvents
     Var
         PurchL: record "Purchase Line";
     begin
+
+        if PurchaseHeader."Currency Code" = '' then
+            exit;
         If ((PurchaseHeader."Document Type" = "Purchase Document Type"::Order) and (PurchaseHeader.Receive)) or (PurchaseHeader."Document Type" = "purchase document type"::Invoice)
 
          then begin
@@ -350,7 +353,20 @@ codeunit 50113 PurchaseEvents
 
     end;
 
-
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Line",
+           'OnAfterValidateEvent', 'Location Code', false, false)]
+    local procedure PurchaseLine_OnAfterValidateLocation(
+           var Rec: Record "Purchase Line";
+           xRec: Record "Purchase Line")
+    begin
+        // Si l'utilisateur avait déjà saisi un coût
+        if xRec."Direct Unit Cost" <> 0 then begin
+            // Et si BC l’a écrasé
+            if Rec."Direct Unit Cost" <> xRec."Direct Unit Cost" then begin
+                Rec.Validate("Direct Unit Cost", xRec."Direct Unit Cost");
+            end;
+        end;
+    end;
 
 
 }

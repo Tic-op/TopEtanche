@@ -1,4 +1,4 @@
-namespace Top.Top;
+/* namespace Top.Top;
 
 using Microsoft.Sales.Document;
 using Microsoft.Inventory.Item;
@@ -59,3 +59,4 @@ pageextension 50062 "Sales Quote Fact Boxes" extends "Sales Quote"
 
 }
 
+ */

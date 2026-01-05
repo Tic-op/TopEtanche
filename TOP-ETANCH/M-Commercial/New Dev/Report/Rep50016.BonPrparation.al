@@ -2,6 +2,7 @@ namespace Top.Top;
 using Microsoft.Sales.Document;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Sales.Customer;
+using Microsoft.Inventory.Item;
 
 report 50016 "BonPréparation"
 {
@@ -65,6 +66,7 @@ report 50016 "BonPréparation"
                 column(item_No_; "item No.") { }
                 column(description; description) { }
                 column(Qty; Qty) { }
+                column(vendorItemNo; vendorItemNo) { }
                 column(DD; Ordredepreparation."Date début préparation") { }
                 column(DF; Ordredepreparation."Date fin préparation") { }
                 Column(NumTicket; NumTicket) { }
@@ -75,6 +77,7 @@ report 50016 "BonPréparation"
                     SalesL: record "Sales Line";
                     TransferLine: record "Transfer Line";
                     Customer: Record Customer;
+                    itemrec: record Item;
                 begin
                     Customer.SetLoadFields("No.", Name, "Phone No.", "Mobile Phone No.");
                     SalesL.SetLoadFields("Document Type", "Document No.", "Line No.", Type, "Sell-to Customer No.", "Sell-to Customer Name");
@@ -87,8 +90,15 @@ report 50016 "BonPréparation"
                             Customer.get(Demandeur);
                             CustPhone := Customer."Phone No.";
                         end;
-                        Destination := Demandeur + '  ' + "Nom demandeur";
+                        Destination := /*Demandeur + '  ' +*/ "Nom demandeur";
+                        if "Source type." = "Source type."::Transfert then
+                            Destination := Demandeur;
 
+                    end;
+                    vendorItemNo := "item No.";
+                    if itemrec.get("item No.") then begin
+                        if itemrec.get("item No.") then
+                            if itemrec."Vendor Item No." <> '' then vendorItemNo := itemrec."Vendor Item No."
                     end;
 
 
@@ -177,9 +187,8 @@ report 50016 "BonPréparation"
 
     trigger OnInitReport()
     begin
-        imprimer_destination := false;
+        imprimer_destination := true;
         NumTicket := 0;
-
     end;
 
 
@@ -189,4 +198,5 @@ report 50016 "BonPréparation"
         CustPhone: text;
         NumTicket: Integer;
         Destination: text;
+        vendorItemNo: text;
 }

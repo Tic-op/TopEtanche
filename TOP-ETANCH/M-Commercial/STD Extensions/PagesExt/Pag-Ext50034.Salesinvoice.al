@@ -12,6 +12,40 @@ pageextension 50034 Salesinvoice extends "Sales Invoice"
 
     layout
     {
+        addafter("Due Date")
+        {
+            field("Bon de preparations"; Rec."Bon de preparations")
+            {
+                Caption = 'Bon de preparations';
+                ApplicationArea = all;
+
+                trigger OnDrillDown()
+                var
+                    ListBonPre: Page "Liste bon de préparation";
+                    OrderPre: record "Ordre de preparation";
+                begin
+                    OrderPre.setrange("Order No", rec."No.");
+                    ListBonPre.SetTableView(OrderPre);
+                    ListBonPre.Run();
+                end;
+            }
+            field("Bon de preparations préparés"; Rec."Bon de preparations préparés")
+            {
+                Caption = 'Préparés';
+                ApplicationArea = all;
+
+                trigger OnDrillDown()
+                var
+                    ListBonPre: Page "Liste bon de préparation";
+                    OrderPre: record "Ordre de preparation";
+                begin
+                    OrderPre.setrange("Order No", rec."No.");
+                    OrderPre.SetRange(Statut, OrderPre.Statut::"Préparé");
+                    ListBonPre.SetTableView(OrderPre);
+                    ListBonPre.Run();
+                end;
+            }
+        }
         modify("Campaign No.") { visible = false; }
         modify("Responsibility Center") { visible = false; }
         modify("Assigned User ID") { visible = false; }
@@ -35,6 +69,30 @@ pageextension 50034 Salesinvoice extends "Sales Invoice"
         modify("Direct Debit Mandate ID") { Visible = false; }
         modify(Control174) { visible = false; }
         modify("Currency Code") { visible = false; }
+        /*  modify("Sell-to Customer Name")
+         {
+
+             trigger OnAfterValidate()
+             var
+                 RS: Page "Usual Search";
+                 SalesHeader: Record "Sales Header";
+
+             begin
+                 if SalesHeader.Get(Rec."Document Type", Rec."No.") then begin
+                     SalesHeader.TestField(Status, SalesHeader.Status::Open);
+                     RS.initvar(SalesHeader."Document Type", SalesHeader."No.");
+                     //RS.Run();
+                     RS.RunModal();
+
+                     // Page.RunModal(50029);
+                     CurrPage.Update();
+
+                 end
+
+             end;
+         } */
+
+
 
         addafter("Shipping and Billing")
         {
@@ -60,21 +118,7 @@ pageextension 50034 Salesinvoice extends "Sales Invoice"
                     // Enabled = false;
 
                 }
-                field("Bon de preparations"; Rec."Bon de preparations")
-                {
-                    Caption = 'Bon de preparations';
-                    ApplicationArea = all;
 
-                    trigger OnDrillDown()
-                    var
-                        ListBonPre: Page "Liste bon de préparation";
-                        OrderPre: record "Ordre de preparation";
-                    begin
-                        OrderPre.setrange("Order No", rec."No.");
-                        ListBonPre.SetTableView(OrderPre);
-                        ListBonPre.Run();
-                    end;
-                }
             }
         }
     }
@@ -188,6 +232,28 @@ pageextension 50034 Salesinvoice extends "Sales Invoice"
 
 
             }
+            action(VérifiPrep)
+            {
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+                ApplicationArea = All;
+                Image = PrintVoucher;
+                visible = true;
+                Caption = 'Imprimer feuille préparation';
+                trigger OnAction()
+                var
+                    Ligneprep: record "Ligne préparation";
+
+
+                begin
+                    Ligneprep.setrange("Source type.", Ligneprep."Source type."::Facture);
+                    Ligneprep.setrange("Source No.", Rec."No.");
+                    if Ligneprep.FindSet() then
+                        Report.RunModal(50015, true, true, Ligneprep);
+                end;
+            }
+
 
 
 

@@ -18,7 +18,6 @@ tableextension 50113 Vendor_Ext extends Vendor
         {
             Caption = 'Timbre';
             InitValue = true;
-
         }
         field(50102; "Equipement"; Boolean)
         {

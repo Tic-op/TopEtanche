@@ -134,15 +134,37 @@ tableextension 50132 SalesHeader extends "Sales Header"
             FieldClass = FlowField;
             // CalcFormula = count("Ordre de preparation" where("Order No" = field("No."), Statut = filter("Créé" | "Regroupé" | "Préparé" | "En cours")));
             CalcFormula = count("Ordre de preparation" where("Order No" = field("No.")));
+        }
+        field(50013; "Bon de preparations préparés"; integer)
+        {
 
-
+            Caption = 'Bon de preparations';
+            FieldClass = FlowField;
+            // CalcFormula = count("Ordre de preparation" where("Order No" = field("No."), Statut = filter("Créé" | "Regroupé" | "Préparé" | "En cours")));
+            CalcFormula = count("Ordre de preparation" where("Order No" = field("No."), Statut = const("Préparé")));
         }
         field(60100; "Documents vérifiés"; Boolean)
         {
             Caption = 'Documents client Vérifiés';
         }
 
+        modify("document Date")
+        {
+            trigger OnAfterValidate()
+            begin
+                if "document type" = "document type"::Quote then
+                    ApplyVatSuspension();
+            end;
 
+        }
+
+        modify("Posting Date")
+        {
+            trigger OnAfterValidate()
+            begin
+                ApplyVatSuspension();
+            end;
+        }
 
         modify("Sell-to Customer No.")
         {
@@ -152,9 +174,11 @@ tableextension 50132 SalesHeader extends "Sales Header"
                 CustomerRec: Record Customer;
                 GLSetup: Record "General Ledger Setup";
             begin
-                
+
                 "Stamp Amount" := 0;
                 GLSetup.get;
+
+                ApplyVatSuspension();
 
 
                 if "Sell-to Customer No." <> '' then begin
@@ -380,6 +404,34 @@ tableextension 50132 SalesHeader extends "Sales Header"
     begin
         if ("Document Type" = "Document Type"::invoice) and ("Posting No." <> '') then
             Error('Vous ne pouvez pas supprimer ce document');
+    end;
+
+
+    local procedure ApplyVatSuspension()
+    var
+        VatSusp: Record "Customer VAT Suspension";
+        Cust: Record Customer;
+        Date0: Date;
+    begin
+        if ("Sell-to Customer No." = '') then
+            exit;
+
+        // Recherche suspension active
+        VatSusp.Reset();
+        VatSusp.SetRange("Customer No.", "Sell-to Customer No.");
+        Date0 := "Posting Date";
+        if "document type" = "document type"::Quote then
+            Date0 := "Document Date";
+        VatSusp.SetFilter("Start Date", '<=%1', Date0);
+        VatSusp.SetFilter("End Date", '>=%1', Date0);
+
+        if VatSusp.FindFirst() then begin
+            VatSusp.TestField("VAT Bus. Posting Group");
+            VatSusp.TestField("Bus. Posting Group");
+            Validate("VAT Bus. Posting Group", VatSusp."VAT Bus. Posting Group");
+            validate("Gen. Bus. Posting Group", VatSusp."Bus. Posting Group");
+        end;
+
     end;
 
     var

@@ -25,11 +25,11 @@ page 50174 "itemdistribution"
                     DecimalPlaces = 0 : 3;
                     ApplicationArea = all;
                 }
-                field("Affectée"; "quantité totale"-"quantité affectée")
+                field("Affectée"; "quantité totale" - "quantité affectée")
                 {
                     Enabled = false;
                     Editable = false;
-                    Caption='Restant';
+                    Caption = 'Restant';
                     decimalPlaces = 0 : 3;
                     ApplicationArea = all;
 
@@ -257,11 +257,14 @@ page 50174 "itemdistribution"
                 repeat
                     SL."Line No." := SL.GetLastLineNo() + 1000;
                     SL."Location Code" := Rec."Location Code";
+                    if rec."Bin Code" <> '' then
+                        SL.Validate("Bin Code", Rec."Bin Code"); // new AM 301225
                     SL.Validate("Quantity (Base)", Rec."Qty to assign");
                     SL.Validate("Qty. to Ship (Base)", Rec."Qty to assign");
+                    SL.Validate("Unit Price", SlToDelete."Unit Price");
                     SL.Validate("Line Discount %", SlToDelete."Line Discount %");
                     SL.Insert();
-                    SL.Validate("Bin Code", Rec."Bin Code");
+                    // SL.Validate("Bin Code", Rec."Bin Code");
                     SL.Modify();
                 until Rec.Next() = 0;
 
@@ -335,7 +338,7 @@ page 50174 "itemdistribution"
         item: Record Item;
         "Qté par unité Sortie": decimal;
         "Qté réelle à transferer": decimal;
-        Locationtransit : record location ;
+        Locationtransit: record location;
 
 
 
@@ -372,10 +375,10 @@ page 50174 "itemdistribution"
                     // TransferHeader."In-Transit Code" := CodeTransit();
                     TransferHeader."Source No." := Doc;
                     TransferHeader."Source Line No." := Line;
-                   // TransferHeader."Direct Transfer" := true;
-                    Locationtransit.setrange("Use As In-Transit",true);
-            Locationtransit.FindFirst() ;
-            TransferHeader.validate("In-Transit Code",Locationtransit.code);
+                    // TransferHeader."Direct Transfer" := true;
+                    Locationtransit.setrange("Use As In-Transit", true);
+                    Locationtransit.FindFirst();
+                    TransferHeader.validate("In-Transit Code", Locationtransit.code);
                     TransferHeader.Insert(true);
                     TransferNo := TransferHeader."No.";
                     LastSourceLocation := CurrentSourceLocation;

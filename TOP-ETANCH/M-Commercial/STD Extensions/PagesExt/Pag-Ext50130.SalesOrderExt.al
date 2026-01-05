@@ -17,23 +17,39 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
     // InsertAllowed = false;
     layout
     {
-        addafter("Posting Date")
+        addafter("Due Date")
         {
-            /*  field("Prise en charge"; Rec."Prise en charge")
-             {
-                 ApplicationArea = all;
-
-             } */
-            /* field("Vente comptoir"; Rec."Vente comptoir")
+            field("Bon de preparations"; Rec."Bon de preparations")
             {
+                Caption = 'Bon de preparations';
                 ApplicationArea = all;
-                trigger OnValidate()
+
+                trigger OnDrillDown()
+                var
+                    ListBonPre: Page "Liste bon de préparation";
+                    OrderPre: record "Ordre de preparation";
                 begin
+                    OrderPre.setrange("Order No", rec."No.");
+                    ListBonPre.SetTableView(OrderPre);
+                    ListBonPre.Run();
+                end;
+            }
+            field("Bon de preparations préparés"; Rec."Bon de preparations préparés")
+            {
+                Caption = 'Bon de préparations préparés';
+                ApplicationArea = all;
 
-                    CurrPage.update();
-                end;     
-            } */
-
+                trigger OnDrillDown()
+                var
+                    ListBonPre: Page "Liste bon de préparation";
+                    OrderPre: record "Ordre de preparation";
+                begin
+                    OrderPre.setrange("Order No", rec."No.");
+                    OrderPre.SetRange(Statut, OrderPre.Statut::"Préparé");
+                    ListBonPre.SetTableView(OrderPre);
+                    ListBonPre.Run();
+                end;
+            }
         }
 
 
@@ -44,6 +60,9 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
             trigger OnAfterValidate()
             var
                 customer: Record Customer;
+                RS: Page "Usual Search";
+                SalesHeader: Record "Sales Header";
+
             begin
                 /*  rec."Prise en charge" := true;
                  rec.Modify(); */
@@ -53,9 +72,47 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                         Error('Ce client est bloqué pour la raison suivante \%1 !', customer."Cause du blocage");
                 end;
 
-            end;
 
+
+                /* begin
+                    if SalesHeader.Get(Rec."Document Type", Rec."No.") then begin
+                        SalesHeader.TestField(Status, SalesHeader.Status::Open);
+                        RS.initvar(SalesHeader."Document Type", SalesHeader."No.");
+                        //RS.Run();
+                        RS.RunModal();
+
+                        // Page.RunModal(50029);
+                        CurrPage.Update();
+
+                    end
+
+                end; */
+            end;
         }
+        /*  modify("Sell-to Customer Name")
+         {
+             trigger OnAfterValidate()
+             var
+                 RS: Page "Usual Search";
+                 SalesHeader: Record "Sales Header";
+             begin
+
+                 if SalesHeader.Get(Rec."Document Type", Rec."No.") then begin
+                     SalesHeader.TestField(Status, SalesHeader.Status::Open);
+                     RS.initvar(SalesHeader."Document Type", SalesHeader."No.");
+                     //RS.Run();
+                     RS.RunModal();
+
+                     // Page.RunModal(50029);
+                     CurrPage.Update();
+
+                 end
+             end;
+         } */
+
+
+
+
         modify("Campaign No.")
         {
             Visible = false;
@@ -186,21 +243,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                     // Enabled = false;
 
                 }
-                field("Bon de preparations"; Rec."Bon de preparations")
-                {
-                    Caption = 'Bon de preparations';
-                    ApplicationArea = all;
 
-                    trigger OnDrillDown()
-                    var
-                        ListBonPre: Page "Liste bon de préparation";
-                        OrderPre: record "Ordre de preparation";
-                    begin
-                        OrderPre.setrange("Order No", rec."No.");
-                        ListBonPre.SetTableView(OrderPre);
-                        ListBonPre.Run();
-                    end;
-                }
 
 
             }
@@ -411,8 +454,28 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                 end;
 
             }
+            action(VérifiPrep)
+            {
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+                ApplicationArea = All;
+                Image = PrintVoucher;
+                visible = true;
+                Caption = 'Imprimer feuille préparation';
+                trigger OnAction()
+                var
+                    Ligneprep: record "Ligne préparation";
+                begin
+                    Ligneprep.setrange("Source type.", Ligneprep."Source type."::Facture);
+                    Ligneprep.setrange("Source No.", Rec."No.");
+                    if Ligneprep.FindSet() then
+                        Report.RunModal(50015, true, true, Ligneprep);
+                end;
+            }
 
         }
 
     }
+
 }

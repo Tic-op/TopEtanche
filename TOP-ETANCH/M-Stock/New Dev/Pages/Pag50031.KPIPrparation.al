@@ -7,8 +7,8 @@ page 50031 "KPI Préparation"
     Caption = 'KPI Préparation';
     PageType = CardPart;
     SourceTable = "Indicateur Préparation";
-     RefreshOnActivate = true;
-    
+    RefreshOnActivate = true;
+
     layout
     {
         area(Content)
@@ -29,45 +29,43 @@ page 50031 "KPI Préparation"
                  end;             
                   }
             } */
-          
-               
-                
-                
-                field("Préparations vente encours"; Rec."Prép vente encours")
-                {
-                    ToolTip = 'Specifies the value of the Préparations vente encours field.', Comment = '%';
-                }
-                field("Préparations vente regoupées"; Rec."Prép vente regoupées")
-                {
-                    ToolTip = 'Specifies the value of the Préparations vente regoupées field.', Comment = '%';
-                }
-                field("Préparations transfert encours"; Rec."Prép transfert encours")
-                {
-                    ToolTip = 'Specifies the value of the Préparations transfert encours field.', Comment = '%';
-                }
-                field("Prép transfert regoupées"; Rec."Prép transfer regoupées")
-                {
-                    ToolTip = 'Specifies the value of the Préparations transfert regoupées field.', Comment = '%';
-                }
-            
+
+
+
+
+            field("Nouvelles prép."; Rec."Nouvelles prép.")
+            {
+                ToolTip = 'Specifies the value of the Préparations vente encours field.', Comment = '%';
+            }
+            field("Encours Vente"; Rec."Encours Vente")
+            {
+                ToolTip = 'Specifies the value of the Préparations vente regoupées field.', Comment = '%';
+            }
+            field("Encours Transf."; Rec."Encours Transf.")
+            {
+                ToolTip = 'Specifies the value of the Préparations transfert encours field.', Comment = '%';
+            }
+
+
         }
     }
-      trigger OnOpenPage()
-         begin 
-         Rec.Reset();
+    trigger OnOpenPage()
+    begin
+        Rec.Reset();
         if not Rec.Get() then begin
             Rec.Init();
             Rec.Insert();
         end;
 
-        rec.SetRange(Locationfilter,'');
+        rec.SetRange(Locationfilter, '');
 
-          rec.SetAutoCalcFields("Prép transfer regoupées","Prép transfert encours","Prép vente encours","Prép vente regoupées");
+        rec.SetAutoCalcFields("Prép transfer regoupées", "Nouvelles prép.", "Encours Transf.", "Encours Vente");
 
-        end;
-        var 
-        FiltreMagasin : code [10];
-       
-        }
-   
+    end;
+
+    var
+        FiltreMagasin: code[10];
+
+}
+
 

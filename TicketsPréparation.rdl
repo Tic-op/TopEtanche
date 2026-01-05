@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2025-12-22T14:05:48.4529355Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2025-12-31T10:43:43.1294471Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -32,16 +32,15 @@
             <TablixBody>
               <TablixColumns>
                 <TablixColumn>
-                  <Width>6.90214cm</Width>
+                  <Width>5.026cm</Width>
                 </TablixColumn>
               </TablixColumns>
               <TablixRows>
                 <TablixRow>
-                  <Height>3.38339cm</Height>
+                  <Height>2.94203cm</Height>
                   <TablixCells>
                     <TablixCell>
                       <CellContents>
-                        <rd:Selected>true</rd:Selected>
                         <Rectangle Name="Rectangle2">
                           <ReportItems>
                             <Textbox Name="Textbox18">
@@ -53,29 +52,23 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
-                                      <Value>N°:</Value>
+                                      <Value>=Fields!vendorItemNo.Value</Value>
                                       <Style>
-                                        <FontSize>7pt</FontSize>
                                         <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
-                                      <Value>=Fields!item_No_.Value</Value>
-                                      <Style>
-                                        <FontSize>7pt</FontSize>
-                                      </Style>
+                                      <Value xml:space="preserve"> </Value>
+                                      <Style />
                                     </TextRun>
-                                    <TextRun>
-                                      <Value> - </Value>
-                                      <Style>
-                                        <FontSize>7pt</FontSize>
-                                      </Style>
-                                    </TextRun>
+                                  </TextRuns>
+                                  <Style />
+                                </Paragraph>
+                                <Paragraph>
+                                  <TextRuns>
                                     <TextRun>
                                       <Value>=Fields!description.Value</Value>
-                                      <Style>
-                                        <FontSize>6pt</FontSize>
-                                      </Style>
+                                      <Style />
                                     </TextRun>
                                   </TextRuns>
                                   <Style />
@@ -84,55 +77,45 @@
                                   <TextRuns>
                                     <TextRun>
                                       <Value>Qté : </Value>
-                                      <Style>
-                                        <FontSize>7pt</FontSize>
-                                      </Style>
+                                      <Style />
                                     </TextRun>
                                     <TextRun>
                                       <Value>=Fields!Qty.Value</Value>
                                       <Style>
-                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
                                       <Value> - </Value>
-                                      <Style>
-                                        <FontSize>7pt</FontSize>
-                                      </Style>
+                                      <Style />
                                     </TextRun>
                                     <TextRun>
                                       <Value>=Fields!Magasin.Value</Value>
-                                      <Style>
-                                        <FontSize>6pt</FontSize>
-                                      </Style>
+                                      <Style />
                                     </TextRun>
                                     <TextRun>
                                       <Value xml:space="preserve">   </Value>
-                                      <Style>
-                                        <FontSize>6pt</FontSize>
-                                      </Style>
+                                      <Style />
                                     </TextRun>
                                     <TextRun>
                                       <Value>=Fields!Bin_Code.Value</Value>
                                       <Style>
-                                        <FontSize>6pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
                                   <Style />
                                 </Paragraph>
                               </Paragraphs>
-                              <Top>0.38906in</Top>
-                              <Left>0.08326in</Left>
-                              <Height>0.30758in</Height>
-                              <Width>2.54993in</Width>
+                              <Top>0.26102in</Top>
+                              <Left>0.00621in</Left>
+                              <Height>0.89726in</Height>
+                              <Width>1.94918in</Width>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
@@ -146,21 +129,12 @@
                                     <TextRun>
                                       <Value>=Fields!Destination.Value</Value>
                                       <Style>
-                                        <FontSize>6pt</FontSize>
                                         <FontWeight>Normal</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
                                       <Value xml:space="preserve"> </Value>
                                       <Style>
-                                        <FontSize>6pt</FontSize>
-                                        <FontWeight>Normal</FontWeight>
-                                      </Style>
-                                    </TextRun>
-                                    <TextRun>
-                                      <Value>=Fields!CustPhone.Value</Value>
-                                      <Style>
-                                        <FontSize>6pt</FontSize>
                                         <FontWeight>Normal</FontWeight>
                                       </Style>
                                     </TextRun>
@@ -170,9 +144,20 @@
                                 <Paragraph>
                                   <TextRuns>
                                     <TextRun>
+                                      <Value>=Fields!Source_No_.Value</Value>
+                                      <Style>
+                                        <FontWeight>Normal</FontWeight>
+                                      </Style>
+                                    </TextRun>
+                                    <TextRun>
+                                      <Value>-</Value>
+                                      <Style>
+                                        <FontWeight>Normal</FontWeight>
+                                      </Style>
+                                    </TextRun>
+                                    <TextRun>
                                       <Value>=Fields!Document_No_.Value</Value>
                                       <Style>
-                                        <FontSize>6pt</FontSize>
                                         <FontWeight>Normal</FontWeight>
                                       </Style>
                                     </TextRun>
@@ -180,18 +165,16 @@
                                   <Style />
                                 </Paragraph>
                               </Paragraphs>
-                              <Top>0.06735in</Top>
-                              <Left>0.08326in</Left>
-                              <Height>0.29394in</Height>
-                              <Width>2.22966in</Width>
+                              <Top>0.01027in</Top>
+                              <Left>0.00906in</Left>
+                              <Height>0.23686in</Height>
+                              <Width>1.71444in</Width>
                               <ZIndex>1</ZIndex>
                               <Style>
                                 <Border>
                                   <Style>None</Style>
                                 </Border>
-                                <PaddingLeft>2pt</PaddingLeft>
                                 <PaddingRight>2pt</PaddingRight>
-                                <PaddingTop>2pt</PaddingTop>
                                 <PaddingBottom>2pt</PaddingBottom>
                               </Style>
                             </Textbox>
@@ -205,29 +188,32 @@
                                     <TextRun>
                                       <Value>=Fields!NumTicket.Value</Value>
                                       <Style>
-                                        <FontSize>6pt</FontSize>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
                                       <Value>/</Value>
                                       <Style>
-                                        <FontSize>6pt</FontSize>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                     <TextRun>
                                       <Value>=Fields!TotalTicket.Value</Value>
                                       <Style>
-                                        <FontSize>6pt</FontSize>
+                                        <FontSize>7pt</FontSize>
+                                        <FontWeight>Bold</FontWeight>
                                       </Style>
                                     </TextRun>
                                   </TextRuns>
                                   <Style />
                                 </Paragraph>
                               </Paragraphs>
-                              <Top>0.21434cm</Top>
-                              <Left>6.01592cm</Left>
+                              <Top>0.02609cm</Top>
+                              <Left>4.37768cm</Left>
                               <Height>0.381cm</Height>
-                              <Width>0.67238cm</Width>
+                              <Width>0.58902cm</Width>
                               <ZIndex>2</ZIndex>
                               <Style>
                                 <Border>
@@ -269,10 +255,10 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>0.34746cm</Top>
-            <Left>0.33868cm</Left>
-            <Height>3.38339cm</Height>
-            <Width>6.90214cm</Width>
+            <Top>0.01401cm</Top>
+            <Left>0.03423cm</Left>
+            <Height>2.94203cm</Height>
+            <Width>5.026cm</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -280,13 +266,13 @@
             </Style>
           </Tablix>
         </ReportItems>
-        <Height>4.01775cm</Height>
+        <Height>3.08112cm</Height>
         <Style />
       </Body>
-      <Width>7.45249cm</Width>
+      <Width>5.14682cm</Width>
       <Page>
-        <PageHeight>4cm</PageHeight>
-        <PageWidth>8cm</PageWidth>
+        <PageHeight>3.5cm</PageHeight>
+        <PageWidth>5.5cm</PageWidth>
         <ColumnSpacing>1.27cm</ColumnSpacing>
         <Style />
       </Page>
@@ -391,6 +377,9 @@ End Function
         </Field>
         <Field Name="QtyFormat">
           <DataField>QtyFormat</DataField>
+        </Field>
+        <Field Name="vendorItemNo">
+          <DataField>vendorItemNo</DataField>
         </Field>
         <Field Name="DD">
           <DataField>DD</DataField>

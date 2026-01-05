@@ -40,11 +40,11 @@ tableextension 50002 Salesperson extends "Salesperson/Purchaser"
             TableRelation = Location;
         }
     }
-    trigger onmodify()
+    /* trigger onmodify()
     begin
         if "Code Secteur" = '' then
             error('code secteur vide');
-    end;
+    end; */
 
 
 }

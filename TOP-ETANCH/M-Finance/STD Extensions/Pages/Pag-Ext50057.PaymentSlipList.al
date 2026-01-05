@@ -30,7 +30,24 @@ pageextension 50057 "Payment Slip List" extends "Payment Slip List"
                 ApplicationArea = all;
                 RunObject = page "Payment Lines List";
             }
+
+            action("Etat Caisse")
+            {
+                Image = CashReceiptJournal;
+                Promoted = true;
+                PromotedCategory = Report;
+                ApplicationArea = All;
+
+                trigger OnAction()
+                var
+                    cais: Report "Caisse journalière";
+                begin
+                    cais.Run();
+                end;
+            }
         }
+
+
     }
 
 }

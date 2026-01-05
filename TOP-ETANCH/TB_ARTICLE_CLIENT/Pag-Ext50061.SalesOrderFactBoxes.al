@@ -1,4 +1,4 @@
-namespace Top.Top;
+/* namespace Top.Top;
 
 using Microsoft.Sales.Document;
 using Microsoft.Inventory.Item;
@@ -54,3 +54,4 @@ pageextension 50061 "Sales Order Fact Boxes" extends "Sales Order"
 
 }
 
+ */

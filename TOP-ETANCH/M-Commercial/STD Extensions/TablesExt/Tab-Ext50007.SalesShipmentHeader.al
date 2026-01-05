@@ -1,6 +1,7 @@
 namespace TopEtanch.TopEtanch;
 
 using Microsoft.Sales.History;
+using Microsoft.Bank.Payment;
 
 tableextension 50007 "Sales Shipment Header" extends "Sales Shipment Header"
 {
@@ -17,6 +18,14 @@ tableextension 50007 "Sales Shipment Header" extends "Sales Shipment Header"
         field(50111; "Mode de livraison"; Option)
         {
             OptionMembers = "comptoir","Top Etanchéité","Transporteur Externe";
+
+        }
+        field(50004; "Règlement en cours"; Decimal)
+        {
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = sum("Payment Line".Amount where("facture caisse" = field("No."), "Copied To No." = filter(''), "Status No." = filter(0)));
+            Caption = 'Règlement caisse';
 
         }
     }

@@ -291,6 +291,32 @@ pageextension 50047 "Sales Invoice Subform" extends "Sales Invoice Subform"
                         item.GetLastSales(Rec."Sell-to Customer No.", rec."Sell-to Customer Name", rec."VAT %");
                 end;
             }
+            Action(Recherche_Ticop)
+
+            {
+                ShortcutKey = 'Alt+W';
+                ApplicationArea = all;
+                Image = AddWatch;
+                trigger OnAction()
+                var
+                    RS: Page "Usual Search";
+                    SalesHeader: Record "Sales Header";
+
+                begin
+                    SalesHeader.Get(Rec."Document Type", Rec."Document No.");
+                    SalesHeader.TestField(Status, SalesHeader.Status::Open);
+                    RS.initvar(SalesHeader."Document Type", SalesHeader."No.");
+                    //RS.Run();
+                    RS.RunModal();
+
+                    // Page.RunModal(50029);
+                    CurrPage.Update();
+
+
+
+                end;
+            }
+
 
 
         }

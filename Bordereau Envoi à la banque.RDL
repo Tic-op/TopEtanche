@@ -959,6 +959,9 @@ hk0+ti7ElnofmlqxV+9uCbAu5mVrgw8vMDJdpFB2+IV9DfyjffUk/Dq6puCfee1s9tMaMtlY72VjnYdt
         <Field Name="PostDate">
           <DataField>PostDate</DataField>
         </Field>
+        <Field Name="companyName">
+          <DataField>companyName</DataField>
+        </Field>
         <Field Name="compte">
           <DataField>compte</DataField>
         </Field>
@@ -998,9 +1001,6 @@ hk0+ti7ElnofmlqxV+9uCbAu5mVrgw8vMDJdpFB2+IV9DfyjffUk/Dq6puCfee1s9tMaMtlY72VjnYdt
         <Field Name="MontantHFormat">
           <DataField>MontantHFormat</DataField>
         </Field>
-        <Field Name="picture">
-          <DataField>picture</DataField>
-        </Field>
         <Field Name="Vat_Reg_No">
           <DataField>Vat_Reg_No</DataField>
         </Field>
@@ -1009,6 +1009,18 @@ hk0+ti7ElnofmlqxV+9uCbAu5mVrgw8vMDJdpFB2+IV9DfyjffUk/Dq6puCfee1s9tMaMtlY72VjnYdt
         </Field>
         <Field Name="Titre">
           <DataField>Titre</DataField>
+        </Field>
+        <Field Name="BQ">
+          <DataField>BQ</DataField>
+        </Field>
+        <Field Name="RIB">
+          <DataField>RIB</DataField>
+        </Field>
+        <Field Name="affichage">
+          <DataField>affichage</DataField>
+        </Field>
+        <Field Name="picture">
+          <DataField>picture</DataField>
         </Field>
       </Fields>
       <Query>

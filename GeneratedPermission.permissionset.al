@@ -161,5 +161,19 @@ permissionset 50000 GeneratedPermission
         page "Import folder card" = X,
         page "Import Folder List" = X,
         page "Mettre à jour le document" = X,
-        page "Statistic Import Folder" = X;
+        page "Statistic Import Folder" = X,
+        report "Transfer Report" = X,
+        report "TransferShipReport Complete" = X,
+        page "Recherche article" = X,
+        page "Usual Search" = X,
+        tabledata "Customer VAT Suspension" = RIMD,
+        tabledata "Ligne DocVente Regroupée" = RIMD,
+        table "Customer VAT Suspension" = X,
+        table "Ligne DocVente Regroupée" = X,
+        report "BL RGRP" = X,
+        codeunit "Sales Document Line Mngmt" = X,
+        page "Customer VAT Suspension List" = X,
+        report "Feuille préparation" = X,
+        report TicketsRetour = X,
+        page "Fiche Paiement" = X;
 }

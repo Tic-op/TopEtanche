@@ -200,8 +200,8 @@ codeunit 50052 SalesEvents
 
         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
         SalesLine.SetRange("Document No.", SalesHeader."No.");
-        SalesLine.setfilter("Shipment Line No.", '%1', 0);//
-        SalesLine.SetFilter("Shipment No.", '%1', '');// Extraire ligne expédition Pad de control disponibilité ;
+        SalesLine.SetRange("Shipment Line No.", 0);//
+        SalesLine.SetRange("Shipment No.", '');// Extraire ligne expédition Pad de control disponibilité ;
         SalesLine.SetRange(Type, SalesLine.Type::Item);
 
         if SalesLine.FindFirst() then

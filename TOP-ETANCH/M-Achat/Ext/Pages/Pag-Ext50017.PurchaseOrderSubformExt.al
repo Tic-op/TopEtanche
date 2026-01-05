@@ -48,22 +48,22 @@ pageextension 50017 PurchaseOrderSubformExt extends "Purchase Order Subform"
             end;
 
         }
-        modify("No.")
-        {
-            trigger OnAfterValidate()
-            begin
-                if xrec."No." <> '' then
-                    error('On peut pas modifier la référence');
-            end;
-        }
-        modify("Description")
-        {
-            trigger OnAfterValidate()
-            begin
-                if xrec."No." <> '' then
-                    error('On peut pas modifier la description');
-            end;
-        }
-
+        /*   modify("No.")
+           {
+               trigger OnAfterValidate()
+               begin
+                   if xrec."No." <> '' then
+                       error('On peut pas modifier la référence');
+               end;
+           }
+           modify("Description")
+           {
+               trigger OnAfterValidate()
+               begin
+                   if xrec."No." <> '' then
+                       error('On peut pas modifier la description');
+               end;
+           }
+   */
     }
 }

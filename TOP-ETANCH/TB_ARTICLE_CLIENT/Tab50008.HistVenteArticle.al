@@ -1,9 +1,9 @@
 table 50008 HistVenteArticle
 {
     Caption = 'HistVenteArticle';
-   // TableType = Temporary ;
+    // TableType = Temporary ;
     DataClassification = ToBeClassified;
-    
+
     fields
     {
         field(1; "Item No"; Code[20])
@@ -14,7 +14,8 @@ table 50008 HistVenteArticle
         {
             Caption = 'Type document';
             OptionMembers = "","Expédition","Facture","Devis","Facture validée","Commande Pré-BL";
-            OptionCaption = ' ,BL,FV,Devis,FV+,CV';        }
+            OptionCaption = ' ,BL,FV,Devis,FV+,CV';
+        }
         field(5; "Document No"; Code[20])
         {
             Caption = 'No document';
@@ -23,7 +24,8 @@ table 50008 HistVenteArticle
             if ("Document Type" = const(Devis)) "Sales Header Archive" where("Document Type" = const("Sales Document Type"::Quote), "No." = field("Document No"))
             else if ("Document Type" = const(Facture)) "Sales Header" where("Document Type" = const("Sales Document Type"::invoice), "No." = field("Document No"))
             else if ("Document Type" = const("Commande Pré-BL")) "Sales Header" where("Document Type" = const("Sales Document Type"::Order), "No." = field("Document No"), "Shipping No." = filter(<> ''));
-            ValidateTableRelation = false ;}
+            ValidateTableRelation = false;
+        }
 
         field(2; "Customer No"; Code[20])
         {
@@ -42,24 +44,24 @@ table 50008 HistVenteArticle
         field(7; "Price HT"; Decimal)
         {
             Caption = 'Prix HT';
-            DecimalPlaces = 0:3 ;
+            DecimalPlaces = 0 : 3;
         }
         field(8; "Price TTC"; Decimal)
         {
             Caption = 'Prix TTC';
-            DecimalPlaces = 0:3 ;
+            DecimalPlaces = 0 : 3;
         }
         field(9; Remise; Decimal)
         {
             Caption = 'Remise';
-            MinValue = 0 ;
-            maxvalue = 100 ;
-            DecimalPlaces = 0:2;
+            MinValue = 0;
+            maxvalue = 100;
+            DecimalPlaces = 0 : 2;
         }
     }
     keys
     {
-        key(PK; "Item No","Document Type","Customer No")
+        key(PK; "Item No", "Document Type", "Customer No")
         {
             Clustered = true;
         }

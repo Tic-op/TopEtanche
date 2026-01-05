@@ -2831,6 +2831,21 @@ End Function
         <Field Name="VAT__Format">
           <DataField>VAT__Format</DataField>
         </Field>
+        <Field Name="VAT_Prod__Posting_Group">
+          <DataField>VAT_Prod__Posting_Group</DataField>
+        </Field>
+        <Field Name="AmountTVA">
+          <DataField>AmountTVA</DataField>
+        </Field>
+        <Field Name="AmountTVAFormat">
+          <DataField>AmountTVAFormat</DataField>
+        </Field>
+        <Field Name="Base">
+          <DataField>Base</DataField>
+        </Field>
+        <Field Name="BaseFormat">
+          <DataField>BaseFormat</DataField>
+        </Field>
       </Fields>
       <Query>
         <DataSourceName>DataSource</DataSourceName>

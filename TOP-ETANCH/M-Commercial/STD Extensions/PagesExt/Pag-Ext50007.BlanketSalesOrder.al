@@ -3,6 +3,7 @@ namespace Pharmatec.Pharmatec;
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
 using PHARMATECCLOUD.PHARMATECCLOUD;
+using Top.Top;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Item;
 using Microsoft.Sales.Setup;
@@ -33,7 +34,7 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
             {
                 ApplicationArea = all;
                 Enabled = not PartiallyShipped;
-                visible = false ;
+                visible = false;
                 trigger OnValidate()
                 begin
                     /*    if rec.PartiallyShipped() then
@@ -138,6 +139,27 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
             visible = false;
         }
         modify("Currency Code") { visible = false; }
+        /*   modify("Sell-to Customer Name")
+          {
+
+              trigger OnAfterValidate()
+              var
+                  RS: Page "Usual Search";
+                  SalesHeader: Record "Sales Header";
+
+              begin
+                  if SalesHeader.Get(Rec."Document Type", Rec."No.") then begin
+                      SalesHeader.TestField(Status, SalesHeader.Status::Open);
+                      RS.initvar(SalesHeader."Document Type", SalesHeader."No.");
+                      //RS.Run();
+                      RS.RunModal();
+                      // Page.RunModal(50029);
+                      CurrPage.Update();
+
+                  end
+
+              end;
+          } */
 
 
     }

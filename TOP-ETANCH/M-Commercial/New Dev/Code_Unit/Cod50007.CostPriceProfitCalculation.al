@@ -30,7 +30,7 @@ codeunit 50007 CostPriceProfitCalculation
 
 
     //  [EventSubscriber(ObjectType::Table,database::Item,OnAfterModifyEvent, '', false, false)]
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::ItemCostManagement, OnAfterUpdateUnitCost, '', false, false)]
+    // [EventSubscriber(ObjectType::Codeunit, Codeunit::ItemCostManagement, OnAfterUpdateUnitCost, '', false, false)]
     procedure UpdateSalesPrices(var item: Record Item);
     var
 
@@ -96,7 +96,7 @@ codeunit 50007 CostPriceProfitCalculation
                         pricelisL.Verify();
                     end;
                 end;
-                until ParamMarge.next = 0;                
+            until ParamMarge.next = 0;
     end;
 
 
