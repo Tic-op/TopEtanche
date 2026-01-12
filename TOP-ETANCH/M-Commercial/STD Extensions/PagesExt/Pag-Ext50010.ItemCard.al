@@ -8,7 +8,7 @@ pageextension 50010 "Item Card" extends "Item Card"
 {
     layout
 
-    {   
+    {
         addlast(InventoryGrp)
         {
             field("Unité de Dépot"; Rec."Unité de Dépot")
@@ -120,21 +120,31 @@ pageextension 50010 "Item Card" extends "Item Card"
             }
 
         }
-         modify(Inventory)
-        { trigger OnAssistEdit() begin 
-            exit;
-        end;
-           
+        modify(Inventory)
+        {
+            trigger OnAssistEdit()
+            begin
+                exit;
+            end;
+
         }
-        addafter("Unit Price") {
-            field("Prix minimal";Rec."Prix minimal")
-            {ApplicationArea = all ;}
+        modify("Unit Price")
+        {
+
+            Editable = false;
         }
- 
+        addafter("Unit Price")
+        {
+            field("Prix marché"; Rec."Prix marché")
+            { ApplicationArea = all; }
+            field("Prix standard"; Rec."Prix standard")
+            { ApplicationArea = all; }
+        }
+
     }
 
     actions
-    {  
+    {
 
         addbefore(Navigation_Item)
         {

@@ -90,6 +90,7 @@ report 50022 "Impression Effet Fournisseur"
                 Companyinfo: record "Company Information";
                 bank: record "Bank Account";
                 cu: Codeunit "Montant Toute Lettres";
+                PH: Record "Payment Header";
 
 
 
@@ -102,8 +103,11 @@ report 50022 "Impression Effet Fournisseur"
                 Company_RIB := Companyinfo."Bank Account No.";
                 company_bankName := Companyinfo."Bank Name";
                 BankAgency := Companyinfo."Bank Branch No.";
-                bank.get(Companyinfo."Default Bank Account No.");
-                BankAddress := Bank.Address;
+                PH.get(PaymentLine."Document No.");
+                BankPH := PH."Account No.";
+                BankAddress := PH."Bank Name";
+                bank.get(BankPH);
+                //BankAddress := Bank.Address;
                 BankNo := bank."Bank Account No.";
 
                 RIB1 := BankNo.Substring(1, 2);
@@ -145,6 +149,6 @@ report 50022 "Impression Effet Fournisseur"
         BankAgency: text;
         RIB1, RIB2, RIB3, RIB4 : text;
         textmontant: text;
-        BankNo: Text;
+        BankNo, BankPH : Text;
 
 }

@@ -54,4 +54,20 @@ tableextension 50075 PurchaseLineExt extends "Purchase Line"
 
     end;
 
+    procedure GetLastLineNo(): integer
+    var
+        PurchL: record "Purchase Line";
+
+
+    begin
+        PurchL.setrange("Document Type", "Document Type");
+        PurchL.setrange("Document No.", "Document No.");
+        if PurchL.FindLast() then
+            exit(PurchL."Line No.")
+        else
+            exit(0);
+
+
+    end;
+
 }

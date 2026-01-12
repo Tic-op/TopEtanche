@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-01-02T10:19:54.2044463Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-01-11T14:27:56.9791175Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -1042,7 +1042,6 @@
                               <Style>Solid</Style>
                               <Width>0.25pt</Width>
                             </RightBorder>
-                            <BackgroundColor>LightGrey</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1097,7 +1096,6 @@
                               <Style>Solid</Style>
                               <Width>0.25pt</Width>
                             </RightBorder>
-                            <BackgroundColor>LightGrey</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1152,7 +1150,6 @@
                               <Style>Solid</Style>
                               <Width>0.25pt</Width>
                             </RightBorder>
-                            <BackgroundColor>LightGrey</BackgroundColor>
                             <PaddingLeft>2pt</PaddingLeft>
                             <PaddingRight>2pt</PaddingRight>
                             <PaddingTop>2pt</PaddingTop>
@@ -1579,7 +1576,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>Total Brut HT</Value>
+                    <Value>Total HT</Value>
                     <Style>
                       <FontWeight>Bold</FontWeight>
                     </Style>
@@ -1591,7 +1588,7 @@
               </Paragraph>
             </Paragraphs>
             <Top>2.38091cm</Top>
-            <Left>9.57299cm</Left>
+            <Left>8.39824cm</Left>
             <Height>0.25in</Height>
             <Width>0.98333in</Width>
             <ZIndex>2</ZIndex>
@@ -1620,7 +1617,6 @@
                 <Style>Solid</Style>
                 <Width>0.25pt</Width>
               </RightBorder>
-              <BackgroundColor>LightGrey</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1647,7 +1643,7 @@
               </Paragraph>
             </Paragraphs>
             <Top>2.3809cm</Top>
-            <Left>12.07063cm</Left>
+            <Left>10.89588cm</Left>
             <Height>0.25in</Height>
             <Width>1.00001in</Width>
             <ZIndex>3</ZIndex>
@@ -1676,7 +1672,6 @@
                 <Style>Solid</Style>
                 <Width>0.25pt</Width>
               </RightBorder>
-              <BackgroundColor>LightGrey</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1702,8 +1697,8 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>2.3809cm</Top>
-            <Left>17.11942cm</Left>
+            <Top>2.38089cm</Top>
+            <Left>17.10822cm</Left>
             <Height>0.25in</Height>
             <Width>0.97087in</Width>
             <ZIndex>4</ZIndex>
@@ -1732,7 +1727,6 @@
                 <Style>Solid</Style>
                 <Width>0.25pt</Width>
               </RightBorder>
-              <BackgroundColor>LightGrey</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1760,7 +1754,7 @@
               </Paragraph>
             </Paragraphs>
             <Top>3.0159cm</Top>
-            <Left>12.07064cm</Left>
+            <Left>10.89589cm</Left>
             <Height>0.635cm</Height>
             <Width>2.54cm</Width>
             <ZIndex>5</ZIndex>
@@ -1803,7 +1797,7 @@
               <Paragraph>
                 <TextRuns>
                   <TextRun>
-                    <Value>=Sum(Fields!montant.Value) + Sum(Fields!tva.Value)</Value>
+                    <Value>=Sum(Fields!montant.Value) + Sum(Fields!tva.Value)+Fields!Timbre.Value</Value>
                     <Style>
                       <FontSize>8pt</FontSize>
                       <Format>#,0.000;(#,0.000)</Format>
@@ -1815,8 +1809,8 @@
                 </Style>
               </Paragraph>
             </Paragraphs>
-            <Top>3.0159cm</Top>
-            <Left>17.11942cm</Left>
+            <Top>3.01589cm</Top>
+            <Left>17.10822cm</Left>
             <Height>0.635cm</Height>
             <Width>2.46601cm</Width>
             <ZIndex>6</ZIndex>
@@ -1872,7 +1866,7 @@
               </Paragraph>
             </Paragraphs>
             <Top>1.18737in</Top>
-            <Left>3.76889in</Left>
+            <Left>3.30639in</Left>
             <Height>0.25in</Height>
             <Width>0.98333in</Width>
             <ZIndex>7</ZIndex>
@@ -1927,9 +1921,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>2.38089cm</Top>
-            <Left>14.61064cm</Left>
+            <Left>13.43589cm</Left>
             <Height>0.25in</Height>
-            <Width>0.98772in</Width>
+            <Width>0.77939in</Width>
             <ZIndex>8</ZIndex>
             <Style>
               <Border>
@@ -1956,7 +1950,6 @@
                 <Style>Solid</Style>
                 <Width>0.25pt</Width>
               </RightBorder>
-              <BackgroundColor>LightGrey</BackgroundColor>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -1984,9 +1977,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>1.18736in</Top>
-            <Left>5.75222in</Left>
+            <Left>5.28972in</Left>
             <Height>0.25in</Height>
-            <Width>0.9877in</Width>
+            <Width>0.77939in</Width>
             <ZIndex>9</ZIndex>
             <Style>
               <Border>
@@ -2081,6 +2074,117 @@
               <Border>
                 <Style>None</Style>
               </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox22">
+            <rd:DefaultName>Textbox16</rd:DefaultName>
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Timbre</Value>
+                    <Style>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>2.38089cm</Top>
+            <Left>15.41553cm</Left>
+            <Height>0.25in</Height>
+            <Width>0.6731in</Width>
+            <ZIndex>12</ZIndex>
+            <Style>
+              <Border>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </Border>
+              <TopBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </TopBorder>
+              <BottomBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </BottomBorder>
+              <LeftBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </LeftBorder>
+              <RightBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </RightBorder>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="MontantNet3">
+            <rd:DefaultName>MontantNet</rd:DefaultName>
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!Timbre.Value</Value>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <Format>#,0.000;(#,0.000)</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Right</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>3.01589cm</Top>
+            <Left>15.41553cm</Left>
+            <Height>0.635cm</Height>
+            <Width>1.70968cm</Width>
+            <ZIndex>13</ZIndex>
+            <Style>
+              <Border>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </Border>
+              <TopBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </TopBorder>
+              <BottomBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </BottomBorder>
+              <LeftBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </LeftBorder>
+              <RightBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </RightBorder>
               <PaddingLeft>2pt</PaddingLeft>
               <PaddingRight>2pt</PaddingRight>
               <PaddingTop>2pt</PaddingTop>
@@ -2441,7 +2545,6 @@
                 <Border>
                   <Style>None</Style>
                 </Border>
-                <BackgroundColor>LightGrey</BackgroundColor>
                 <PaddingLeft>2pt</PaddingLeft>
                 <PaddingRight>2pt</PaddingRight>
                 <PaddingTop>2pt</PaddingTop>
@@ -3462,6 +3565,12 @@ zKCnftQBNRUZXbH707+D8KAHUVH/AAfjSlRtzQA+jNRN/qx9aRogEJyaAJqMj1qs5PlIM0ksSqhIYk/W
         </Field>
         <Field Name="Your_Reference">
           <DataField>Your_Reference</DataField>
+        </Field>
+        <Field Name="Timbre">
+          <DataField>Timbre</DataField>
+        </Field>
+        <Field Name="TimbreFormat">
+          <DataField>TimbreFormat</DataField>
         </Field>
         <Field Name="No_">
           <DataField>No_</DataField>

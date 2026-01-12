@@ -63,6 +63,16 @@ pageextension 50135 "GL_Setup Ext" extends "General Ledger Setup"
                 {
                     ApplicationArea = all;
                 }
+                field("Gains écr. apurement"; Rec."Gains écr. apurement")
+                {
+                    ApplicationArea = all;
+
+                }
+                field("Pertes écr. apurement"; Rec."Pertes écr. apurement")
+                {
+                    ApplicationArea = all;
+
+                }
             }
         }
     }

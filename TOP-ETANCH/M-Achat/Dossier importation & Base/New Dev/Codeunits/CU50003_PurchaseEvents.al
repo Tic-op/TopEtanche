@@ -49,11 +49,14 @@ codeunit 50113 PurchaseEvents
     var
         i: Enum "Purchase Document Status";
         PurchaseLine: Record "Purchase Line";
+        Vend: record Vendor;
 
 
     begin
         if (PurchaseHeader."Currency Code" <> '') then exit;
-        if not PurchaseHeader.Stamp then exit;
+        Vend.get(PurchaseHeader."Buy-from Vendor No.");
+        if not Vend.Stamp then exit;
+        // if not PurchaseHeader.Stamp then exit;
 
         PurchaseHeader.Status := PurchaseHeader.Status::Open;
 
@@ -116,9 +119,11 @@ codeunit 50113 PurchaseEvents
         RecLPurchLine: Record "Purchase Line";
         RecLPurchLine1: Record "Purchase Line";
         VarILineNo: Integer;
+        Vend: record Vendor;
 
     begin
-        if not rec.Stamp then exit;
+        Vend.get(rec."Buy-from Vendor No.");
+        if not Vend.Stamp then exit;
 
         GLSetup.GET;
         GLSetup.TestField("Montant timbre fiscal");

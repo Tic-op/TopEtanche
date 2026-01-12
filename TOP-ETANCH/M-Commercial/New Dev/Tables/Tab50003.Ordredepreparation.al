@@ -29,8 +29,6 @@ table 50003 "Ordre de preparation"
                 end;
                 If (Statut = Statut::"Préparé") then begin
                     "Date fin préparation" := CurrentDateTime;
-                
-
                 end;
 
 
@@ -79,7 +77,7 @@ table 50003 "Ordre de preparation"
         }
         field(9; "Préparateur"; Text[50])
         {
-            TableRelation = "Logistic resource"where(blocked = const(false));//Magasin = field(Magasin), 
+            TableRelation = "Logistic resource" where(blocked = const(false));//Magasin = field(Magasin), 
         }
         field(10; "document type"; Option)
         {
@@ -106,14 +104,13 @@ table 50003 "Ordre de preparation"
         }
         field(15; Suspendu; Boolean)
         {
-            InitValue= false ; 
+            InitValue = false;
             trigger OnValidate()
-            begin 
-              if Suspendu then 
-              begin 
-                if Statut<> Statut::"En cours" then 
-                error('impossible de suspendre une préparation qui n''est pas en cours');
-              end;
+            begin
+                if Suspendu then begin
+                    if Statut <> Statut::"En cours" then
+                        error('impossible de suspendre une préparation qui n''est pas en cours');
+                end;
             end;
         }
     }
@@ -150,11 +147,16 @@ table 50003 "Ordre de preparation"
 
     end;
 
+    trigger OnModify()
+    begin
+        CheckIfSalesDocIsConfirmed();
+    end;
+
     Trigger OnDelete()
     var
         Lignepréparation: Record "Ligne préparation";
     begin
-
+        CheckIfSalesDocIsConfirmed();
         if (Statut <> Statut::"Créé") and (Statut <> Statut::"En cours")
         then
             error('Impossible de supprimer un bon de préparation de statut %1 ', Statut);
@@ -172,5 +174,15 @@ table 50003 "Ordre de preparation"
         exit(Preplines.count < 2);
     end;
 
+    local procedure CheckIfSalesDocIsConfirmed()
+    var
+        SH: Record "Sales Header";
+    begin
+        if SH.GET(SH."Document Type"::Order, "Order No") then begin
+            SH.CalcFields(Shipped);
+            if SH.Shipped then
+                Error('Vous ne pouvez pas faire cette action car la commande reliée est déjà livrée...');
+        end;
+    end;
 
 }

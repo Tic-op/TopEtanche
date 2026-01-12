@@ -7,6 +7,15 @@ pageextension 50055 "Payment Slip Subform" extends "Payment Slip Subform"
     layout
     {
 
+        addlast(Control1)
+        {
+            field("Facture Caisse"; Rec."Facture Caisse")
+            {
+                ApplicationArea = all;
+                Editable = false;
+            }
+
+        }
 
         modify("Amount")
         {
@@ -69,7 +78,9 @@ pageextension 50055 "Payment Slip Subform" extends "Payment Slip Subform"
                 Caption = 'Référence';
             }
 
+
         }
+
 
         addafter("Bank Account Name")
         {
@@ -138,6 +149,21 @@ pageextension 50055 "Payment Slip Subform" extends "Payment Slip Subform"
             Enabled = BoolEdit;
 
 
+        }
+    }
+    actions
+    {
+        addafter(Modify)
+        {
+
+            action("Modifier ligne")
+            {
+                ApplicationArea = all;
+                Image = Change;
+                RunObject = page 50054;
+                RunPageLink = "Document No." = field("Document No."), "Line No." = field("Line No.");
+
+            }
         }
     }
 

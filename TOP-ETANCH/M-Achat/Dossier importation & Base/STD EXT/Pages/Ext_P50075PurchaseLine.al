@@ -51,6 +51,31 @@ pageextension 50075 purchaseorderSubFormExtt extends "Purchase Order Subform"
 
                 end;
             }
+            Action(Recherche_Ticop)
+
+            {
+                ShortcutKey = 'Alt+W';
+                ApplicationArea = all;
+                Image = AddWatch;
+                trigger OnAction()
+                var
+                    RS: Page "Usual search Purchase";
+                    PurchaseHeader: record "Purchase Header";
+                begin
+                    PurchaseHeader.Get(Rec."Document Type", Rec."Document No.");
+                    PurchaseHeader.TestField(Status, PurchaseHeader.Status::Open);
+                    RS.initvarPurch(PurchaseHeader."Document Type", PurchaseHeader."No.");
+                    //RS.Run();
+                    rs.RunModal();
+
+                    // Page.RunModal(50029);
+                    CurrPage.Update();
+
+
+
+                end;
+            }
+
 
         }
     }

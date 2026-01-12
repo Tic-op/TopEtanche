@@ -4,6 +4,7 @@ using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
 using Microsoft.Finance.GeneralLedger.Setup;
 using System.Security.User;
+using Microsoft.CRM.Team;
 using PHARMATECCLOUD.PHARMATECCLOUD;
 using Microsoft.Inventory.Location;
 using Microsoft.Sales.Setup;
@@ -153,16 +154,25 @@ tableextension 50132 SalesHeader extends "Sales Header"
             trigger OnAfterValidate()
             begin
                 if "document type" = "document type"::Quote then
-                    ApplyVatSuspension();
+                    ApplyVatSuspension("document Date");
             end;
 
         }
 
+        modify("Order Date")
+        {
+            trigger OnAfterValidate()
+            begin
+                if "document type" = "document type"::Quote then
+                    ApplyVatSuspension("Order Date");
+            end;
+
+        }
         modify("Posting Date")
         {
             trigger OnAfterValidate()
             begin
-                ApplyVatSuspension();
+                ApplyVatSuspension("Posting Date");
             end;
         }
 
@@ -178,14 +188,14 @@ tableextension 50132 SalesHeader extends "Sales Header"
                 "Stamp Amount" := 0;
                 GLSetup.get;
 
-                ApplyVatSuspension();
+                ApplyVatSuspension(Today);
 
 
                 if "Sell-to Customer No." <> '' then begin
                     if CustomerRec.Get("Sell-to Customer No.") and CustomerRec.Stamp then begin
                         "Stamp Amount" := GLSetup."Montant timbre fiscal";
                         // BY AM 090125
-                        If "Document Type" = "Sales Document Type"::Order then
+                        If ("Document Type" = "Sales Document Type"::Order) OR ("Document Type" = "Sales Document Type"::Invoice) then
                             if (CustomerRec."Cause du blocage" <> CustomerRec."Cause du blocage"::"Non bloqué") then
                                 error('Client bloqué à cause du %1', CustomerRec."Cause du blocage");
                         // END AM 090125
@@ -204,11 +214,19 @@ tableextension 50132 SalesHeader extends "Sales Header"
             trigger OnafterValidate()
             var
                 UserSetup: record 91;
+                salesperson: Record "Salesperson/Purchaser";
             begin
                 if UserSetup.get(UserId) then begin
 
                     if UserSetup."Salespers./Purch. Code" <> '' then
                         SetSalespersonCode('', "Salesperson Code")
+                end;
+
+                if Rec."Salesperson Code" <> '' then begin
+                    salesperson.get(Rec."Salesperson Code");
+                    if rec."Location Code" = '' then begin
+                        rec."Location Code" := salesperson.Magasin;
+                    end;
                 end;
             end;
 
@@ -241,17 +259,18 @@ tableextension 50132 SalesHeader extends "Sales Header"
                 location: Record Location;
             begin
 
-                if "Vente comptoir" then begin
+                //  if "Vente comptoir" then begin
 
-                    if "Document Type" = "Document Type"::Order then
-                        exit;
+                //    if "Document Type" = "Document Type"::Order then
+                //      exit;
 
 
-                    if location.Get("Location Code") then begin
-                        if location.Type <> location.Type::"Point de vente" then
-                            Error('Le magasin choisi n''est pas un point de vente.');
-                    end else
-                        Error('Le magasin spécifié est introuvable.');
+                if location.Get("Location Code") then begin
+                    if (location.Type <> location.Type::"Point de vente")// and (Location.Type <> Location.type::Tampon)
+                     then
+                        Error('Le magasin choisi n''est pas un point de vente.');
+                    //    end else
+                    //      Error('Le magasin spécifié est introuvable.');
                 end;
             end;
         }
@@ -288,8 +307,9 @@ tableextension 50132 SalesHeader extends "Sales Header"
         SalesL: record "Sales Line";
     begin
         // if "Document Type" = "Sales Document Type"::"Blanket Order" then begin
-        SalesL.setrange("Document No.", "No.");
+
         SalesL.setrange("Document Type", "Sales Document Type"::"Blanket Order");
+        SalesL.setrange("Document No.", "No.");
         SalesL.Setfilter(Quantity, '<> %1', 0);
         If SalesL.Count = 0 then
             exit(false)
@@ -407,32 +427,94 @@ tableextension 50132 SalesHeader extends "Sales Header"
     end;
 
 
-    local procedure ApplyVatSuspension()
+    local procedure ApplyVatSuspension(Date0: Date)
     var
         VatSusp: Record "Customer VAT Suspension";
         Cust: Record Customer;
-        Date0: Date;
     begin
         if ("Sell-to Customer No." = '') then
             exit;
 
+        Cust.get("Sell-to Customer No.");
         // Recherche suspension active
         VatSusp.Reset();
         VatSusp.SetRange("Customer No.", "Sell-to Customer No.");
-        Date0 := "Posting Date";
-        if "document type" = "document type"::Quote then
-            Date0 := "Document Date";
+
         VatSusp.SetFilter("Start Date", '<=%1', Date0);
         VatSusp.SetFilter("End Date", '>=%1', Date0);
 
         if VatSusp.FindFirst() then begin
+
             VatSusp.TestField("VAT Bus. Posting Group");
             VatSusp.TestField("Bus. Posting Group");
+            Message('Attention !! Client en %1', "VAT Bus. Posting Group");
             Validate("VAT Bus. Posting Group", VatSusp."VAT Bus. Posting Group");
             validate("Gen. Bus. Posting Group", VatSusp."Bus. Posting Group");
+            "External Document No." := VatSusp.Description;
+        end
+        ELSE begin
+            Validate("VAT Bus. Posting Group", Cust."VAT Bus. Posting Group");
+            validate("Gen. Bus. Posting Group", Cust."Gen. Bus. Posting Group");
+            "External Document No." := '';
+
         end;
 
     end;
+
+    Procedure GetBlanketSalesOrder(): Code[20]
+    var
+        SH: record "Sales Header";
+    begin
+
+        If Sh.get("Sales Document Type"::"Blanket Order", "No.") then
+            exit(SH."No.")
+        else
+            exit('');
+
+    end;
+
+    Procedure ShowBlanketOrder()
+    var
+        SH: record "Sales Header";
+        Pagef: page "Blanket Sales Order";
+
+    begin
+
+        SH.setrange("Document Type", "Sales Document Type"::"Blanket Order");
+        Sh.setrange("No.", "No.");
+        if Sh.findset then
+            Page.runmodal(507, SH);
+
+
+    end;
+
+    Procedure NeedPreparation(): Boolean
+    var
+        SL: record "Sales Line";
+    begin
+        SL.setrange("Document Type", "Document Type");
+        SL.setrange("Document No.", "No.");
+        SL.SetFilter("Location Code", '<>%1', "Location Code");
+        if SL.findset() then
+            exit(true)
+        else
+            exit(false)
+
+
+    end;
+
+    procedure ModifiedGenCustomerGroup(): Boolean
+    var
+        cust: Record customer;
+    begin
+        //Test visuel si le client a changé de groupe, utilisé dans le cas de SUSPENSION
+        if cust.get("Sell-to Customer No.") then begin
+            if rec."Gen. Bus. Posting Group" <> cust."Gen. Bus. Posting Group" then
+                exit(true);
+        end;
+    end;
+
+
 
     var
         IsCompletelyInvoiced: Boolean;

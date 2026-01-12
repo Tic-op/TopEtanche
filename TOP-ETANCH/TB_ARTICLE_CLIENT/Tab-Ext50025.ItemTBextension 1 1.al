@@ -49,6 +49,18 @@ tableextension 50225 ItemTBextension extends Item
 
 
         }
+        field(50133; AvailabilityByLocation; Decimal)
+        {
+
+
+
+        }
+        field(50134; AvailabilityInTampon; Decimal)
+        {
+
+
+
+        }
 
         modify(Description)
         {

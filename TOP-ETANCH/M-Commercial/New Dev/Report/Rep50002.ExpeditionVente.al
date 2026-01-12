@@ -50,7 +50,7 @@ report 50002 BL
             {
 
             }
-        
+
 
             column(External_Document_No_; "External Document No.")
             { }
@@ -103,7 +103,7 @@ report 50002 BL
                 { }
                 column(Remise; Remise)
                 { }
-                
+
 
                 column(totalremise; totalremise)
                 { }
@@ -190,8 +190,8 @@ report 50002 BL
                 Cust.get("Sell-to Customer No.");
                 cust.CalcFields("Balance Due (LCY)");
                 Solde := Cust."Balance Due (LCY)";
-                if "Sell-to Customer Name 2" = '' then
-                    "Sell-to Customer Name 2" := "Sell-to Customer Name";
+                /*    if "Sell-to Customer Name 2" = '' then
+                       "Sell-to Customer Name 2" := "Sell-to Customer Name"; */
 
 
             end;

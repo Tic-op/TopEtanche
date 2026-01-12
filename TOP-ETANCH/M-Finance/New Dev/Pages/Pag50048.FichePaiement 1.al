@@ -68,6 +68,7 @@ page 50048 "Fiche Paiement"
 
 
                     }
+
                     field("Banque Client"; BanquePaiement) { }
                     field(PiècePaiement; PiècePaiement) { }
 
@@ -215,11 +216,12 @@ page 50048 "Fiche Paiement"
 
         PH.SetCurrentKey("Posting Date");
         PH.SetRange("Posting Date", Today);
+        PH.SetRange("Document Date", Today);
         PH.SetRange("Payment Class", PaymentClass.Code);
 
         SalesSetup.get;
 
-        NoSerie := 'CAISSE';
+        NoSerie := 'CAISSE FACT';
 
         PH.SetRange("No. Series", NoSerie);
 
@@ -253,6 +255,7 @@ page 50048 "Fiche Paiement"
         PH."No." := Doc;
         PH."Payment Class" := "Modalité";
         PH.Validate("Posting Date", today);
+        PH.Validate("Document Date", today);
         PH."No. Series" := serie;
         if banque <> '' then begin
             PH."Account Type" := PH."Account Type"::"Bank Account";
@@ -283,6 +286,7 @@ page 50048 "Fiche Paiement"
         PL."Bank Account Name" := BanquePaiement;
         PL."Posting Date" := today;
 
+
         PL."Payment in Progress" := true;
 
 
@@ -297,7 +301,9 @@ page 50048 "Fiche Paiement"
         recL21.SETAUTOCALCFIELDS("Remaining Amt. (LCY)");
         IF recL21.FINDFIRST and recL21.Open THEN BEGIN
             recL21."Applies-to ID" := PL."No." + '/' + format(Pl."Line No.");
+
             recL21.validate("Amount to Apply", -PL.Amount);
+
             recL21.MODIFY;
         end;
 

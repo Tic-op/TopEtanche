@@ -4,6 +4,17 @@ using Microsoft.Sales.History;
 
 pageextension 50063 "Posted Sales Invoice Ext" extends "Posted Sales Invoice"
 {
+    Layout
+    {
+        addafter("Sell-to Customer Name")
+        {
+
+            field("Sell-to Customer Name2"; Rec."Sell-to Customer Name 2")
+            {
+                ApplicationArea = all;
+            }
+        }
+    }
     actions
     {
         addafter(Print)

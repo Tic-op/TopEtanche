@@ -14,6 +14,7 @@ page 50006 "Liste bon de préparation"
     InsertAllowed = false;
     ModifyAllowed = false;
     DeleteAllowed = false;
+    SourceTableView = sorting("Creation date", "Date début préparation", "Date fin préparation") order(descending);
 
     layout
     {

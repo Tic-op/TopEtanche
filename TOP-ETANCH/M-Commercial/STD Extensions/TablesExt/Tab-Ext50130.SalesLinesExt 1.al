@@ -330,10 +330,16 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
                  Error('Impossible de modifier cette ligne, veuillez supprimer le bon de préparation associé.');
              end; */
         // "ControlDisponibilitéSaleslines"();
+        if ("Quantity (Base)" <> xRec."Quantity (Base)") or ("Qty. to Ship (Base)" <> xrec."Qty. to Ship (Base)") or
+        ("Location Code" <> xRec."Location Code") or ("Bin Code" <> xRec."Bin Code")
+         then begin
 
-        CalcFields("Preparé");
-        if "Preparé" then
-            Error('Impossible de modifier cette ligne, veuillez supprimer le bon de préparation associé.');
+
+            IF ("Document Type" = "Sales Document Type"::Invoice) or ("Document Type" = "Sales Document Type"::order) then begin
+                if "Preparé" then
+                    Error('Impossible de supprimer cette ligne, veuillez supprimer le bon de préparation associé.');
+            end
+        end;
 
     end;
 
@@ -348,8 +354,10 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
                   Error('Impossible de supprimer cette ligne , veuillez supprimer le bon de préparation associé.');
           end; */
         CalcFields("Preparé");
-        if "Preparé" then
-            Error('Impossible de supprimer cette ligne, veuillez supprimer le bon de préparation associé.');
+        IF ("Document Type" = "Sales Document Type"::Invoice) or ("Document Type" = "Sales Document Type"::order) then begin
+            if "Preparé" then
+                Error('Impossible de supprimer cette ligne, veuillez supprimer le bon de préparation associé.');
+        end
     end;
 
 

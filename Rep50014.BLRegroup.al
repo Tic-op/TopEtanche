@@ -153,8 +153,8 @@ report 50014 "BL RGRP"
                 Cust.get("Sell-to Customer No.");
                 cust.CalcFields("Balance Due (LCY)");
                 Solde := Cust."Balance Due (LCY)";
-                if "Sell-to Customer Name 2" = '' then
-                    "Sell-to Customer Name 2" := "Sell-to Customer Name";
+                /*  if "Sell-to Customer Name 2" = '' then
+                     "Sell-to Customer Name 2" := "Sell-to Customer Name"; */
 
                 CU.InsertLinesFromSalesDoc("No.", 110, LDVR);
 
@@ -251,7 +251,7 @@ report 50014 "BL RGRP"
     var
         companyInf: Record "Company Information";
 
-        SalesPersonName: Text[50];
+        SalesPersonName: Text[250];
         MontTlettre: Codeunit "Montant Toute Lettres";
         txtMntTLettres: text;
         MontantNet2: Decimal;

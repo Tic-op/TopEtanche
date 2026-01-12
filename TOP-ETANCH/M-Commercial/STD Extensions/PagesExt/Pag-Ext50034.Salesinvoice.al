@@ -12,6 +12,21 @@ pageextension 50034 Salesinvoice extends "Sales Invoice"
 
     layout
     {
+
+
+        modify("Sell-to Customer Name")
+        {
+            StyleExpr = StyleSusp;
+        }
+
+        addafter("Sell-to Customer Name")
+        {
+
+            field("Sell-to Customer Name2"; Rec."Sell-to Customer Name 2")
+            {
+                ApplicationArea = all;
+            }
+        }
         addafter("Due Date")
         {
             field("Bon de preparations"; Rec."Bon de preparations")
@@ -45,6 +60,15 @@ pageextension 50034 Salesinvoice extends "Sales Invoice"
                     ListBonPre.Run();
                 end;
             }
+            field("Commande cadre associée"; rec.GetBlanketSalesOrder)
+            {
+                editable = false;
+                ApplicationArea = all;
+                Trigger OnDrillDown()
+                begin
+                    rec.ShowBlanketOrder();
+                end;
+            }
         }
         modify("Campaign No.") { visible = false; }
         modify("Responsibility Center") { visible = false; }
@@ -69,6 +93,11 @@ pageextension 50034 Salesinvoice extends "Sales Invoice"
         modify("Direct Debit Mandate ID") { Visible = false; }
         modify(Control174) { visible = false; }
         modify("Currency Code") { visible = false; }
+        moveafter("External Document No."; "Salesperson Code")
+        modify("Salesperson Code")
+        {
+            ShowMandatory = true;
+        }
         /*  modify("Sell-to Customer Name")
          {
 
@@ -152,6 +181,7 @@ pageextension 50034 Salesinvoice extends "Sales Invoice"
 
 
                 begin
+
                     "PrépEvent"."GénérerOrdredePréparation"(OrdrePrep."document type"::Facture, rec."No.");
 
                     /*   OrdrePrep.SetRange("Order No", Rec."No.");
@@ -239,7 +269,7 @@ pageextension 50034 Salesinvoice extends "Sales Invoice"
                 PromotedOnly = true;
                 ApplicationArea = All;
                 Image = PrintVoucher;
-                visible = true;
+                visible = false;
                 Caption = 'Imprimer feuille préparation';
                 trigger OnAction()
                 var
@@ -261,4 +291,18 @@ pageextension 50034 Salesinvoice extends "Sales Invoice"
 
 
     }
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        if rec.ModifiedGenCustomerGroup() then
+            StyleSusp := 'Unfavorable'
+        else
+            StyleSusp := 'Normal';
+    end;
+
+    var
+        StyleSusp: Text;
+
+
+
 }

@@ -235,6 +235,15 @@ codeunit 50010 "VerificationStock"
             end;
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Sales Line", OnBeforeGetDefaultBin, '', false, false)]
+    procedure DisabledefaultBin(var SalesLine: Record "Sales Line"; var IsHandled: Boolean)
+    var
+    begin
+        IsHandled := True; //By AM 050126
+
+
+    end;
+
 
 
 

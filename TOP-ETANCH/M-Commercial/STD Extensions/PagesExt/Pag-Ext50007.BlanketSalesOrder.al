@@ -7,6 +7,7 @@ using Top.Top;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Item;
 using Microsoft.Sales.Setup;
+using Microsoft.Warehouse.Structure;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Sales.History;
 
@@ -79,6 +80,12 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
             }
         }
         moveafter("Salesperson Code"; "Location Code")
+
+        moveafter("Sell-to Customer Name"; "Salesperson Code")
+        modify("Salesperson Code")
+        {
+            ShowMandatory = true;
+        }
         modify("Location Code")
         {
             ApplicationArea = all;
@@ -188,6 +195,7 @@ pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
                     InvoiceHeader: Record "Sales Header";
                     SalesLine: Record "Sales Line";
                     Cu: codeunit SalesEvents;
+
                 begin
 
                     Cu.CheckConditions(Rec);

@@ -6,7 +6,6 @@ using TopEtanch.TopEtanch;
 pageextension 50032 SalesOrderList extends "Sales Order List"
 {
 
-
     //InsertAllowed= false ;
     layout
     {
@@ -31,7 +30,14 @@ pageextension 50032 SalesOrderList extends "Sales Order List"
         }
         addafter(Status)
         {
-
+            field(Shipped; Rec.Shipped)
+            {
+                ApplicationArea = all;
+            }
+            field(Vendeur; Rec."Salesperson Code")
+            {
+                ApplicationArea = all;
+            }
             field("Bon de preparations"; Rec."Bon de preparations")
             {
                 Caption = 'Bon de preparations';
@@ -74,6 +80,12 @@ pageextension 50032 SalesOrderList extends "Sales Order List"
             StylePreparation := 'Favorable'
         else
             StylePreparation := 'Standard';
+    end;
+
+    trigger OnOpenPage()
+    begin
+
+        Rec.SetRange(Shipped, false);
     end;
 
     var

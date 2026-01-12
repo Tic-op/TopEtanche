@@ -113,4 +113,19 @@ tableextension 50030 TransferLine extends "Transfer Line"
                 exit(Item.CalcDisponibilité("Transfer-from Code", "Transfer-from Bin Code"))
         end
     end;
+
+    Procedure GetLastLineNo(): integer;
+    var
+        TransferL: record "Transfer Line";
+    begin
+        TransferL.setrange("Document No.", "Document No.");
+        if TransferL.findlast() then
+            exit(TransferL."Line No.")
+        else
+            exit(0);
+
+
+
+
+    end;
 }

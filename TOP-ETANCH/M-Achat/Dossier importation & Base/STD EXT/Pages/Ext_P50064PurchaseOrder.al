@@ -21,7 +21,6 @@ pageextension 50164 pourchaseorderExt extends "Purchase Order"
     actions
     {
 
-
         addafter("Archive Document")
         {
 
@@ -33,7 +32,7 @@ pageextension 50164 pourchaseorderExt extends "Purchase Order"
                 PromotedOnly = true;
                 PromotedIsBig = true;
                 Visible = true;
-                caption = 'MAJ Origine NGP';
+                caption = 'MAJ Origine NGP Reception';
                 Image = Purchasing;
                 // AccessByPermission = tabledata "Purch. Rcpt. Line" = m;
                 trigger OnAction()
@@ -56,6 +55,42 @@ pageextension 50164 pourchaseorderExt extends "Purchase Order"
 
                 end;
             }
+            action(UpdateNGPOriginItem)
+            {
+                ApplicationArea = all;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+                PromotedIsBig = true;
+                Visible = true;
+                caption = 'MAJ Origine NGP Article';
+                Image = Purchasing;
+                // AccessByPermission = tabledata "Purch. Rcpt. Line" = m;
+                trigger OnAction()
+                var
+                    Itemrec: record item;
+                    PurchL: record "Purchase Line";
+                begin
+                    if Rec."Currency Code" <> '' then begin
+                        PurchL.SetRange("Document Type", rec."Document Type");
+                        PurchL.SetRange("Document No.", rec."No.");
+                        PurchL.setrange(type, PurchL.type::Item);
+
+                        PurchL.FindFirst();
+                        repeat
+                            Itemrec.get(PurchL."No.");
+                            Itemrec.validate("Tariff No.", Purchl."Tariff No.");
+                            Itemrec."Country/Region of Origin Code" := PurchL."Country region origin code";
+                            itemrec.modify(true);
+
+
+
+                        until PurchL.next = 0;
+                    end;
+
+                end;
+            }
+
 
 
 

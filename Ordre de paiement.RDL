@@ -9,7 +9,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.0.20283.0</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2025-07-16T09:17:34.0257181Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-01-06T08:37:40.4102779Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -50,8 +50,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox1</rd:DefaultName>
-            <Top>0.37541in</Top>
-            <Left>1.56628in</Left>
+            <Top>0.15313in</Top>
+            <Left>1.54181in</Left>
             <Height>0.35833in</Height>
             <Width>2.35208in</Width>
             <Style>
@@ -82,8 +82,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox2</rd:DefaultName>
-            <Top>0.37541in</Top>
-            <Left>3.91836in</Left>
+            <Top>0.15313in</Top>
+            <Left>3.89389in</Left>
             <Height>0.35833in</Height>
             <Width>3.57268in</Width>
             <ZIndex>1</ZIndex>
@@ -115,8 +115,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox3</rd:DefaultName>
-            <Top>0.93166in</Top>
-            <Left>0.20989in</Left>
+            <Top>0.70938in</Top>
+            <Left>0.18542in</Left>
             <Height>0.40833in</Height>
             <Width>1.34915in</Width>
             <ZIndex>2</ZIndex>
@@ -148,8 +148,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox4</rd:DefaultName>
-            <Top>0.93165in</Top>
-            <Left>3.9003in</Left>
+            <Top>0.70937in</Top>
+            <Left>3.87583in</Left>
             <Height>0.40833in</Height>
             <Width>0.52887in</Width>
             <ZIndex>3</ZIndex>
@@ -187,8 +187,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox5</rd:DefaultName>
-            <Top>0.93167in</Top>
-            <Left>5.41144in</Left>
+            <Top>0.70939in</Top>
+            <Left>5.38697in</Left>
             <Height>0.40833in</Height>
             <Width>0.67114in</Width>
             <ZIndex>4</ZIndex>
@@ -226,8 +226,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox6</rd:DefaultName>
-            <Top>0.93167in</Top>
-            <Left>6.85727in</Left>
+            <Top>0.70939in</Top>
+            <Left>6.8328in</Left>
             <Height>0.40833in</Height>
             <Width>0.36666in</Width>
             <ZIndex>5</ZIndex>
@@ -259,8 +259,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox7</rd:DefaultName>
-            <Top>1.76223in</Top>
-            <Left>0.34655in</Left>
+            <Top>1.28995in</Top>
+            <Left>0.32208in</Left>
             <Height>0.25in</Height>
             <Width>0.78834in</Width>
             <ZIndex>6</ZIndex>
@@ -292,8 +292,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox8</rd:DefaultName>
-            <Top>1.51223in</Top>
-            <Left>4.46081in</Left>
+            <Top>1.28995in</Top>
+            <Left>4.43634in</Left>
             <Height>0.25in</Height>
             <Width>1.20833in</Width>
             <ZIndex>7</ZIndex>
@@ -325,8 +325,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox9</rd:DefaultName>
-            <Top>2.02541in</Top>
-            <Left>0.34655in</Left>
+            <Top>1.80313in</Top>
+            <Left>0.32208in</Left>
             <Height>0.25in</Height>
             <Width>1.18904in</Width>
             <ZIndex>8</ZIndex>
@@ -358,8 +358,8 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox10</rd:DefaultName>
-            <Top>2.02541in</Top>
-            <Left>3.04307in</Left>
+            <Top>1.80313in</Top>
+            <Left>3.0186in</Left>
             <Height>0.25in</Height>
             <Width>0.81527in</Width>
             <ZIndex>9</ZIndex>
@@ -391,11 +391,303 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox11</rd:DefaultName>
-            <Top>2.02541in</Top>
-            <Left>5.41144in</Left>
+            <Top>1.80313in</Top>
+            <Left>5.38697in</Left>
             <Height>0.25in</Height>
             <Width>1.49486in</Width>
             <ZIndex>10</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="PaymentClassName">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!PaymentClassName.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>PaymentClassName</rd:DefaultName>
+            <Top>1.80182cm</Top>
+            <Left>3.89779cm</Left>
+            <Height>1.03717cm</Height>
+            <Width>5.96092cm</Width>
+            <ZIndex>11</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Drawee_Reference">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!External_Document_No_.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Drawee_Reference</rd:DefaultName>
+            <Top>1.8018cm</Top>
+            <Left>11.22323cm</Left>
+            <Height>1.03717cm</Height>
+            <Width>2.5cm</Width>
+            <ZIndex>12</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="BankNO">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!BankNO.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>BankNO</rd:DefaultName>
+            <Top>1.80184cm</Top>
+            <Left>15.38761cm</Left>
+            <Height>1.03717cm</Height>
+            <Width>1.98886cm</Width>
+            <ZIndex>13</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Due_Date1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!Due_Date.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                      <Format>dd/MM/yyyy</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Due_Date1</rd:DefaultName>
+            <Top>1.80186cm</Top>
+            <Left>18.28665cm</Left>
+            <Height>1.03717cm</Height>
+            <Width>2.1339cm</Width>
+            <ZIndex>14</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="StatusName">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!StatusName.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>StatusName</rd:DefaultName>
+            <Top>3.27646cm</Top>
+            <Left>2.82045cm</Left>
+            <Height>0.635cm</Height>
+            <Width>5.675cm</Width>
+            <ZIndex>15</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="AmountHeader">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!AmountHeader.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                      <Format>#,0.000;(#,0.000)</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>AmountHeader</rd:DefaultName>
+            <Top>3.27646cm</Top>
+            <Left>14.33745cm</Left>
+            <Height>0.635cm</Height>
+            <Width>3.03902cm</Width>
+            <ZIndex>16</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Montant_base_RS1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!Montant_base_RS.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                      <Format>#,0.000;(#,0.000)</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Montant_base_RS1</rd:DefaultName>
+            <Top>4.57994cm</Top>
+            <Left>3.83823cm</Left>
+            <Height>0.635cm</Height>
+            <Width>3.1985cm</Width>
+            <ZIndex>17</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Code_RS">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!Code_RS.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Code_RS</rd:DefaultName>
+            <Top>4.57994cm</Top>
+            <Left>9.738cm</Left>
+            <Height>0.635cm</Height>
+            <Width>2.57582cm</Width>
+            <ZIndex>18</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Montant_RS1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=First(Fields!Montant_RS.Value, "DataSet_Result")</Value>
+                    <Style>
+                      <FontSize>11pt</FontSize>
+                      <Format>#,0.000;(#,0.000)</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Montant_RS1</rd:DefaultName>
+            <Top>4.57994cm</Top>
+            <Left>17.47984cm</Left>
+            <Height>0.635cm</Height>
+            <Width>2.5cm</Width>
+            <ZIndex>19</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -904,11 +1196,11 @@
               </TablixMembers>
             </TablixRowHierarchy>
             <DataSetName>DataSet_Result</DataSetName>
-            <Top>2.64627in</Top>
-            <Left>0.27738in</Left>
+            <Top>2.38584in</Top>
+            <Left>0.24363in</Left>
             <Height>0.5in</Height>
             <Width>7.73774in</Width>
-            <ZIndex>11</ZIndex>
+            <ZIndex>20</ZIndex>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -953,11 +1245,11 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox29</rd:DefaultName>
-            <Top>3.29001in</Top>
-            <Left>0.27738in</Left>
+            <Top>3.02958in</Top>
+            <Left>0.24363in</Left>
             <Height>0.25in</Height>
             <Width>2.37329in</Width>
-            <ZIndex>12</ZIndex>
+            <ZIndex>21</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1018,11 +1310,11 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>3.68167in</Top>
-            <Left>0.50989in</Left>
+            <Top>3.42124in</Top>
+            <Left>0.47614in</Left>
             <Height>1.33959in</Height>
             <Width>1.63233in</Width>
-            <ZIndex>13</ZIndex>
+            <ZIndex>22</ZIndex>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -1105,11 +1397,11 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>3.68167in</Top>
-            <Left>3.07624in</Left>
+            <Top>3.42124in</Top>
+            <Left>3.04249in</Left>
             <Height>1.33959in</Height>
             <Width>1.81458in</Width>
-            <ZIndex>14</ZIndex>
+            <ZIndex>23</ZIndex>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -1190,11 +1482,11 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>3.68167in</Top>
-            <Left>5.8872in</Left>
+            <Top>3.42124in</Top>
+            <Left>5.85345in</Left>
             <Height>1.3396in</Height>
             <Width>1.8108in</Width>
-            <ZIndex>15</ZIndex>
+            <ZIndex>24</ZIndex>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -1277,11 +1569,11 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Textbox30</rd:DefaultName>
-            <Top>5.5725in</Top>
-            <Left>2.06358in</Left>
+            <Top>5.31207in</Top>
+            <Left>2.02983in</Left>
             <Height>1.75834in</Height>
             <Width>4.04066in</Width>
-            <ZIndex>16</ZIndex>
+            <ZIndex>25</ZIndex>
             <Style>
               <Border>
                 <Style>Solid</Style>
@@ -1312,265 +1604,6 @@
               <PaddingBottom>2pt</PaddingBottom>
             </Style>
           </Textbox>
-          <Textbox Name="PaymentClassName">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!PaymentClassName.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>11pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>PaymentClassName</rd:DefaultName>
-            <Top>2.36643cm</Top>
-            <Left>3.95995cm</Left>
-            <Height>1.03717cm</Height>
-            <Width>5.96092cm</Width>
-            <ZIndex>17</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Drawee_Reference">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!External_Document_No_.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>11pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Drawee_Reference</rd:DefaultName>
-            <Top>2.36641cm</Top>
-            <Left>11.28539cm</Left>
-            <Height>1.03717cm</Height>
-            <Width>2.5cm</Width>
-            <ZIndex>18</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="BankNO">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!BankNO.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>11pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>BankNO</rd:DefaultName>
-            <Top>2.36645cm</Top>
-            <Left>15.44977cm</Left>
-            <Height>1.03717cm</Height>
-            <Width>1.98886cm</Width>
-            <ZIndex>19</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="StatusName">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!StatusName.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>11pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>StatusName</rd:DefaultName>
-            <Top>3.84107cm</Top>
-            <Left>2.88261cm</Left>
-            <Height>0.635cm</Height>
-            <Width>5.675cm</Width>
-            <ZIndex>20</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="AmountHeader">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!AmountHeader.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>11pt</FontSize>
-                      <Format>#,0.000;(#,0.000)</Format>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>AmountHeader</rd:DefaultName>
-            <Top>3.84107cm</Top>
-            <Left>14.39961cm</Left>
-            <Height>0.635cm</Height>
-            <Width>3.03902cm</Width>
-            <ZIndex>21</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Montant_base_RS1">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!Montant_base_RS.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>11pt</FontSize>
-                      <Format>#,0.000;(#,0.000)</Format>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Montant_base_RS1</rd:DefaultName>
-            <Top>5.14455cm</Top>
-            <Left>3.90039cm</Left>
-            <Height>0.635cm</Height>
-            <Width>3.1985cm</Width>
-            <ZIndex>22</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Code_RS">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!Code_RS.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>11pt</FontSize>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Code_RS</rd:DefaultName>
-            <Top>5.14455cm</Top>
-            <Left>9.80016cm</Left>
-            <Height>0.635cm</Height>
-            <Width>2.57582cm</Width>
-            <ZIndex>23</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
-          <Textbox Name="Montant_RS1">
-            <CanGrow>true</CanGrow>
-            <KeepTogether>true</KeepTogether>
-            <Paragraphs>
-              <Paragraph>
-                <TextRuns>
-                  <TextRun>
-                    <Value>=First(Fields!Montant_RS.Value, "DataSet_Result")</Value>
-                    <Style>
-                      <FontSize>11pt</FontSize>
-                      <Format>#,0.000;(#,0.000)</Format>
-                    </Style>
-                  </TextRun>
-                </TextRuns>
-                <Style />
-              </Paragraph>
-            </Paragraphs>
-            <rd:DefaultName>Montant_RS1</rd:DefaultName>
-            <Top>5.14455cm</Top>
-            <Left>17.542cm</Left>
-            <Height>0.635cm</Height>
-            <Width>2.5cm</Width>
-            <ZIndex>24</ZIndex>
-            <Style>
-              <Border>
-                <Style>None</Style>
-              </Border>
-              <PaddingLeft>2pt</PaddingLeft>
-              <PaddingRight>2pt</PaddingRight>
-              <PaddingTop>2pt</PaddingTop>
-              <PaddingBottom>2pt</PaddingBottom>
-            </Style>
-          </Textbox>
           <Textbox Name="Posting_Date">
             <CanGrow>true</CanGrow>
             <KeepTogether>true</KeepTogether>
@@ -1589,11 +1622,11 @@
               </Paragraph>
             </Paragraphs>
             <rd:DefaultName>Posting_Date</rd:DefaultName>
-            <Top>8.35664cm</Top>
-            <Left>6.66919cm</Left>
+            <Top>7.69515cm</Top>
+            <Left>6.58348cm</Left>
             <Height>0.635cm</Height>
             <Width>3.66537cm</Width>
-            <ZIndex>25</ZIndex>
+            <ZIndex>26</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -1605,7 +1638,7 @@
             </Style>
           </Textbox>
         </ReportItems>
-        <Height>20.84389cm</Height>
+        <Height>18.81189cm</Height>
         <Style />
       </Body>
       <Width>20.89151cm</Width>

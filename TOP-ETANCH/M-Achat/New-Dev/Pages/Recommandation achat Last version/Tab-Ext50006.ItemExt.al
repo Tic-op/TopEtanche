@@ -72,9 +72,11 @@ tableextension 50096 "Item Ext RA" extends Item
     trigger OnInsert()
     begin
         "Costing Method" := "Costing Method"::Average;
-       // validate("Gen. Prod. Posting Group", 'PR');
-       // validate("Inventory Posting Group", 'PR');
-        // validate("Base Unit of Measure", 'PCE');
+        "Price/Profit Calculation" := "Price/Profit Calculation"::"Profit=Price-Cost";
+        "Item Disc. Group" := 'DEFAUT';
+        validate("Gen. Prod. Posting Group", 'MARCH19');
+        validate("Inventory Posting Group", 'NÉGOCE');
+        //  validate("Base Unit of Measure", 'PCE');
     end;
 
     trigger OnModify()

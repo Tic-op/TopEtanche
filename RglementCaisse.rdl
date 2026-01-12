@@ -1740,6 +1740,9 @@ End Function
         <Field Name="AccountNo">
           <DataField>AccountNo</DataField>
         </Field>
+        <Field Name="Type">
+          <DataField>Type</DataField>
+        </Field>
         <Field Name="Designation">
           <DataField>Designation</DataField>
         </Field>

@@ -13,6 +13,12 @@ pageextension 50057 "Payment Slip List" extends "Payment Slip List"
                 ApplicationArea = all;
             }
 
+            field("Lignes disponibles"; Rec."Lignes disponibles")
+            {
+                Style = Favorable;
+                ApplicationArea = All;
+            }
+
         }
     }
     actions

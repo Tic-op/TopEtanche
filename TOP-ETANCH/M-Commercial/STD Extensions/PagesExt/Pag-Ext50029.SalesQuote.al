@@ -9,6 +9,32 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
 
     layout
     {
+
+        modify("Sell-to Customer Name")
+        {
+            StyleExpr = StyleSusp;
+        }
+
+        addafter("Sell-to Customer Name")
+        {
+
+            field("Sell-to Customer Name2"; Rec."Sell-to Customer Name 2")
+            {
+                ApplicationArea = all;
+            }
+        }
+        addlast(General)
+        {
+            field("Commande cadre associée"; rec.GetBlanketSalesOrder)
+            {
+                editable = false;
+                ApplicationArea = all;
+                Trigger OnDrillDown()
+                begin
+                    rec.ShowBlanketOrder();
+                end;
+            }
+        }
         addafter("Payment Terms Code")
         {
             field("Type de facturation"; rec."Type de facturation")
@@ -47,6 +73,11 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
         modify("Responsibility Center") { visible = false; }
         modify("Assigned User ID") { visible = false; }
         modify("Currency Code") { visible = false; }
+        moveafter("External Document No."; "Salesperson Code")
+        modify("Salesperson Code")
+        {
+            ShowMandatory = true;
+        }
         /*  modify("Sell-to Customer Name")
          {
 
@@ -135,4 +166,19 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
             }
         }
     }
+
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        if rec.ModifiedGenCustomerGroup() then
+            StyleSusp := 'Unfavorable'
+        else
+            StyleSusp := 'Normal';
+    end;
+
+    var
+        StyleSusp: Text;
+
+
+
 }

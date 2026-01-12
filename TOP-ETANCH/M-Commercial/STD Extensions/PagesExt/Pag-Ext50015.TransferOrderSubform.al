@@ -4,6 +4,7 @@ using Microsoft.Inventory.Transfer;
 using Microsoft.Sales.Document;
 using Microsoft.Inventory.Location;
 using Microsoft.Warehouse.Structure;
+using Top.Top;
 using Microsoft.Inventory.Item;
 using PHARMATEC.PHARMATEC;
 
@@ -92,6 +93,36 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
     }
     actions
     {
+        addlast("&Line")
+        {
+            Action(Recherche_Ticop)
+
+            {
+                ShortcutKey = 'Alt+W';
+                ApplicationArea = all;
+                Image = AddWatch;
+                trigger OnAction()
+                var
+                    RS: Page "Usual Search Transfer";
+                    //SalesHeader: Record "Sales Header";
+                    TransferH: Record "Transfer Header";
+
+                begin
+                    TransferH.get(rec."Document No.");
+
+                    RS.initvarTransfer(rec."Document No.");
+                    //RS.Run();
+                    rs.RunModal();
+
+                    // Page.RunModal(50029);
+                    CurrPage.Update();
+
+
+
+                end;
+            }
+
+        }
         addlast(processing)
         {
             action("Dispatch transfer line")

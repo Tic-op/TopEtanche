@@ -172,11 +172,35 @@ tableextension 50005 Itemext extends Item
 
             DecimalPlaces = 0 : 3;
         }
-        field(50201; "Prix minimal"; decimal)
+        field(50201; "Prix marché"; decimal)
         {
+            trigger onvalidate()
+            var
+            begin
+                if "Prix marché" > "Prix standard" then
+                    validate("Unit Price", "Prix marché")
+                else
+                    Validate("Unit Price", "Prix standard");
 
+            end;
 
         }
+
+
+        Field(50202; "Prix standard"; decimal)
+        {
+            trigger onvalidate()
+            var
+            begin
+                if "Prix marché" > "Prix standard" then
+                    validate("Unit Price", "Prix marché")
+                else
+                    Validate("Unit Price", "Prix standard");
+
+            end;
+
+        }
+
 
         modify("Base Unit of Measure")
         {

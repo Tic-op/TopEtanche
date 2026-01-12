@@ -1,6 +1,8 @@
 namespace BCSPAREPARTS.BCSPAREPARTS;
 
 using Microsoft.Sales.Document;
+using Microsoft.Finance.GeneralLedger.Setup;
+using Microsoft.Sales.Setup;
 using Microsoft.CRM.Team;
 using Microsoft.Foundation.Company;
 using Microsoft.Inventory.Item;
@@ -78,12 +80,14 @@ report 50100 DevisReport
 
             column(External_Document_No_; "External Document No.") { }
             column(Your_Reference; "Your Reference") { }
+            Column(Timbre; Timbre) { }
 
 
 
             dataitem("Sales Line"; "Sales Line")
             {
                 DataItemLink = "Document No." = FIELD("No.");
+                DataItemTableView = where("Document Type" = const("Sales Document Type"::Quote));
                 DataItemLinkReference = SalesHeader;
 
 
@@ -175,7 +179,7 @@ report 50100 DevisReport
                     MontantNet2 := MontantNet2 + montant + tva;
 
                     txtMntTLettres := '';
-                    MontTlettre."Montant en texte"(txtMntTLettres, MontantNet2);
+                    MontTlettre."Montant en texte"(txtMntTLettres, MontantNet2 + timbre);
 
                     reference := "No.";
                     if Type = "Sales Line Type"::Item then begin
@@ -211,7 +215,15 @@ report 50100 DevisReport
                 SalesP: Record "Salesperson/Purchaser";
                 item: Record Item;
                 SE: Codeunit SalesEvents;
+                Customer: record Customer;
+                GLS: record "General Ledger Setup";
             begin
+                Customer.get("Sell-to Customer No.");
+                if Customer.Stamp then begin
+                    GLS.get();
+                    timbre := GLS."Montant timbre fiscal";
+
+                end;
                 companyInf.get;
                 companyInf.CalcFields(Picture);
                 ncommande := '';
@@ -226,10 +238,10 @@ report 50100 DevisReport
                 if SalesP.get("Salesperson Code") then
                     SalespersonName := Salesp.Name;
                 SalespersonPhone := Salesp."Phone No.";
-                //"Montant Timbre" := 1;
+                //  Montant Timbre" := 1;
 
-                if "Sell-to Customer Name 2" = '' then
-                    "Sell-to Customer Name 2" := "Sell-to Customer Name";
+                /*   if "Sell-to Customer Name 2" = '' then
+                      "Sell-to Customer Name 2" := "Sell-to Customer Name"; */
 
                 "No. Printed" += 1;
                 Modify();

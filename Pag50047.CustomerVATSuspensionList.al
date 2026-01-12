@@ -5,7 +5,7 @@ using Microsoft.Sales.History;
 page 50047 "Customer VAT Suspension List"
 {
     ApplicationArea = All;
-    Caption = 'Customer VAT Suspension List';
+    Caption = 'Suspension de la TVA Client';
     PageType = List;
     SourceTable = "Customer VAT Suspension";
     UsageCategory = Administration;

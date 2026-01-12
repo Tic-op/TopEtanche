@@ -22,15 +22,15 @@ report 50007 BLPageComplete
             RequestFilterFields = "Sell-to Customer No.";
 
             column(Valorise; BL_Valorisé) { }
-           // column(VAT_Registration_No2; "VAT Registration No2") { }
+            // column(VAT_Registration_No2; "VAT Registration No2") { }
             column(logo; companyInf.Picture) { }
             column(MFS; companyInf."VAT Registration No.") { }
             column(Tel; companyInf."Phone No.") { }
             column(FAX; companyInf."Fax No.") { }
             column(Name; companyInf.Name) { }
             column(Adress; companyInf.Address) { }
-          //  Column(HeaderJPG; companyInf."Header JPG") { }
-           // column(FooterJPG; companyInf."Footer JPG") { }
+            //  Column(HeaderJPG; companyInf."Header JPG") { }
+            // column(FooterJPG; companyInf."Footer JPG") { }
             column(EMAIL; companyInf."E-Mail") { }
 
 
@@ -146,7 +146,7 @@ report 50007 BLPageComplete
                     item: Record Item;
                 begin
                     montant := ((Quantity * "Unit Price") * ((100 - "Line Discount %") / 100));
-                     reference := "No.";
+                    reference := "No.";
                     if Type = type::Item then begin
 
                         if Vendorref then begin
@@ -186,17 +186,17 @@ report 50007 BLPageComplete
                 cust.CalcFields("Balance Due (LCY)");
                 phone := Cust."Phone No.";
                 Solde := Cust."Balance Due (LCY)";
-                if "Sell-to Customer Name 2" = '' then
-                    "Sell-to Customer Name 2" := "Sell-to Customer Name";
+                /*    if "Sell-to Customer Name 2" = '' then
+                       "Sell-to Customer Name 2" := "Sell-to Customer Name"; */
 
-               
-                
+
+
 
                 CalculerTotaux("No.");
                 Clear(SIL);
                 ;
                 SIL.SetRange("Document No.", "No.");
-               // SIL.SetRange(Type, SIL.Type::Item);
+                // SIL.SetRange(Type, SIL.Type::Item);
                 SIL.FindSet();
                 j := SIL.count;
 
@@ -233,7 +233,7 @@ report 50007 BLPageComplete
 
     }
 
-     requestpage
+    requestpage
     {
         layout
         {
@@ -339,7 +339,7 @@ report 50007 BLPageComplete
         IsEditable: Boolean;
         TVA19Amount, TVA19Base, TVA7Amount, TVA7Base, TVA0Amount, TVA0Base : decimal;
         HeaderHT, HeaderTVA, HeaderDiscount, HeaderTotal : decimal;
-                Vendorref: Boolean;
+        Vendorref: Boolean;
 
 
 }

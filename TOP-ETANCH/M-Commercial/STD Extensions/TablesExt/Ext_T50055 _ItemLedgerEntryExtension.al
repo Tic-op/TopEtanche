@@ -8,7 +8,7 @@ tableextension 50055 "ItemLedgerEntryExtension" extends "Item Ledger Entry"
             DataClassification = ToBeClassified;
             Editable = false;
         }
-        field(50001; "Nom Origine"; Text[50])
+        field(50001; "Nom Origine"; Text[100])
         {
             Caption = 'Nom Origine';
             DataClassification = ToBeClassified;
@@ -95,6 +95,29 @@ tableextension 50055 "ItemLedgerEntryExtension" extends "Item Ledger Entry"
             FieldClass = FlowField;
             CalcFormula = lookup("Sales Shipment Header"."Salesperson Code" where("No." = field("Document No.")));
         }
+        field(60006; "Groupe Compta Client"; code[20])
+        {
+            Caption = 'Groupe Compta Client';
+            DataClassification = ToBeClassified;
+            Editable = false;
+            TableRelation = "Customer Posting Group"; //OD090725
+        }
+
+        field(60007; "Date Facturation"; date)
+        {
+            Caption = 'Date Facturation';
+            FieldClass = FlowField;
+            CalcFormula = lookup("Value Entry"."Posting Date" where("Item Ledger Entry No." = field("Entry No."), "Invoiced Quantity" = field(Quantity)));
+            Editable = false;
+            //"Sales Shipment Header"."Salesperson Code" where("No." = field("Document No.")));
+        }
+        field(60008; "reference fournisseur"; Text[50])
+        {
+            FieldClass = FlowField;
+            Calcformula = lookup(item."Vendor Item No." where("No." = field("Item No.")));
+            editable = false;
+        }
+
 
 
     }

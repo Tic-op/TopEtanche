@@ -248,10 +248,12 @@ codeunit 50052 SalesEvents
     Procedure ONbeforePost(var SalesHeader: Record "Sales Header")
     var
     begin
+        ControlSalesPerson(SalesHeader);
         CheckBlocage(SalesHeader);
         CheckApprobation(SalesHeader);
         //  ControlSource(SalesHeader);//Momentary
         StampEvent(SalesHeader);
+
 
 
     end;
@@ -818,4 +820,47 @@ codeunit 50052 SalesEvents
         ArchiveManagement.StoreSalesDocument(SalesHeader, false);
     end;
 
+    procedure ControlSalesPerson(SH: record "Sales Header")
+    var
+    begin
+        if SH."Salesperson Code" = '' then
+            error('Veuillez mentionner le code vendeur');
+
+
+    end;
+
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post",
+                     'OnAfterPostSalesDoc', '', true, true)]
+    local procedure OnAfterPostSalesDoc(
+        var SalesHeader: Record "Sales Header";
+        var GenJnlPostLine: Codeunit "Gen. Jnl.-Post Line";
+         CommitIsSuppressed: Boolean)
+    var
+        SalesShipmentHeader: Record "Sales Shipment Header";
+        ConfirmOpenShipment: Label
+            'L''expédition vente a été créée. Voulez-vous l''ouvrir ?', Comment = 'FR';
+    begin
+        if not SalesHeader.Ship then
+            exit;
+        if SalesHeader.Invoice then
+            exit;
+
+
+        if SalesHeader."Document Type" <> SalesHeader."Document Type"::Order then
+            exit;
+
+        if not Confirm(ConfirmOpenShipment, false) then
+            exit;
+
+        SalesShipmentHeader.Reset();
+        SalesShipmentHeader.SetCurrentKey("Order No.");
+        SalesShipmentHeader.SetRange("Order No.", SalesHeader."No.");
+
+        if SalesShipmentHeader.FindLast() then
+            PAGE.Run(PAGE::"Posted Sales Shipment", SalesShipmentHeader)
+        else
+            Message('Aucune expédition vente postée trouvée.');
+    end;
 }

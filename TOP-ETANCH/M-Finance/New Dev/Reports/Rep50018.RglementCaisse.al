@@ -42,6 +42,10 @@ report 50025 "Caisse journalière"
             {
 
             }
+            column(Type; "Payment Class")
+            {
+
+            }
             column(Designation; Designation)
             { }
             column(Date; "Date recette")
@@ -71,7 +75,6 @@ report 50025 "Caisse journalière"
                 "Payment Line".SetCurrentKey("Posting Date", "Document No.");
                 "Payment Line".SetRange("Posting Date", "Date recette");
                 SetAutoCalcFields("Status Name");
-
             end;
 
             trigger OnAfterGetRecord()
@@ -103,6 +106,10 @@ report 50025 "Caisse journalière"
                     {
                         ApplicationArea = All;
 
+                    }
+                    field("Type Réglement"; PC."Type caisse")
+                    {
+                        ApplicationArea = all;
                     }
 
 

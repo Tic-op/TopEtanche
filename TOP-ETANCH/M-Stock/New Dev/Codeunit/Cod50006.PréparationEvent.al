@@ -2,6 +2,7 @@ namespace Top.Top;
 using Microsoft.Sales.Document;
 using Microsoft.Inventory.Transfer;
 using Microsoft.Sales.Posting;
+using Microsoft.Inventory.Location;
 
 codeunit 50006 PréparationEvent
 {
@@ -16,10 +17,16 @@ codeunit 50006 PréparationEvent
         Lignepréparation: Record "Ligne préparation";
         LocationCode: Code[20];
         incount: integer;
+        Location: Record Location;
 
 
     begin
         incount := 0;
+        If DocumentType = DocumentType::Commande then
+            SalesH.get("Sales Document Type"::Order, documentNo);
+        If DocumentType = DocumentType::Facture then
+            SalesH.get("Sales Document Type"::invoice, documentNo);
+
         /*   OrdrePrep.setrange("document type",DocumentType);
            OrdrePrep.SetRange("Order No",documentNo);
              if OrdrePrep.FindFirst() then
@@ -32,6 +39,7 @@ codeunit 50006 PréparationEvent
          OrdrePrep.SetFilter(Statut, '<>%1', OrdrePrep.Statut::"Créé");
          if OrdrePrep.FindFirst() then
              Error('La commande %1 est en cours de préparation.', OrdrePrep."Order No"); */
+
 
 
         If (DocumentType = DocumentType::Facture) or (DocumentType = DocumentType::Commande) then begin
@@ -53,6 +61,14 @@ codeunit 50006 PréparationEvent
                 repeat
                     if SalesLine."Location Code" = '' then
                         Error('Il faut avoir un magasin dans les lignes du document', SalesLine."No.")
+                    else begin
+                        Location.get(SalesLine."Location Code");
+                        if Location."Bin Mandatory" then
+                            if SalesLine."Bin Code" = '' then
+                                Error('Emplacement obligatoire');
+
+
+                    end;
 
                 until SalesLine.Next() = 0;
 
@@ -68,7 +84,10 @@ codeunit 50006 PréparationEvent
 
             if SalesLine.FindFirst() then
                 repeat
-                    if SalesLine."Preparé" then continue;
+                    if (SalesLine."Preparé") or
+                    (SalesLine."Location Code" = SalesH."Location Code") //ignorer les lignes vente comptoir AM 070126
+                    then
+                        continue;
                     LocationCode := SalesLine."Location Code";
                     OrdrePrep.Reset();
                     if DocumentType = DocumentType::Facture then
@@ -246,12 +265,12 @@ codeunit 50006 PréparationEvent
             SalesLineToChecknotFromBL.setrange("Shipment Line No.", 0);
 
             If SalesLineToChecknotFromBL.Count > 0 then
-                "CheckPréparation"(Ordreprep."document type"::Facture, SalesHeader."No.");
+                if SalesHeader.NeedPreparation() then "CheckPréparation"(Ordreprep."document type"::Facture, SalesHeader."No.");
         end;
 
         if (SalesHeader."Document Type" = "Sales Document Type"::Order)
        then
-            "CheckPréparation"(Ordreprep."document type"::Commande, SalesHeader."No.");
+            if SalesHeader.NeedPreparation() then "CheckPréparation"(Ordreprep."document type"::Commande, SalesHeader."No.");
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"TransferOrder-Post (Yes/No)", OnBeforePost, '', false, false)]

@@ -98,14 +98,26 @@ page 50046 "Usual Search"
                 {
                     editable = false;
                 }
-                Field(Disponibilité; rec.Availability)
+                Field("Disp. globale"; rec.Availability)
                 {
-                    Caption = 'Disponibilité';
+                    Caption = 'Disp. globale';
                     Editable = false;
                     DecimalPlaces = 0 : 3;
                     BlankZero = true;
-                    Style = Favorable;
+                    Style = AttentionAccent;
                 }
+                Field("Disp. magasin"; rec.AvailabilityByLocation)
+                {
+                    Caption = 'Disp. magasin';
+                    Editable = false;
+                    DecimalPlaces = 0 : 3;
+                    BlankZero = true;
+                    CaptionClass = 'Disp.  ' + SalesHeader."Location Code";
+                    Style = Favorable;
+                    Visible = LocationVisible;
+                    ;
+                }
+
 
                 Field(QtyToAdd; rec."Reorder Quantity")
                 {
@@ -120,6 +132,25 @@ page 50046 "Usual Search"
                     Style = Ambiguous;
                     ApplicationArea = all;
                     Visible = panierVisible;
+
+                }
+                field(Tampon; rec.AvailabilityInTampon)
+                {
+                    Caption = 'Tampon';
+                    Style = StrongAccent;
+                    ApplicationArea = all;
+                    Editable = false;
+                    DecimalPlaces = 0 : 3;
+                    BlankZero = true;
+                }
+                field("Achat en cours"; Rec."Qty. on Purch. Order")
+                {
+                    Caption = 'Achat en cours';
+                    ApplicationArea = all;
+                    DecimalPlaces = 0 : 3;
+                    BlankZero = true;
+
+                    Editable = false;
 
                 }
 
@@ -165,8 +196,22 @@ page 50046 "Usual Search"
 
 
             }
+            /*            part(Historique; HistVenteArticleSubform)
+                        {
+                            ApplicationArea = Basic, Suite;
+                            Editable = false;
+                            SubPageLink = "Item No" = field("No.");
+                            UpdatePropagation = Both;
+                            Caption = 'Historique';
+
+                        }
+                        */
+
         }
+
+
     }
+
     actions
     {
         area(Processing)
@@ -191,30 +236,21 @@ page 50046 "Usual Search"
         Inserer();
     end;
 
-    Trigger OnOpenPage()
-
+    trigger OnAfterGetCurrRecord()
     var
-        item: Record item;
-        i: integer;
+        Customer: Record Customer;
+        Item: Record Item;
     begin
-        // item.SetCurrentKey("Usual search");
-        //   item.setrange("Usual search", '');
-        i := 0;
-        item.findfirst();
-        repeat
-            if (item."Usual search" = '')
-             //OR
-             // (item."Usual search" <> item.Description + ' ' + item."Vendor Item No." + ' ' + item."reference Origine")
-             then begin
-                item."Usual search" := item.Description + ' ' + item."Vendor Item No." + ' ' + item."reference Origine";
-                item.Modify();
-                i := i + 1;
-            end;
-        until (item.Next() = 0);
+        Customer.setrange("No.", SalesHeader."Sell-to Customer No.");
+        //    CurrPage.Historique.Page.SetCustomer(Customer);
+        Item.SetRange("No.", Rec."No.");
+        //  CurrPage.Historique.Page.Setitem(Item);
 
-        //  Message('End');
+
 
     end;
+
+
 
 
     procedure initvar(TypeDoc: Enum "Sales Document Type"; noDoc: Code[20])
@@ -225,6 +261,8 @@ page 50046 "Usual Search"
 
     begin
         SalesHeader.get(TypeDoc, noDoc);
+        if (TypeDoc = TypeDoc::Order) or (TypeDoc = TypeDoc::Invoice) then
+            LocationVisible := SalesHeader."Location Code" <> '';
         if SalesHeader.Status <> SalesHeader.Status::Open
         then
             Error('Le document doit être ouvert!');
@@ -320,7 +358,15 @@ or
                 SalesL.validate(Type, "Sales Line Type"::Item);
 
                 SalesL.validate("No.", Rec."No.");
-                SalesL.Validate(Quantity, Rec."Reorder Quantity");
+
+                if rec."Reorder Quantity" <= rec.AvailabilityByLocation then
+                    SalesL.Validate(Quantity, Rec."Reorder Quantity")
+                else begin
+                    SalesL.validate("Location Code", '');
+                    SalesL.Validate(Quantity, Rec."Reorder Quantity")
+                end;
+                //SalesL.Quantity := rec."Reorder Quantity";
+                //  SalesL."Qty. to Ship" := rec."Reorder Quantity";
 
                 if SalesL.insert() then begin
                     rec."Reorder Quantity" := 0;
@@ -454,8 +500,8 @@ or
 
                 Rec."Unit. cost simulation" := ItemRec."Unit Cost";
                 rec.Availability := rec."CalcDisponibilitéWithResetFilters"('', '');
-
-
+                rec.AvailabilityByLocation := rec."CalcDisponibilitéWithResetFilters"(SalesHeader."Location Code", '');
+                Rec.AvailabilityInTampon := rec."CalcDisponibilitéWithResetFilters"('LIV', '');
                 If not OnlyAvailable then
                     Rec.Insert()
                 else
@@ -629,6 +675,7 @@ or
         QtyToAdd: decimal;
         FiltreDescription, FiltreReferenceFournisseur, FiltreReferenceOrigine : Text[100];
         SearchFilter, XrecSearchFilter : Code[50];
-        OnlyAvailable: Boolean;
+        OnlyAvailable, LocationVisible : Boolean;
+
     //VendorFilter: text[100];
 }

@@ -56,6 +56,7 @@ report 50008 DevisPageComplete
             dataitem("Sales Line"; "Sales Line")
             {
                 DataItemLink = "Document No." = FIELD("No.");
+                DataItemTableView = where("Document Type" = const("Sales Document Type"::Quote));
                 DataItemLinkReference = SalesHeader;
                 UseTemporary = true;
                 //DataItemTableView= where (Type = const ("Sales Line Type"::Item));//,"Quantity (Base)" = filter(>0));
@@ -124,6 +125,7 @@ report 50008 DevisPageComplete
 
                 Clear(SIL);
                 ;
+                Sil.setrange("Document Type", "Document Type");
                 SIL.SetRange("Document No.", "No.");
                 // SIL.SetRange(Type, SIL.Type::Item); 
                 SIL.FindSet();
@@ -144,6 +146,7 @@ report 50008 DevisPageComplete
                 for temp_i := j MOD 32 to 21 do begin
                     line += 11;
                     "Sales Line".Init();
+                    "Sales Line"."Document Type" := "Document Type";
                     "Sales Line"."Document No." := "No.";
                     "Sales Line"."Line No." := line;
                     "Sales Line".Type := "Sales Line".Type::Item;

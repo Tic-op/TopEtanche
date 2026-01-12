@@ -80,6 +80,20 @@ tableextension 50138 TableGLStampExtension extends "General Ledger Setup"
             TableRelation = "G/L Account";
 
         }
+        field(50014; "Gains écr. apurement"; Code[25])
+        {
+            Caption = 'Gains écr. apurement';
+            DataClassification = ToBeClassified;
+            TableRelation = "G/L Account";
+
+        }
+        field(50015; "Pertes écr. apurement"; Code[25])
+        {
+            Caption = 'Pertes écr. apurement';
+            DataClassification = ToBeClassified;
+            TableRelation = "G/L Account";
+
+        }
     }
 }
 

@@ -17,6 +17,19 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
     // InsertAllowed = false;
     layout
     {
+
+        modify("Sell-to Customer Name")
+        {
+            StyleExpr = StyleSusp;
+        }
+        addafter("Sell-to Customer Name")
+        {
+
+            field("Sell-to Customer Name2"; Rec."Sell-to Customer Name 2")
+            {
+                ApplicationArea = all;
+            }
+        }
         addafter("Due Date")
         {
             field("Bon de preparations"; Rec."Bon de preparations")
@@ -48,6 +61,15 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                     OrderPre.SetRange(Statut, OrderPre.Statut::"Préparé");
                     ListBonPre.SetTableView(OrderPre);
                     ListBonPre.Run();
+                end;
+            }
+            field("Commande cadre associée"; rec.GetBlanketSalesOrder)
+            {
+                editable = false;
+                ApplicationArea = all;
+                Trigger OnDrillDown()
+                begin
+                    rec.ShowBlanketOrder();
                 end;
             }
         }
@@ -112,7 +134,6 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
 
 
 
-
         modify("Campaign No.")
         {
             Visible = false;
@@ -133,9 +154,12 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
         {
             Visible = false;
         }
+        moveafter("Sell-to Customer Name"; "Salesperson Code")
+
         modify("Salesperson Code")
         {
             Importance = Promoted;
+            ShowMandatory = true;
         }
         modify(WorkDescription)
         {
@@ -342,6 +366,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                     SalesEvents.AssignLotNoToSalesOrder(rec."Document Type", rec."No.");
 
                     //Test sur prise en charge
+                    SaleL.setrange("Document Type", rec."Document Type");
                     SaleL.setrange("Document No.", rec."No.");
                     SaleL.setrange(Type, "Sales Line Type"::Item);
                     if SaleL.findfirst then
@@ -461,7 +486,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                 PromotedOnly = true;
                 ApplicationArea = All;
                 Image = PrintVoucher;
-                visible = true;
+                visible = false;
                 Caption = 'Imprimer feuille préparation';
                 trigger OnAction()
                 var
@@ -478,4 +503,15 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
 
     }
 
+
+    trigger OnAfterGetCurrRecord()
+    begin
+        if rec.ModifiedGenCustomerGroup() then
+            StyleSusp := 'Unfavorable'
+        else
+            StyleSusp := 'Normal';
+    end;
+
+    var
+        StyleSusp: Text;
 }

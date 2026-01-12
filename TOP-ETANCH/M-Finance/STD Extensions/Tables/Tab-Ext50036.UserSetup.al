@@ -11,5 +11,9 @@ tableextension 50036 "User Setup" extends "User Setup"
             Caption = 'Blockage Client';
             DataClassification = ToBeClassified;
         }
+        field(50003; "TB DIR"; Boolean)
+        {
+
+        }
     }
 }

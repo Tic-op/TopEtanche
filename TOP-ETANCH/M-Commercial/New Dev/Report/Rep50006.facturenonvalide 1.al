@@ -83,6 +83,7 @@ report 50006 "facture non validée"
             dataitem("Sales Line"; "Sales Line")
             {
                 DataItemLink = "Document No." = FIELD("No.");
+                DataItemTableView = where("Document Type" = const("Sales Document Type"::invoice));
                 DataItemLinkReference = SalesHeader;
 
 
@@ -226,9 +227,9 @@ report 50006 "facture non validée"
                 SalespersonPhone := Salesp."Phone No.";
                 //"Montant Timbre" := 1;
 
-                if "Sell-to Customer Name 2" = '' then
-                    "Sell-to Customer Name 2" := "Sell-to Customer Name";
-
+                /*    if "Sell-to Customer Name 2" = '' then
+                       "Sell-to Customer Name 2" := "Sell-to Customer Name";
+    */
                 "No. Printed" += 1;
                 Modify();
                 SE.ArchiveDevis("No.");

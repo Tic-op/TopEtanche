@@ -1,18 +1,17 @@
-
 namespace Top.Top;
+
 using Microsoft.Bank.Payment;
 using Microsoft.Bank.BankAccount;
-using BCSPAREPARTS.BCSPAREPARTS;
-using Microsoft.Sales.Customer;
 using Microsoft.Foundation.Company;
 using Pharmatec_Ticop.Pharmatec_Ticop;
 
-report 50019 "Bordereau Envoi à la banque"
+report 50023 "Versement Espece"
 {
     ApplicationArea = All;
-    Caption = 'Bordereau Envoi à la banque';
+    Caption = 'Versement Espece';
     UsageCategory = ReportsAndAnalysis;
-    RDLCLayout = 'Bordereau Envoi à la banque.RDL';
+    RDLCLayout = 'Versement Espece.rdl';
+    DefaultLayout = RDLC;
     dataset
     {
 
@@ -72,7 +71,7 @@ report 50019 "Bordereau Envoi à la banque"
             trigger OnAfterGetRecord()
 
             var
-                Customer: record Customer;
+
                 MontantLettre: Codeunit "Montant Toute Lettres";
 
 
@@ -95,52 +94,24 @@ report 50019 "Bordereau Envoi à la banque"
                 Montant := Montant + Amount;
                 PaymentHeader.CalcFields(Amount);
                 MontantH := abs(PaymentHeader.Amount);
-                if customer.get("Account No.") then
-                    Vat_Reg_No := Customer."VAT Registration No.";
+
                 MontantLettre."Montant en texte"(TextMontant, MontantH);
 
                 TitleText := "Payment Class" + "Status Name";
 
-                if TitleText.Contains('CHEQUE') then begin
-                    TitleText := 'Bordereau de remise Chèques';
+                if TitleText.Contains('ESPECE') then begin
+                    TitleText := 'Bordereau de Versement Espèce';
                     affichage := false;
                 end;
-
-
-
-                if TitleText.Contains('Effet') then begin
-
-                    if TitleText.Contains('escompte') then begin
-                        TitleText := 'Bordereau de d''escompte Effets';
-                        affichage := true;
-                    end
-                    else
-                        if TitleText.Contains('encaissement') then begin
-
-
-                            TitleText := 'Bordereau de d''encaissement Effets';
-                            affichage := true;
-                        end;
-                end
-
-
-
 
 
 
 
             end;
 
-
-
         }
 
-
-
     }
-
-
-
 
     var
         NombrePièce: Integer;

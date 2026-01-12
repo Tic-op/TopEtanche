@@ -86,6 +86,33 @@ pageextension 50028 ItemList extends "Item List"
 
             }
         }
+        addlast(Statistics)
+        {
+            Action(Recherche_Ticop)
+
+            {
+                ShortcutKey = 'Alt+W';
+                ApplicationArea = all;
+                Image = AddWatch;
+                trigger OnAction()
+                var
+                    RS: Page "Usual Search item";
+
+
+                begin
+
+                    //RS.Run();
+                    rs.RunModal();
+
+                    // Page.RunModal(50029);
+                    CurrPage.Update();
+
+
+
+                end;
+            }
+
+        }
     }
     trigger OnAfterGetRecord()
     var

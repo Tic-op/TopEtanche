@@ -66,6 +66,14 @@ tableextension 50033 "Payment Header" extends "Payment Header"
             Caption = 'Intérêt comptabilisé';
             DataClassification = ToBeClassified;
         }
-        
+        field(50008; "Lignes disponibles"; Integer)
+        {
+            Caption = 'Lignes disponibles';
+            FieldClass = FlowField;
+            CalcFormula = count("Payment Line" where("No." = field("No."), "Copied To No." = const('')));
+            Editable = false;
+
+        }
+
     }
 }
