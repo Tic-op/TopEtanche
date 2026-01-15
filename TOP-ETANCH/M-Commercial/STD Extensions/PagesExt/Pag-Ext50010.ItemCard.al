@@ -1,7 +1,7 @@
 namespace TopEtanch.TopEtanch;
 
 using Microsoft.Inventory.Item;
-using BSPCloud.BSPCloud;
+
 using Microsoft.Inventory.Item.Attribute;
 
 pageextension 50010 "Item Card" extends "Item Card"

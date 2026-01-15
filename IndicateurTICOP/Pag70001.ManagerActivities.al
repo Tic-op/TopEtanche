@@ -1,8 +1,9 @@
-namespace PHARMATECCLOUD.PHARMATECCLOUD;
+namespace TopEtanch.TopEtanch;
+
 using Microsoft.Inventory.Ledger;
 using Microsoft.Sales.Receivables;
 using Microsoft.Purchases.Payables;
-using Pharmatec.Pharmatec;
+
 using System.Security.User;
 using TopEtanch.TopEtanch;
 

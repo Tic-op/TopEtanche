@@ -1,4 +1,5 @@
-namespace Pharmatec.Pharmatec;
+namespace TopEtanch.TopEtanch;
+
 using Microsoft.Purchases.History;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Foundation.Company;

@@ -2,7 +2,7 @@ namespace TopEtanch.TopEtanch;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Location;
-using PHARMATEC.PHARMATEC;
+
 using Microsoft.Warehouse.Structure;
 using Microsoft.Inventory.Counting.Journal;
 using Microsoft.Inventory.Ledger;

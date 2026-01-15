@@ -1,4 +1,5 @@
-namespace PHARMATEC.PHARMATEC;
+
+namespace TopEtanch.TopEtanch;
 
 using Microsoft.Projects.Resources.Resource;
 
@@ -32,7 +33,7 @@ pageextension 50044 ResourceCardExt extends "Resource Card"
                 PromotedOnly = true;
                 PromotedCategory = Process;
                 ApplicationArea = All;
-                Visible=false ;
+                Visible = false;
                 /* trigger OnAction()
                 var
                     test: Codeunit "TEST-ISRA";

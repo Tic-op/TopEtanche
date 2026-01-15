@@ -373,5 +373,59 @@ codeunit 50113 PurchaseEvents
         end;
     end;
 
+    [EventSubscriber(ObjectType::Page, Page::"Document Attachment Factbox", OnBeforeDrillDown, '', false, false)]
+    local procedure OnBeforeDrillDown(DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef);
+    var
+
+        ImportFolder: Record "Import Folder";
+
+    begin
+        case DocumentAttachment."Table ID" of
+
+            Database::"Import Folder":
+                begin
+                    RecRef.Open(DATABASE::"Import Folder");
+                    if ImportFolder.Get(DocumentAttachment."No.") then
+                        RecRef.GetTable(ImportFolder);
+                end;
+
+
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Page, Page::"Document Attachment Details", OnAfterOpenForRecRef, '', false, false)]
+    local procedure OnAfterOpenForRecRef(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef);
+    var
+        FieldRef: FieldRef;
+        RecNo: Code[20];
+    begin
+        case RecRef.Number of
+
+            DATABASE::"Import Folder":
+                begin
+                    FieldRef := RecRef.Field(1);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.SetRange("No.", RecNo);
+                end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Document Attachment", OnAfterInitFieldsFromRecRef, '', false, false)]
+    local procedure OnAfterInitFieldsFromRecRef(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
+    var
+        FieldRef: FieldRef;
+        RecNo: Code[20];
+    begin
+        case RecRef.Number of
+
+            DATABASE::"Import Folder":
+                begin
+                    FieldRef := RecRef.Field(1);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.Validate("No.", RecNo);
+                end;
+        end;
+    end;
+
 
 }

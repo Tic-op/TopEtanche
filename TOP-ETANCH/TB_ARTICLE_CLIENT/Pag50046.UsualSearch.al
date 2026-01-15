@@ -368,7 +368,7 @@ or
                 //SalesL.Quantity := rec."Reorder Quantity";
                 //  SalesL."Qty. to Ship" := rec."Reorder Quantity";
 
-                if SalesL.insert() then begin
+                if SalesL.insert(true) then begin
                     rec."Reorder Quantity" := 0;
                 end;
                 SalesL.Validate("Unit Price", rec."Unit Price");
@@ -396,7 +396,7 @@ or
                 BO := CurrDoc;
                 BO."Document Type" := SalesHeader."Document Type"::"Blanket Order";
                 // BO.Validate("Posting Date", Today);
-                if BO.insert then BO.Validate("Posting Date", Today);
+                if BO.insert() then BO.Validate("Posting Date", Today);
 
 
 
@@ -409,7 +409,7 @@ or
                 SalesL.validate("No.", Rec."No.");
                 SalesL.Validate(Quantity, Rec."Budget Quantity");
 
-                if SalesL.insert() then begin
+                if SalesL.insert(true) then begin
                     rec."Budget Quantity" := 0;
                     SalesL.Validate("Unit Price", rec."Unit Price");
                     SalesL.Modify();
@@ -455,7 +455,8 @@ or
         // message(FiltreRecherche);
         //Message(SearchFilter);
         //Message(FiltrerecharcheClean);
-        Itemrec.setfilter("Usual search", '*' + FiltrerecharcheClean + '*');
+        Itemrec.setfilter("Usual search", FiltrerecharcheClean);
+        //message(FiltrerecharcheClean);
 
         TotalCount := ItemRec.Count();
         CurrentCount := 0;
@@ -550,7 +551,8 @@ or
         foreach Token in InputText.Split('*') do begin
             /*    Token := DelChr(Token, '<>', ' ');
                if Token <> '' then */
-            Tokens.Add(Token);
+            if Token <> '' then
+                Tokens.Add(Token);
         end;
 
         if Tokens.Count = 0 then
@@ -628,7 +630,9 @@ or
         i: Integer;
     begin
         if StartIndex = Tokens.Count then begin
-            Result.Add(JoinTokens(Tokens));
+            if not Result.Contains(JoinTokens(Tokens)) then
+                //  Result.Add(JoinTokens(Tokens));
+                Result.Add(JoinTokens(Tokens));
             exit;
         end;
 
@@ -661,6 +665,35 @@ or
             Result += '*' + Token + '*';
         exit(Result);
     end;
+
+    /*  procedure BuildFilter1(InputText: Text): Text
+     var
+         Tokens: List of [Text];
+         Token: Text;
+         ResultFilter: Text;
+     begin
+         // Split only on *
+         foreach Token in InputText.Split('*') do begin
+             Token := DelChr(Token, '<>', ' ');
+             if Token <> '' then
+                 Tokens.Add(UpperCase(Token));
+         end;
+
+         if Tokens.Count = 0 then
+             exit('');
+
+         if Tokens.Count > 10 then
+             Error('Max 10 blocs de recherche');
+
+         foreach Token in Tokens do begin
+             if ResultFilter <> '' then
+                 ResultFilter += '&';
+             ResultFilter += '*' + Token + '*';
+         end;
+
+         exit(ResultFilter);
+     end;
+  */
 
 
 

@@ -32,6 +32,10 @@ report 50014 "BL RGRP"
             {
 
             }
+            column(VAT_Registration_No_; "VAT Registration No.")
+            {
+
+            }
 
 
             column(Salesperson_Code; "Salesperson Code")

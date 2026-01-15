@@ -194,5 +194,9 @@ permissionset 50000 GeneratedPermission
         page "Usual Search Transfer" = X,
         page "modif PL" = X,
         page ModifierDateEcheance = X,
-        page "Usual Search Item" = X;
+        page "Usual Search Item" = X,
+        report Apurement = X,
+        report "Devisarchivé" = X,
+        report "Importer Qté Achat" = X,
+        report "Mise à jour magasin" = X;
 }

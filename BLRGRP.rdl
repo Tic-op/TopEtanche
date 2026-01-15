@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-01-03T07:35:36.6159738Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-01-14T09:20:09.6141429Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -2147,6 +2147,14 @@
                           <Value>=First(Fields!Sell_to_Address.Value, "DataSet_Result")</Value>
                           <Style />
                         </TextRun>
+                        <TextRun>
+                          <Value xml:space="preserve">   </Value>
+                          <Style />
+                        </TextRun>
+                        <TextRun>
+                          <Value>=First(Fields!Sell_to_City.Value, "DataSet_Result")</Value>
+                          <Style />
+                        </TextRun>
                       </TextRuns>
                       <Style />
                     </Paragraph>
@@ -2174,7 +2182,7 @@
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value>=First(Fields!Sell_to_City.Value, "DataSet_Result")</Value>
+                          <Value>=First(Fields!Sell_to_Phone_No_.Value, "DataSet_Result")</Value>
                           <Style />
                         </TextRun>
                       </TextRuns>
@@ -2204,15 +2212,23 @@
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value>=First(Fields!Sell_to_Phone_No_.Value, "DataSet_Result")</Value>
-                          <Style />
+                          <Value>MF : </Value>
+                          <Style>
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
+                        </TextRun>
+                        <TextRun>
+                          <Value>=First(Fields!VAT_Registration_No_.Value, "DataSet_Result")</Value>
+                          <Style>
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
                         </TextRun>
                       </TextRuns>
                       <Style />
                     </Paragraph>
                   </Paragraphs>
                   <Top>4.02138cm</Top>
-                  <Left>0.26675cm</Left>
+                  <Left>0.31003cm</Left>
                   <Height>0.6cm</Height>
                   <Width>8.76534cm</Width>
                   <ZIndex>5</ZIndex>
@@ -2769,6 +2785,9 @@ End Function
         </Field>
         <Field Name="Posting_Date">
           <DataField>Posting_Date</DataField>
+        </Field>
+        <Field Name="VAT_Registration_No_">
+          <DataField>VAT_Registration_No_</DataField>
         </Field>
         <Field Name="Salesperson_Code">
           <DataField>Salesperson_Code</DataField>

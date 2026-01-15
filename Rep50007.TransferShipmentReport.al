@@ -1,4 +1,5 @@
-namespace Pharmatec.Pharmatec;
+namespace TopEtanch.TopEtanch;
+
 
 using Microsoft.Inventory.Transfer;
 using Microsoft.CRM.Contact;
@@ -10,7 +11,7 @@ using Microsoft.Inventory.Ledger;
 report 50051 "TransferShipReport Complete"
 {
     ApplicationArea = All;
-    Caption = 'Transfer Shipment Report';
+    Caption = 'Transfert magasin';
     UsageCategory = ReportsAndAnalysis;
     RDLCLayout = 'Transfert Shipment.RDL';
     DefaultLayout = RDLC;

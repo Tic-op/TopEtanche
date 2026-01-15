@@ -1,4 +1,4 @@
-namespace BSPCloud.BSPCloud;
+namespace TopEtanch.TopEtanch;
 
 using Microsoft.Inventory.Item;
 using BCSPAREPARTS.BCSPAREPARTS;
@@ -41,36 +41,38 @@ page 50178 "Recommandation Achats"
 
                 }
             }
-           
-             group(Filtres)
+
+            group(Filtres)
             {
                 field(Fournisseur; Fournisseur)
                 {
-                    ShowMandatory = true ;
+                    ShowMandatory = true;
                     ApplicationArea = all;
                     TableRelation = Vendor;
-                    
+
 
 
                 }
-                field(Désignation ;FiltrerDescription){
-                      ShowMandatory = true ;
+                field(Désignation; FiltrerDescription)
+                {
+                    ShowMandatory = true;
                     ApplicationArea = all;
                 }
-                
+
                 field(Item_Category; Item_Category)
                 {
                     ApplicationArea = all;
                     TableRelation = "Item Category";
                     Caption = 'Catégorie article';
-                    ShowMandatory = true ;
+                    ShowMandatory = true;
                 }
-                 field(Fabricant; FilterFabricant)
+                field(Fabricant; FilterFabricant)
                 {
                     ApplicationArea = all;
-                    TableRelation = Manufacturer ;
-                     ShowMandatory = true ;
-                } }
+                    TableRelation = Manufacturer;
+                    ShowMandatory = true;
+                }
+            }
             group("Option")
             {
 
@@ -118,7 +120,7 @@ page 50178 "Recommandation Achats"
                 }
 
             }
-            
+
             repeater(General)
             {
                 Caption = 'General';
@@ -257,7 +259,7 @@ page 50178 "Recommandation Achats"
 
         }
 
-    } 
+    }
     actions
     {
 
@@ -324,12 +326,12 @@ page 50178 "Recommandation Achats"
                     If FilterFabricant <> '' then begin
                         item.setfilter("Manufacturer Code", FilterFabricant)
                     end;
-                 /*    If FilterMarque <> '' then begin
-                        item.setrange(Marque, FilterMarque);
-                    end;
-                    If FilterOrigine <> '' then begin
-                        item.setrange("Item Origin", FilterOrigine);
-                    end; */
+                    /*    If FilterMarque <> '' then begin
+                           item.setrange(Marque, FilterMarque);
+                       end;
+                       If FilterOrigine <> '' then begin
+                           item.setrange("Item Origin", FilterOrigine);
+                       end; */
 
 
                     item.SetAutoCalcFields("Qty. on Sales Order", "Qty. on Purch. Order", Inventory, "lignes demandes prix");

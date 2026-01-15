@@ -4,7 +4,7 @@ using Microsoft.Sales.Document;
 using Microsoft.Warehouse.Structure;
 using Microsoft.Sales.History;
 using Microsoft.Warehouse.Ledger;
-using PHARMATEC.PHARMATEC;
+
 using Microsoft.Inventory.Tracking;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Item;

@@ -1,4 +1,5 @@
-namespace PHARMATEC.PHARMATEC;
+namespace TopEtanch.TopEtanch;
+
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Setup;
 using Microsoft.Utilities;

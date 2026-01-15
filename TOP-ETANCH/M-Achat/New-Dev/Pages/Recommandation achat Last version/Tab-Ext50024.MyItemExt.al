@@ -1,4 +1,4 @@
-namespace BSPCloud.BSPCloud;
+namespace TopEtanch.TopEtanch;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
