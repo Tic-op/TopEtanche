@@ -333,7 +333,7 @@ report 50007 BLPageComplete
         SalesPersonPhonE, phone : text;
         Solde: decimal;
         // Afficherref: Boolean;
-        reference: Code[20];
+        reference: text;
         i: Decimal;
         SansRemise: Boolean;
         IsEditable: Boolean;

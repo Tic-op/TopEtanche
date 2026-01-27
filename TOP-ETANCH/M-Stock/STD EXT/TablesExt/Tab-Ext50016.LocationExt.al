@@ -1,4 +1,4 @@
-namespace PHARMATECCLOUD.PHARMATECCLOUD;
+nAMESPACE TOP.TOP;
 
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Posting;
@@ -33,7 +33,7 @@ tableextension 50016 "Location Ext" extends Location
 
             CalcFormula = sum("Item Ledger Entry"."Operation Cost" where("Location Code" = field(code)));
         }
-     
+
         /*  field(50004; "tampon"; Boolean)
          {
              caption = 'Tampon';

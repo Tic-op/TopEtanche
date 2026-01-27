@@ -1,7 +1,8 @@
 namespace TopEtanch.TopEtanch;
 
 using Microsoft.Inventory.Item;
-using BSPCloud.BSPCloud;
+using Top.Top;
+
 using Microsoft.Inventory.Item.Attribute;
 
 pageextension 50010 "Item Card" extends "Item Card"
@@ -9,6 +10,28 @@ pageextension 50010 "Item Card" extends "Item Card"
     layout
 
     {
+        modify("Shelf No.")
+        {
+            Visible = false;
+        }
+        addafter(Inventory)
+        {
+            field(Emplacement; rec.ListeEmplacementDispo())
+            {
+                Caption = 'Emplacement dispo ';
+                Editable = false;
+                ApplicationArea = all;
+                MultiLine = true;
+                Style = Strong;
+                trigger OnDrillDown()
+                begin
+                    rec.ShowListeEmplacementDispo();
+
+                end;
+
+            }
+        }
+
         addlast(InventoryGrp)
         {
             field("Unité de Dépot"; Rec."Unité de Dépot")
@@ -132,15 +155,25 @@ pageextension 50010 "Item Card" extends "Item Card"
         {
 
             Editable = false;
-        }
-        addafter("Unit Price")
-        {
-            field("Prix marché"; Rec."Prix marché")
-            { ApplicationArea = all; }
-            field("Prix standard"; Rec."Prix standard")
-            { ApplicationArea = all; }
-        }
+            trigger OnDrillDown()
+            var
+                PriceMangment: Page "Item Price Management Card";
+                ItemRec: Record Item;
+            begin
+                ItemRec.SetRange("No.", Rec."No.");
+                PriceMangment.SetTableView(ItemRec);
+                PriceMangment.Run();
 
+            end;
+        }
+        /*     addafter("Unit Price")
+             {
+                 field("Prix marché"; Rec."Prix marché")
+                 { ApplicationArea = all; Editable = false; }
+                 field("Prix standard"; Rec."Prix standard")
+                 { ApplicationArea = all; Editable = false; }
+             }
+     */
     }
 
     actions

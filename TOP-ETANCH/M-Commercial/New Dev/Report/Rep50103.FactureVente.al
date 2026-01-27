@@ -23,7 +23,7 @@ report 50103 FactureVente
         {
             RequestFilterFields = "Sell-to Customer No.";
 
-            column(Sell_to_Customer_Name; "Sell-to Customer Name")
+            column(Sell_to_Customer_Name; NomClient)
             {
 
             }
@@ -216,6 +216,9 @@ report 50103 FactureVente
                 PC: Record "Payment Class";
 
             begin
+                If NomClient = '' then
+                    NomClient := "Sell-to Customer Name";
+                if "Sell-to Customer Name 2" <> '' then NomClient := "Sell-to Customer Name 2";
                 companyInfo.get;
                 companyInfo.CalcFields(Picture);
                 if SalesP.get("Salesperson Code") then
@@ -270,6 +273,12 @@ report 50103 FactureVente
                     ApplicationArea = all;
                     // Editable = IsEditable;
 
+                }
+                field(NomClient; NomClient)
+                {
+                    //  visible = false;
+                    ApplicationArea = all;
+                    Caption = 'Nom du client passager';
                 }
             }
         }
@@ -372,5 +381,6 @@ report 50103 FactureVente
         vendorref: Boolean;
         Cust: record Customer;
         PaiementText: Text;
+        NomClient: text[100];
 
 }

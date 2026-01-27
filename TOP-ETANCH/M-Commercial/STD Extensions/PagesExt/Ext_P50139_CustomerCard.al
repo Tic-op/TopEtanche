@@ -4,7 +4,7 @@ using Microsoft.Sales.Customer;
 using Microsoft.CRM.Contact;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Intrastat;
-using PHARMATECCLOUD.PHARMATECCLOUD;
+
 
 
 

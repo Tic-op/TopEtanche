@@ -4,7 +4,7 @@ using Microsoft.Sales.Document;
 using Microsoft.Foundation.NoSeries;
 using Microsoft.Sales.Setup;
 using Microsoft.Inventory.Location;
-using PHARMATEC.PHARMATEC;
+
 using TopEtanch.TopEtanch;
 
 pageextension 50034 Salesinvoice extends "Sales Invoice"

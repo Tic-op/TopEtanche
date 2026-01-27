@@ -32,6 +32,24 @@ tableextension 50030 TransferLine extends "Transfer Line"
             CalcFormula = lookup("Ligne préparation"."Document No." where("Source type." = const("Transfert"), "Source No." = field("Document No."), "Source line No." = field("Line No.")));
 
         }
+        modify("Transfer-from Bin Code")
+        {
+            trigger OnAfterValidate()
+            begin
+                If "Quantity (Base)" > GetDisponibilite(false)
+        then
+                    error('Quantité non disponible');
+            end;
+        }
+        modify(Quantity)
+        {
+            trigger OnAfterValidate()
+            begin
+                If "Quantity (Base)" > GetDisponibilite(false)
+        then
+                    error('Quantité non disponible');
+            end;
+        }
     }
 
     /*  trigger OnModify()
@@ -56,6 +74,7 @@ tableextension 50030 TransferLine extends "Transfer Line"
             if "Preparé" then
                 Error('Impossible de modifier cette ligne, veuillez supprimer le bon de préparation associé.');
         end;
+
     end;
 
     trigger OnDelete()

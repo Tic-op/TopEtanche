@@ -125,6 +125,7 @@ page 50049 "Fiche Paiement BL"
         NoSeries: Codeunit "No. Series";
         DocNo: Code[20];
         LineNo: Integer;
+
     begin
         PaymentClass.SetRange("Type caisse", ModalitéPaiement);
         PaymentClass.FindFirst();
@@ -133,6 +134,10 @@ page 50049 "Fiche Paiement BL"
         PH.SetRange("Posting Date", Today);
         PH.SetRange("Payment Class", PaymentClass.Code);
         PH.SetRange("Status No.", 0);
+
+
+
+        PH.SetRange("No. Series", 'CAISSE BL');
         if CompanyBank <> '' then
             PH.SetRange("Account No.", CompanyBank);
 
@@ -143,6 +148,7 @@ page 50049 "Fiche Paiement BL"
             PH.Init();
             PH."No." := DocNo;
             PH."Payment Class" := PaymentClass.Code;
+            PH."No. Series" := 'CAISSE BL';
             PH.Validate("Posting Date", Today);
             if CompanyBank <> '' then begin
                 PH."Account Type" := PH."Account Type"::"Bank Account";

@@ -1,4 +1,5 @@
-namespace PHARMATEC.PHARMATEC;
+namespace TopEtanch.TopEtanch;
+
 
 using Microsoft.Inventory.Item;
 using Microsoft.Warehouse.Structure;

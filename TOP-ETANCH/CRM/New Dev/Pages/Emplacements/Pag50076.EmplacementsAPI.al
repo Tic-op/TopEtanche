@@ -1,4 +1,5 @@
-namespace PHARMATEC.PHARMATEC;
+namespace TopEtanch.TopEtanch;
+
 
 using Microsoft.Warehouse.Structure;
 
@@ -14,14 +15,14 @@ page 50076 EmplacementsAPI
     EntitySetName = 'emplacements';
     PageType = API;
     SourceTable = "Bin Content";
-    
+
 
     layout
     {
         area(Content)
         {
-             repeater(General)
-            { 
+            repeater(General)
+            {
                 field(SystemId; Rec.SystemId) { }
                 field("Item"; Rec."Item No.") { }
                 field(Qty; Rec.Quantity)
@@ -40,10 +41,10 @@ page 50076 EmplacementsAPI
             }
         }
     }
-          trigger OnAfterGetRecord()
+    trigger OnAfterGetRecord()
     begin
         Rec.CalcFields(Quantity);
     end;
-    }
-  
+}
+
 

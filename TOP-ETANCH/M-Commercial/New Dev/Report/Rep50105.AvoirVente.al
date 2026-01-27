@@ -310,7 +310,7 @@ report 50105 AvoirVente
         baseHT: Decimal;
         TotalRemise: Decimal;
         txtMntTLettres: text;
-        reference: code[20];
+        reference: text;
         vendorref: Boolean;
 
 

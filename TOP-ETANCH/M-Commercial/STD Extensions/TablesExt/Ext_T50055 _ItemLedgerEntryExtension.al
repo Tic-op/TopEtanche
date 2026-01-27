@@ -68,7 +68,7 @@ tableextension 50055 "ItemLedgerEntryExtension" extends "Item Ledger Entry"
         }
         field(60002; "Sous-famille 1"; Code[20])
         {
-            Caption = 'Sous-famille 1';
+            Caption = 'Catégorie';
             DataClassification = ToBeClassified;
             TableRelation = "Item Category"."Code" where("Parent Category" = field(Famille));
             Editable = false;
@@ -76,25 +76,39 @@ tableextension 50055 "ItemLedgerEntryExtension" extends "Item Ledger Entry"
         }
         field(60003; "Sous-famille 2"; Code[20])
         {
-            Caption = 'Sous-famille 2';
+            Caption = 'Produit';
             DataClassification = ToBeClassified;
             TableRelation = "Item Category"."Code" where("Parent Category" = field("Sous-famille 1"));
             Editable = false;
 
         }
+        field(60054; "Sous-famille 3"; Code[20])
+        {
+            Caption = 'Type article';
+            DataClassification = ToBeClassified;
+            TableRelation = "Item Category"."Code" where("Parent Category" = field("Sous-famille 2"));
+            editable = false;
+        }
+        field(60055; "Sous-famille 4"; Code[20])
+        {
+            Caption = 'Materiaux article';
+            DataClassification = ToBeClassified;
+            TableRelation = "Item Category"."Code" where("Parent Category" = field("Sous-famille 3"));
+            editable = false;
+        }
         field(60004; "Designation"; Text[100])
         {
             Caption = 'Désignation';
-            FieldClass = FlowField;
-            CalcFormula = Lookup(Item.Description where("No." = field("Item No.")));
+            Editable = false;
 
         }
-        field(60005; "code vendeur"; code[20])
-        {
-            Caption = 'Code vendeur';
-            FieldClass = FlowField;
-            CalcFormula = lookup("Sales Shipment Header"."Salesperson Code" where("No." = field("Document No.")));
-        }
+        /*   field(60005; "code vendeur"; code[20])
+          {
+              Caption = 'Code vendeur';
+              FieldClass = FlowField;
+              CalcFormula = lookup("Sales Shipment Header"."Salesperson Code" where("No." = field("Document No.")));
+          }
+   */
         field(60006; "Groupe Compta Client"; code[20])
         {
             Caption = 'Groupe Compta Client';
@@ -103,19 +117,44 @@ tableextension 50055 "ItemLedgerEntryExtension" extends "Item Ledger Entry"
             TableRelation = "Customer Posting Group"; //OD090725
         }
 
-        field(60007; "Date Facturation"; date)
+        /*   field(60007; "Date Facturation"; date)
+          {
+              Caption = 'Date Facturation';
+              FieldClass = FlowField;
+              CalcFormula = lookup("Value Entry"."Posting Date" where("Item Ledger Entry No." = field("Entry No."), "Invoiced Quantity" = field(Quantity)));
+              Editable = false;
+              //"Sales Shipment Header"."Salesperson Code" where("No." = field("Document No.")));
+          }
+          field(60008; "reference fournisseur"; Text[50])
+          {
+              FieldClass = FlowField;
+              Calcformula = lookup(item."Vendor Item No." where("No." = field("Item No.")));
+              editable = false;
+          } */
+
+        field(60105; "codeVendeur"; code[20])
+        {
+            Caption = 'Code vendeur';
+
+        }
+        field(60107; "DateFacturation"; date)
         {
             Caption = 'Date Facturation';
-            FieldClass = FlowField;
-            CalcFormula = lookup("Value Entry"."Posting Date" where("Item Ledger Entry No." = field("Entry No."), "Invoiced Quantity" = field(Quantity)));
+            // FieldClass = FlowField;
+            //CalcFormula = lookup("Value Entry"."Posting Date" where("Item Ledger Entry No." = field("Entry No."), "Invoiced Quantity" = field(Quantity)));
             Editable = false;
             //"Sales Shipment Header"."Salesperson Code" where("No." = field("Document No.")));
         }
-        field(60008; "reference fournisseur"; Text[50])
+        field(60108; "referencefournisseur"; Text[50])
         {
-            FieldClass = FlowField;
-            Calcformula = lookup(item."Vendor Item No." where("No." = field("Item No.")));
+            // FieldClass = FlowField;
+            //Calcformula = lookup(item."Vendor Item No." where("No." = field("Item No.")));
             editable = false;
+        }
+        field(60109; "reference origine"; Code[100])
+        {
+            editable = false;
+
         }
 
 
@@ -135,7 +174,7 @@ tableextension 50055 "ItemLedgerEntryExtension" extends "Item Ledger Entry"
         {
 
         }
-        key(Famille; Famille, "Sous-famille 1", "Sous-famille 2")
+        key(Famille; Famille, "Sous-famille 1", "Sous-famille 2", "Sous-famille 3", "Sous-famille 4")
         {
 
         }

@@ -6,7 +6,7 @@ using Microsoft.Inventory.Location;
 using Microsoft.Warehouse.Structure;
 using Top.Top;
 using Microsoft.Inventory.Item;
-using PHARMATEC.PHARMATEC;
+
 
 pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
 {
@@ -46,7 +46,7 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
                 trigger OnDrillDown()
                 var
                     Location: record Location;
-                    Bin: record Bin;
+                    Bin: record "Bin Content";
                     Textmessage: text;
                     item: Record item;
 
@@ -57,11 +57,12 @@ pageextension 50015 TransferOrderSubform extends "Transfer Order Subform"
                         repeat
                             if (location.Type = location.type::Casse) or (Location.type = location.type::Tampon) then continue;
                             Textmessage := Textmessage + Location.Code + '------' + item."CalcDisponibilité"(Location.code, '').ToText() + '\';
-                            if location."Bin Mandatory" then begin
+                            if (location."Bin Mandatory") then begin
                                 Bin.SetRange("Location Code", Location.code);
+                                Bin.setrange("Item No.", item."No.");
                                 if bin.FindFirst() then
                                     repeat
-                                        Textmessage := Textmessage + '>>>>' + Bin.Code + '------' + item."CalcDisponibilité"(Location.code, bin.code).ToText() + '\';
+                                        Textmessage := Textmessage + '>>>>' + Bin."Bin Code" + '------' + item."CalcDisponibilité"(Location.code, bin."Bin Code").ToText() + '\';
 
 
                                     until bin.next = 0;

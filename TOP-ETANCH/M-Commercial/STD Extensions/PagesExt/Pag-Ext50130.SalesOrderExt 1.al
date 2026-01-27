@@ -2,7 +2,7 @@ namespace Ticop_pharmatec.Ticop_pharmatec;
 
 using Microsoft.sales.Document;
 using Microsoft.Inventory.Item.Attribute;
-using Pharmatec.Pharmatec;
+
 using Microsoft.Sales.Customer;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Tracking;

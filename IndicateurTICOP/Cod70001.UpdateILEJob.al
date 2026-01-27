@@ -1,4 +1,4 @@
-namespace PHARMATECCLOUD.PHARMATECCLOUD;
+nAMESPACE TOP.TOP;
 
 
 
@@ -29,6 +29,7 @@ codeunit 50101 "ILE UPDATE JOB "
     begin
         //    DestroyLocationDemoContenent();
         UpdateILE_Info(false);
+        //  MigrationdesFlowfields();
     end;
 
 
@@ -112,6 +113,7 @@ codeunit 50101 "ILE UPDATE JOB "
         Second: Integer;
         Customer: Record Customer;
         Vendor: Record Vendor;
+        VE: record "Value Entry";
 
 
     begin
@@ -131,10 +133,24 @@ codeunit 50101 "ILE UPDATE JOB "
             repeat
                 Item.get(ILE."Item No.");
                 IlE."Operation Cost" := (ILE."Cost Amount (Actual)") + (ILE."Cost Amount (Expected)");
-                /*   ILE.Famille := Item.Famille;
-                  ILE."Sous-famille 1" := Item."Sous-famille 1";
-                  ILE."Sous-famille 2" := Item."Sous-famille 2"; */
+                //AM Update
+                ILE.Famille := Item."Famille Category";
+                ILE."Sous-famille 1" := Item."Catégorie Category";
+                ILE."Sous-famille 2" := Item."Produit Category";
+                ILE."Sous-famille 3" := Item."Type category";
+                ILE."Sous-famille 4" := item."Matériau category";
+                ILE.referencefournisseur := item."Vendor Item No.";
+                ILE."reference origine" := item."reference origine";
+                VE.SetCurrentKey("Item Ledger Entry No.", "Valuation Date", "Posting Date");
+                VE.SetRange("Item Ledger Entry No.", ILE."Entry No.");
+                VE.FindFirst();
+
+
+                ILE.DateFacturation := Ve."Posting Date";
+                ILE.codeVendeur := VE."Salespers./Purch. Code";
                 ILE.Designation := item.Description;
+
+                //AM Update
 
                 if ile."Entry Type" = ILE."Entry Type"::Sale then begin
                     ILE."Sales Operation Amount" := ILE."Sales Amount (Actual)" + ILE."Sales Amount (Expected)";
@@ -201,6 +217,36 @@ codeunit 50101 "ILE UPDATE JOB "
             until SalesHeader.Next() = 0;
         end;
     end;*/
+    /*   Procedure MigrationdesFlowfields()
+      var
+          ILE: record "Item Ledger Entry";
+      begin
+          ILE.LockTable();
+          ILE.SetCurrentKey("Item No.", "Posting Date");
+          ILE.SetAutoCalcFields("code vendeur", "reference fournisseur", "Date Facturation");
+
+          ILE.findset();
+          repeat
+              ILE.codeVendeur := ILE."code vendeur";
+
+              ILE.referencefournisseur := ILE."reference fournisseur";
+              ILE."Date Facturation" := ILE."Date Facturation";
+              ILE.Modify(true);
+          until ILE.next = 0;
+      end; */
+
+    [EventSubscriber(ObjectType::Table, Database::"Item Ledger Entry", OnAfterInsertEvent, '', false, false)]
+
+    Procedure insertdata()
+    var
+    begin
+        /*   ILE.Famille := Item."Famille Category";
+              ILE."Sous-famille 1" := Item."Catégorie Category";
+              ILE."Sous-famille 2" := Item."Produit Category";
+              ILE."Sous-famille 3" := Item."Type category";
+              ILE."Sous-famille 4" := Item."Matériau category";
+*/
+    end;
 
 }
 

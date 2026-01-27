@@ -194,5 +194,17 @@ permissionset 50000 GeneratedPermission
         page "Usual Search Transfer" = X,
         page "modif PL" = X,
         page ModifierDateEcheance = X,
-        page "Usual Search Item" = X;
+        page "Usual Search Item" = X,
+        report Apurement = X,
+        report "Devisarchivé" = X,
+        report "Importer Qté Achat" = X,
+        report "Mise à jour magasin" = X,
+        report "Etat de recouvrement/secteur" = X,
+        codeunit UpdateSuspensionCondition = X,
+        report FactureVenteGRP = X,
+        codeunit "Purch Rcpt Pricing Mgt" = X,
+        page "Item Active Price " = X,
+        page "Item Price Management Card" = X,
+        page "Item Sales Price FactBox" = X,
+        page "Purch Rcpt Pricing Worksheet" = X;
 }

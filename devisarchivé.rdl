@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-01-09T16:04:29.3506771Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-01-14T09:25:55.8367700Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -2391,6 +2391,14 @@
                           <Value>=First(Fields!Sell_to_Address.Value, "DataSet_Result")</Value>
                           <Style />
                         </TextRun>
+                        <TextRun>
+                          <Value xml:space="preserve">   </Value>
+                          <Style />
+                        </TextRun>
+                        <TextRun>
+                          <Value>=First(Fields!Sell_to_City.Value, "DataSet_Result")</Value>
+                          <Style />
+                        </TextRun>
                       </TextRuns>
                       <Style />
                     </Paragraph>
@@ -2418,7 +2426,7 @@
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value>=First(Fields!Sell_to_City.Value, "DataSet_Result")</Value>
+                          <Value>=First(Fields!Sell_to_Phone_No_.Value, "DataSet_Result")</Value>
                           <Style />
                         </TextRun>
                       </TextRuns>
@@ -2448,8 +2456,16 @@
                     <Paragraph>
                       <TextRuns>
                         <TextRun>
-                          <Value>=First(Fields!Sell_to_Phone_No_.Value, "DataSet_Result")</Value>
-                          <Style />
+                          <Value>MF : </Value>
+                          <Style>
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
+                        </TextRun>
+                        <TextRun>
+                          <Value>=First(Fields!VAT_Registration_No_.Value, "DataSet_Result")</Value>
+                          <Style>
+                            <FontWeight>Bold</FontWeight>
+                          </Style>
                         </TextRun>
                       </TextRuns>
                       <Style />

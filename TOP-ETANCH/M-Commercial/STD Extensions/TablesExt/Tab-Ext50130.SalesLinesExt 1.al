@@ -1,4 +1,4 @@
-namespace Ticop_pharmatec.Ticop_pharmatec;
+namespace Top.Top;
 
 using Microsoft.Sales.Document;
 using Microsoft.Inventory.Tracking;
@@ -10,7 +10,7 @@ using Microsoft.Inventory.Item;
 using Microsoft.Warehouse.Structure;
 using Microsoft.Inventory.Location;
 using Microsoft.Sales.Customer;
-using PHARMATECCLOUD.PHARMATECCLOUD;
+
 using Microsoft.Inventory.Ledger;
 
 
@@ -202,17 +202,22 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
                 //OrdrePrep.SetRange(Statut, OrdrePrep.Statut::"Créé"); ??? Nosense 
                 //if OrdrePrep.FindFirst() then
                 //   Error('Impossible de modifier le magasin, veuillez supprimer le bon préparation existant');
-                CalcFields("Preparé");
-                if "Preparé" then
-                    Error('Impossible de modifier le magasin, veuillez supprimer le bon préparation existant');
-                CheckQuantiy("Quantity (Base)");
-                CheckQuantiy("Qty. to Ship (Base)");
-                SalesH.Get("Document Type", "Document No.");
-                if Type = "Sales Line Type"::Item then
-                    if SalesH."Vente comptoir" then
-                        TestField("Location Code", SalesH."Location Code");
-                /*  ControlDisponibilité(); */
-                "ControlDisponibilitéSaleslines"();
+                //  SalesH.Get("Document Type", "Document No.");
+
+
+                if ("Document Type" = "Sales Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice) then begin
+                    CalcFields("Preparé");
+                    if "Preparé" then
+                        Error('Impossible de modifier le magasin, veuillez supprimer le bon préparation existant');
+                    CheckQuantiy("Quantity (Base)");
+                    CheckQuantiy("Qty. to Ship (Base)");
+
+                    if Type = "Sales Line Type"::Item then
+                        if SalesH."Vente comptoir" then
+                            TestField("Location Code", SalesH."Location Code");
+                    /*  ControlDisponibilité(); */
+                    "ControlDisponibilitéSaleslines"();
+                end;
             end;
         }
 
@@ -294,10 +299,12 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
          if SalesH."Bon de preparations" > 0 then
              error('Impossible d''ajouter des lignes. Des préparations associées existent.');
   */
-        ORdreprep.setrange("Order No", "Document No.");
-        ORdreprep.SetRange(Statut, ORdreprep.Statut::"Créé", ORdreprep.Statut::"En cours");
-        if ORdreprep.FindFirst() then
-            error('veuillez préparer les préparations existantes avant d''ajouter des lignes');
+        if (("Document Type" = "Sales Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice)) then begin
+            ORdreprep.setrange("Order No", "Document No.");
+            ORdreprep.SetRange(Statut, ORdreprep.Statut::"Créé", ORdreprep.Statut::"En cours");
+            if ORdreprep.FindFirst() then
+                error('veuillez préparer les préparations existantes avant d''ajouter des lignes');
+        end
     end;
 
     /* trigger OnBeforeInsert()
@@ -353,6 +360,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
               if OrdrePrep.FindFirst() then
                   Error('Impossible de supprimer cette ligne , veuillez supprimer le bon de préparation associé.');
           end; */
+
         CalcFields("Preparé");
         IF ("Document Type" = "Sales Document Type"::Invoice) or ("Document Type" = "Sales Document Type"::order) then begin
             if "Preparé" then

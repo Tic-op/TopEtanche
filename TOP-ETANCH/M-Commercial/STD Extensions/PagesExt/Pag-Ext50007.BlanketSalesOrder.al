@@ -1,8 +1,9 @@
-namespace Pharmatec.Pharmatec;
+
+namespace TOP.TOP;
 
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
-using PHARMATECCLOUD.PHARMATECCLOUD;
+//using PHARMATECCLOUD.PHARMATECCLOUD;
 using Top.Top;
 using Microsoft.Inventory.Location;
 using Microsoft.Inventory.Item;
@@ -10,6 +11,7 @@ using Microsoft.Sales.Setup;
 using Microsoft.Warehouse.Structure;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Sales.History;
+using TopEtanch.TopEtanch;
 
 pageextension 50007 "Blanket Sales Order" extends "Blanket Sales Order"
 {

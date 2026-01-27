@@ -123,21 +123,27 @@ codeunit 50006 PréparationEvent
 
 
         If (DocumentType = DocumentType::Transfert) then begin
-
+            TransferH.get(documentNo);
 
             transferLine.Reset();
             transferLine.SetCurrentKey("Document No.");
-
-
             transferLine.SetRange("Document No.", documentNo);
+            transferLine.SetAutoCalcFields("Preparé");
+            Location.get(TransferH."Transfer-from Code");
 
             if transferLine.FindFirst() then
-                LocationCode := transferLine."Transfer-from Code";
+                repeat
+                    if transferLine.GetDisponibilite(false) < transferLine."Quantity (Base)" then
+                        error('Quantité non disponible pour %1 dans %2  %3', transferLine."Item No.", transferLine."Transfer-from Code", 'Emplacement' + transferLine."Transfer-from Bin Code");
+                    if Location."Bin Mandatory" then
+                        if transferLine."Transfer-from Bin Code" = '' then error('emplacement obligatoir)');
+                until transferLine.next = 0;
+            LocationCode := transferLine."Transfer-from Code";
             OrdrePrep.Reset();
             OrdrePrep.setrange("document type", DocumentType::Transfert);
             OrdrePrep.SetRange("Order No", documentNo);
             OrdrePrep.SetRange("Magasin", LocationCode);
-            OrdrePrep.setrange(Statut, OrdrePrep.Statut::"Créé", OrdrePrep.Statut::"En cours");
+            // OrdrePrep.setrange(Statut, OrdrePrep.Statut::"Créé", OrdrePrep.Statut::"En cours");
             if not OrdrePrep.FindFirst() then begin
                 OrdrePrep.Init();
                 OrdrePrep."Order No" := documentNo;
@@ -149,9 +155,12 @@ codeunit 50006 PréparationEvent
                 OrdrePrep."Nom demandeur" := TransferH."Transfer-to Name";
                 //  OrdrePrep."document type" := OrdrePrep."document type"::Facture;
                 //SalesSetup.Get();
-                OrdrePrep.Insert(true)
-            end;
-            Message('Un bon de préparation a été créé avec succés');
+                OrdrePrep.Insert(true);
+                Message('Un bon de préparation a été créé avec succés');
+            end
+            else
+                error('un bon de préparation existe déja pour ce document')
+
 
 
 

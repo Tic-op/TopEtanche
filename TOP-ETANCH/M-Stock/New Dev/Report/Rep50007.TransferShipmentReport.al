@@ -1,4 +1,5 @@
-namespace Pharmatec.Pharmatec;
+namespace TopEtanch.TopEtanch;
+
 
 using Microsoft.Inventory.Transfer;
 using Microsoft.CRM.Contact;
@@ -7,12 +8,12 @@ using Microsoft.Foundation.Company;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
 
-report 50050 "Transfer Shipment Report "
+report 50051 "TransferShipReport Complete"
 {
     ApplicationArea = All;
-    Caption = 'Transfer Shipment Report';
+    Caption = 'Transfert magasin';
     UsageCategory = ReportsAndAnalysis;
-    RDLCLayout = 'Transfert_shipments.RDL';
+    RDLCLayout = 'Transfert Shipment.RDL';
     DefaultLayout = RDLC;
     Permissions = tabledata "Item Ledger Entry" = RImd,
                   tabledata "Transfer shipment Header" = Rimd;
@@ -23,7 +24,6 @@ report 50050 "Transfer Shipment Report "
         {
             column(PostingDate; "Posting Date") { }
             column(No; "No.") { }
-            Column(reference; reference) { }
 
             column(TransfertoCode; "Transfer-to Code") { }
             column(TransferfromCode; "Transfer-from Code") { }
@@ -42,18 +42,14 @@ report 50050 "Transfer Shipment Report "
             column(picture; companyinfo.Picture) { }
             column(EMAIL; companyinfo."E-Mail") { }
 
-            column(TypeDocumentTxt; Format(TypeDocument)) { }
-            column(Client_No_Selected; ClientNo) { }
-            column(Client_Name_Selected; ClientName) { }
-            column(ClientCity; ClientCity) { }
-            column(ClientAdress; ClientAdress) { }
-            column(ClientAdress2; ClientAdress2) { }
+
 
 
             dataitem("Transfer Shipment Line"; "Transfer Shipment Line")
             {
                 DataItemLink = "Document No." = FIELD("No.");
                 DataItemLinkReference = TransferHeader;
+                UseTemporary = true;
 
                 column(ILE_Qty; Abs(Quantity)) { }
                 column(Item_No_; "Item No.") { }
@@ -61,6 +57,7 @@ report 50050 "Transfer Shipment Report "
                 column(Document_No_; "Document No.") { }
                 column(item_vat; item_vat) { }
                 column(item_UP; item_UP) { }
+                column(reference; reference) { }
 
                 column(Unit_of_Measure; "Unit of Measure Code") { }
 
@@ -68,6 +65,9 @@ report 50050 "Transfer Shipment Report "
                 var
                     item: Record Item;
                 begin
+                    reference := '';
+                    item_description := '';
+                    item_vat := '';
                     if item.Get("Item No.") then begin
                         item_description := item.Description;
                         item_vat := item."VAT Prod. Posting Group";
@@ -76,12 +76,17 @@ report 50050 "Transfer Shipment Report "
 
                     end;
 
+
                 end;
             }
 
             trigger OnAfterGetRecord()
             var
                 Cust: Record Customer;
+                TL: Record "Transfer shipment Line";
+                j: Integer;
+                line: Integer;
+                temp_i: Integer;
             begin
                 companyinfo.Get();
                 companyinfo.CalcFields(Picture);
@@ -94,15 +99,33 @@ report 50050 "Transfer Shipment Report "
                 MagasinDestination := Format("Transfer-to Code");
                 NomSource := "Transfer-from Name";
                 NomDestination := "Transfer-to Name";
+                Clear(TL);
+                ;
+                TL.SetRange("Document No.", "No.");
+                TL.FindSet();
+                j := TL.count;
 
-                if ClientNo <> '' then
-                    if Cust.Get(ClientNo) then begin
-                        ClientName := Cust.Name;
-                        ClientAdress := cust.Address;
-                        ClientAdress2 := Cust."Address 2";
-                        ClientCity := cust.City;
+                repeat
+                    "Transfer Shipment Line".init;
 
-                    end;
+
+                    "Transfer Shipment Line" := TL;
+                    "Transfer Shipment Line".Insert();
+
+                    line := TL."Line No.";
+
+                until TL.next = 0;
+
+
+                for temp_i := j MOD 22 to 21 do begin
+                    line += 11;
+                    "Transfer Shipment Line".Init();
+                    "Transfer Shipment Line"."Document No." := TransferHeader."No.";
+                    "Transfer Shipment Line"."Line No." := line;
+                    "Transfer Shipment Line".insert(false);
+                end;
+
+
             end;
 
             trigger OnPostDataItem()
@@ -110,7 +133,7 @@ report 50050 "Transfer Shipment Report "
                 ILE: record "Item Ledger Entry";
             begin
                 ILE.SetRange("Document No.", TransferHeader."No.");
-                ILE.SetRange("Document Type", ILE."Document Type"::"Transfer Shipment");//, ILE."Document Type"::"Direct Transfer");
+                ILE.SetRange("Document Type", ILE."Document Type"::"Transfer Shipment", ILE."Document Type"::"Direct Transfer");
 
                 if not ILE.FindFirst() then
                     error('il n''y a rien à imprimer %1 %2 %3', ILE."Order No.", ILE."Document Type", "No.");
@@ -126,21 +149,6 @@ report 50050 "Transfer Shipment Report "
             {
                 group("Options du rapport")
                 {
-                    field(TypeDocument; TypeDocument)
-                    {
-                        ApplicationArea = All;
-                        Caption = 'Type de document';
-                    }
-
-                    field(ClientNo; ClientNo)
-                    {
-                        ApplicationArea = All;
-                        Caption = 'N° Client';
-                        TableRelation = Customer."No.";
-                        Visible = TypeDocument = TypeDocument::"Bon de livraison";
-                        ShowMandatory = true;
-
-                    }
                 }
             }
         }
@@ -161,9 +169,7 @@ report 50050 "Transfer Shipment Report "
 
         Commentaire: Text;
 
-        TypeDocument: Option "Bon de livraison","Bon de sortie";
-        ClientNo, item_vat : Code[20];
-        ClientName: Text;
+        item_vat: Code[20];
+        reference: text;
         item_UP: Decimal;
-        reference: Text;
 }

@@ -87,7 +87,7 @@ report 50100 DevisReport
             dataitem("Sales Line"; "Sales Line")
             {
                 DataItemLink = "Document No." = FIELD("No.");
-                DataItemTableView = where("Document Type" = const("Sales Document Type"::Quote));
+                DataItemTableView = where("Document Type" = const("Sales Document Type"::Quote));//, Type = filter("Sales Line Type"::" " | "Sales Line Type"::Item));
                 DataItemLinkReference = SalesHeader;
 
 
@@ -217,7 +217,10 @@ report 50100 DevisReport
                 SE: Codeunit SalesEvents;
                 Customer: record Customer;
                 GLS: record "General Ledger Setup";
+                CU: Codeunit SalesEvents;
             begin
+
+                CU.CheckMargin(SalesHeader);
                 Customer.get("Sell-to Customer No.");
                 if Customer.Stamp then begin
                     GLS.get();

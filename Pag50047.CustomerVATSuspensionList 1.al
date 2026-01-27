@@ -104,6 +104,53 @@ page 50047 "Customer VAT Suspension List"
             }
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            action(CorrigerDocumentsVente)
+            {
+                Caption = 'Corriger TVA Documents';
+                Image = Recalculate;
+                ApplicationArea = All;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+
+                trigger OnAction()
+                var
+                    SalesHeader: Record "Sales Header";
+                    UpdateSuspensionCondition: Codeunit UpdateSuspensionCondition;
+                    ConfirmLbl: Label
+                  'Cette action va corriger les groupes TVA et CA des documents de vente non facturés pour le client %1. Voulez-vous continuer ?';
+                begin
+                    if not Confirm(ConfirmLbl, false, Rec."Customer No.") then
+                        exit;
+
+                    // devis
+                    SalesHeader.Reset();
+                    SalesHeader.setfilter("Document Type", '<>%1', SalesHeader."Document Type"::"Blanket Order");
+                    SalesHeader.SetRange("Sell-to Customer No.", Rec."Customer No.");
+                    SalesHeader.SetFilter("VAT Bus. Posting Group", '<>%1', Rec."VAT Bus. Posting Group");
+                    SalesHeader.SetFilter("Gen. Bus. Posting Group", '<>%1', Rec."Bus. Posting Group");
+
+                    // période
+                    SalesHeader.SetRange("Document Date", Rec."Start Date", Rec."End Date");
+
+                    if SalesHeader.FindSet(true) then
+                        repeat
+                            UpdateSuspensionCondition.CorrigerDocumentVente(
+                                SalesHeader,
+                                Rec."VAT Bus. Posting Group",
+                                Rec."Bus. Posting Group");
+                        until SalesHeader.Next() = 0;
+
+                    Message('Correction TVA terminée pour le client %1.', Rec."Customer No.");
+                end;
+            }
+        }
+    }
+
 
     trigger OnAfterGetRecord()
     begin

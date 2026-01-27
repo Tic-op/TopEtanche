@@ -390,7 +390,7 @@ page 50051 "Usual search Purchase"
         // message(FiltreRecherche);
         //Message(SearchFilter);
         //Message(FiltrerecharcheClean);
-        Itemrec.setfilter("Usual search", '*' + FiltrerecharcheClean + '*');
+        Itemrec.setfilter("Usual search", FiltrerecharcheClean);
 
         TotalCount := ItemRec.Count();
         CurrentCount := 0;
@@ -485,7 +485,8 @@ page 50051 "Usual search Purchase"
         foreach Token in InputText.Split('*') do begin
             /*    Token := DelChr(Token, '<>', ' ');
                if Token <> '' then */
-            Tokens.Add(Token);
+            if Token <> '' then
+                Tokens.Add(Token);
         end;
 
         if Tokens.Count = 0 then
@@ -563,7 +564,8 @@ page 50051 "Usual search Purchase"
         i: Integer;
     begin
         if StartIndex = Tokens.Count then begin
-            Result.Add(JoinTokens(Tokens));
+            if not Result.Contains(JoinTokens(Tokens)) then
+                Result.Add(JoinTokens(Tokens));
             exit;
         end;
 

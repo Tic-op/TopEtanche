@@ -1,12 +1,14 @@
-namespace Pharmatec.Pharmatec;
+
+namespace TopEtanch.TopEtanch;
 
 using Microsoft.Inventory.Item;
 using Microsoft.Foundation.Calendar;
 using Microsoft.Sales.Customer;
+using Microsoft.Pricing.PriceList;
 using Top.Top;
+using Microsoft.Warehouse.Structure;
 using Microsoft.Sales.History;
 using Microsoft.Sales.Document;
-using PHARMATECCLOUD.PHARMATECCLOUD;
 using Microsoft.Inventory.Ledger;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Purchases.Document;
@@ -174,6 +176,8 @@ tableextension 50005 Itemext extends Item
         }
         field(50201; "Prix marché"; decimal)
         {
+            DecimalPlaces = 3 : 3;
+
             trigger onvalidate()
             var
             begin
@@ -181,6 +185,9 @@ tableextension 50005 Itemext extends Item
                     validate("Unit Price", "Prix marché")
                 else
                     Validate("Unit Price", "Prix standard");
+
+                SyncPriceAndMargin(1);
+
 
             end;
 
@@ -189,6 +196,8 @@ tableextension 50005 Itemext extends Item
 
         Field(50202; "Prix standard"; decimal)
         {
+
+            DecimalPlaces = 3 : 3;
             trigger onvalidate()
             var
             begin
@@ -196,6 +205,32 @@ tableextension 50005 Itemext extends Item
                     validate("Unit Price", "Prix marché")
                 else
                     Validate("Unit Price", "Prix standard");
+
+                SyncPriceAndMargin(1);
+
+
+            end;
+
+        }
+
+        Field(50203; MrgMarché; decimal)
+        {
+            DecimalPlaces = 0 : 2;
+            trigger onvalidate()
+            var
+            begin
+                SyncPriceAndMargin(2);
+
+            end;
+
+        }
+        Field(50204; MrgStd; decimal)
+        {
+            DecimalPlaces = 0 : 2;
+            trigger onvalidate()
+            var
+            begin
+                SyncPriceAndMargin(2);
 
             end;
 
@@ -321,6 +356,66 @@ tableextension 50005 Itemext extends Item
         end;
         exit(NB);
     end; */
+
+    procedure SyncPriceAndMargin(CalcSource: Integer)
+    begin
+        if Rec."Unit Cost" = 0 then begin
+            Rec.MrgMarché := 0;
+            Rec.MrgStd := 0;
+            exit;
+        end;
+
+        case CalcSource of
+            1:
+                begin
+                    // Prix → % marge
+                    if Rec."Prix marché" <> 0 then
+                        Rec.MrgMarché :=
+                            ((Rec."Prix marché" - Rec."Unit Cost") / Rec."Unit Cost") * 100
+                    else
+                        Rec.MrgMarché := 0;
+
+                    if Rec."Prix standard" <> 0 then
+                        Rec.MrgStd :=
+                              ((Rec."Prix standard" - Rec."Unit Cost") / Rec."Unit Cost") * 100
+                    else
+                        Rec.MrgStd := 0;
+                end;
+
+            2:
+                begin
+
+                    if Rec.MrgMarché <> xRec.MrgMarché then
+                        Rec.validate("Prix marché", ROUND(
+                            Rec."Unit Cost" * (1 + Rec.MrgMarché / 100), 0.001, '=')
+                        );
+
+                    if Rec.MrgStd <> xRec.MrgStd then
+                        Rec.validate("Prix standard", ROUND(
+                            Rec."Unit Cost" * (1 + Rec.MrgStd / 100), 0.001, '='));
+
+                end;
+
+        end;
+    end;
+
+    procedure UpdateNewPrices(NewCost: Decimal) // the cost can be : Unit cost, or Cost in date (to be calculated)
+    var
+        SalesPriceList: Record "Price List Line";
+    begin
+        //let s consider that margins are fixes
+        if Rec.MrgMarché <> xRec.MrgMarché then
+            Rec.validate("Prix marché", ROUND(
+               NewCost * (1 + Rec.MrgMarché / 100), 0.001, '=')
+            );
+
+        if Rec.MrgStd <> xRec.MrgStd then
+            Rec.validate("Prix standard", ROUND(
+               NewCost * (1 + Rec.MrgStd / 100), 0.001, '='));
+
+        //We also apply that on sales price, active. at the end we remake it as active 
+
+    end;
 
     procedure GetPurchaseFiscalYear(RecLItem: Record Item; VAR QAchatN: Decimal; VAR "QAchatN-1": Decimal; VAR "QAchatN-2": Decimal; VAR NbAchatN: Integer; VAR "NbAchatN-1": Integer; VAR "NbAchatN-2": Integer)
     begin
@@ -481,203 +576,73 @@ tableextension 50005 Itemext extends Item
 
     end;
 
+    Procedure MargeGrosToAPPLY(): Decimal
 
 
-    /*  procedure CalculEcoulement(Datefirst: Date; Datelast: Date; Methode_calculVMJ: option "VMJ Effective","VMJ sur période"; BoolCalcul: Boolean): decimal
-     var
-     begin
-         if BoolCalcul = false then exit(0);
-         "Location Filter" := '';
-         SetAutoCalcFields("Qty. on Purch. Order", "Qty. on Sales Order", Inventory);
-         if Methode_calculVMJ = Methode_calculVMJ::"VMJ sur période" then begin
-             if CalculVMJ(Datefirst, Datelast, true) <> 0 then begin
-
-                 exit((Inventory - "Qty. on Sales Order") / CalculVMJ(Datefirst, Datelast, true));
-             end
-             else
-                 exit(0);
-         end
-         else begin
-             if CalculVMJEffective(Datefirst, Datelast, true) <> 0 then begin
-
-                 exit((Inventory - "Qty. on Sales Order") / CalculVMJEffective(Datefirst, Datelast, true));
-             end
-             else
-                 exit(0);
-
-         end;
+    var
+        LP: record "Price List Line";
+    begin
 
 
+        begin
+            LP.SetCurrentKey("Asset Type", "Asset No.", "Source Type", "Source No.", "Starting Date", "Currency Code", "Variant Code", "Unit of Measure Code", "Minimum Quantity");
+            LP.SetAscending("Starting Date", false);
+            LP.SetRange("Source Type", LP."Source Type"::"Customer Price Group");
+            LP.SetRange("Source No.", 'GROS');
+            /*  PriceListLine.SetRange("Asset Type", PriceListLine."Asset Type"::Item);
+             PriceListLine.SetRange("Asset No.",); */
+            LP.setrange("Product No.", "No.");
 
 
-     end; */
-
-    /*  procedure CalcRecommandation(Datefirst: Date; Datelast: Date; Methode_calculVMJ: option "VMJ Effective","VMJ sur période"): decimal;
-     var
-         Recommandation: decimal;
-         CD: DateFormula;
-
-     begin
-         SetAutoCalcFields("Qty. on Purch. Order", "Qty. on Sales Order", Inventory);
-         if "Couverture demandée" = 0 then exit(0);
-
-         if Methode_calculVMJ = Methode_calculVMJ::"VMJ sur période" then begin
-             if CalculVMJ(Datefirst, Datelast, true) <> 0 then
-                 Recommandation := Round(((("Couverture demandée") - CalculEcoulement(Datefirst, Datelast, Methode_calculVMJ::"VMJ sur période", true)) * CalculVMJ(Datefirst, Datelast, true) - "Qty. on Purch. Order"), 1, '>');
+            if LP.findlast() then
+                exit(LP.MrgStd)
+            else
+                exit(0)
 
 
-             if Recommandation > 0 then
-                 exit(Recommandation) else
-                 exit(-1)
-         end
-         else begin
-             if CalculVMJEffective(Datefirst, Datelast, true) <> 0 then
-                 Recommandation := Round(((("Couverture demandée") - CalculEcoulement(Datefirst, Datelast, Methode_calculVMJ::"VMJ Effective", true)) * CalculVMJEffective(Datefirst, Datelast, true) - "Qty. on Purch. Order"), 1, '>');
+        end;
 
 
-             if Recommandation > 0 then
-                 exit(Recommandation) else
-                 exit(-1)
-
-         end;
+    end;
 
 
 
-     end;
-  */
+    procedure ListeEmplacementDispo() EmplList: Text
+    var
+        binContent: Record "Bin Content";
+        loc0: code[25];
+    begin
+        binContent.SetRange("Item No.", "No.");
+        binContent.SetFilter(Quantity, '>0');
+
+        if binContent.FindSet() then
+            repeat
+                if loc0 <> binContent."Location Code" then
+                    EmplList := EmplList + ' \ ' + binContent."Location Code" + ' : ';
+                EmplList := EmplList + ' ' + binContent."Bin Code";
+
+                loc0 := binContent."Location Code";
+            until binContent.Next() = 0;
+    end;
+
+    procedure ShowListeEmplacementDispo()
+    var
+        binContent: Record "Bin Content";
+    begin
+        binContent.SetRange("Item No.", "No.");
+        binContent.SetFilter(Quantity, '>0');
+        if binContent.FindSet() then
+            Page.RunModal(Page::"Bin Content", binContent);
 
 
-    /*  procedure CalculVMJ(Datefirst: Date; Datelast: Date; BoolCalcul: Boolean): decimal
-     var
-         item: record item;
-         ILE: record "Item Ledger Entry";
-
-         VMJ: decimal;
-         int: integer;
-     begin
-         if BoolCalcul = false then exit(0);
-         ILE.SetCurrentKey("Item No.", "Posting Date");
-         ILE.setrange("Item No.", "No.");
-         ILE.setrange("Entry Type", "Item Ledger Entry Type"::Sale);
-         ILE.setrange("Posting Date", Datefirst, Datelast);
-         if Ile.findfirst() then begin
-             // Datefirst := ILE."Posting Date";
-             // ILE.FindLast();
-             // Datelast := ILE."Posting Date";
-             ILE.CalcSums(Quantity);
-             VMJ := abs(ILE.quantity / (Datelast - Datefirst + 1));
-             exit(VMJ);
-
-
-
-         end
-         else
-             exit(0);
-     end;
-  */
-
-    /*  procedure CalculVMJEffective(DateDebut: Date; DateFin: Date; BoolCalcul: Boolean): decimal
-
-     var
-         NJ: Decimal;
-         NJR: Decimal;
-         QtéCons: Decimal;
-         DDC: date;
-         ILE: record "Item Ledger Entry";
-         D0: date;
-         Item: record item;
-         Item0: record item;
-         CalendarMgmt: Codeunit "Calendar Management";
-         NJ_Repos: integer;
-         CMJ: decimal;
-         cal: record "Base Calendar";
-         baseCal: Record "Customized Calendar Change";
-         location: record Location;
-
-     begin
-         NJ := 0;   // Dispo
-         NJR := 0; // Rupture
-         QtéCons := 0;
-         DDC := 0D;
-         if DateDebut = 0D then exit(0);
-         if BoolCalcul = false then exit(0);
-
-         ILE.SETCURRENTKEY("Item No.", "Posting Date");
-         ILE.SETFILTER("Item No.", "No.");
-         ILE.SETRANGE("Posting Date", DateDebut, DateFin);
-
-         ILE.SETCURRENTKEY("Entry Type", Nonstock, "Item No.", "Posting Date");
-         ILE.SETFILTER("Entry Type", '%1|%2|%3|%4', ILE."Entry Type"::Sale, ILE."Entry Type"::Consumption, ILE."Entry Type"::"Assembly Consumption", "Item Ledger Entry Type"::"Negative Adjmt.");
-
-         IF ILE.FINDFIRST THEN
-             REPEAT
-                 QtéCons -= ILE.Quantity;
-                 IF ILE.Quantity < 0 THEN
-                     DDC := ILE."Posting Date";
-                 IF QtéCons <= 0 THEN
-                     DDC := 0D;
-             UNTIL ILE.NEXT = 0;
+    end;
 
 
 
-         Item.GET("No.");
-         Item0.GET("No.");
-         D0 := 0D;
-         D0 := DateDebut;
-         REPEAT
-             // Item0.SETFILTER("Location Filter", '<>%1&<>%2', 'A99', 'A98');
-             Item0.SETFILTER("Location Filter", '');
-             location.findfirst();
-             repeat
-                 if location.Type <> location.Type::Casse then
-                     item0.setfilter("Location Filter", '%1|%2', Item0."Location Filter", location.code)
-
-             until location.Next() = 0;
-
-             Item0.SETRANGE("Date Filter", D0);
 
 
 
-             // Item.SETFILTER("Location Filter", '<>%1&<>%2', 'A99', 'A98');
-             location.reset;
-             Item.SETFILTER("Location Filter", '');
-             location.findfirst();
-             repeat
-                 if location.Type <> location.Type::Casse then
-                     item0.setfilter("Location Filter", '%1|%2', Item0."Location Filter", location.code)
-
-             until location.Next() = 0;
 
 
-             Item.SETRANGE("Date Filter", DateDebut, D0);
-             Item.CALCFIELDS("Net Change");
-             IF Item."Net Change" > 0 // OR Item0."Sold Qty"  
-             THEN BEGIN
-                 NJ += 1;
-                 if baseCal.get() then
-                     IF CalendarMgmt.IsNonworkingDay(D0, baseCal) THEN //// Calendrier !!!!
-                         NJ_Repos += 1;
-             END
-             ELSE
-                 NJR += 1;
-
-
-
-             D0 := CALCDATE('<1D>', D0); /// := D0 + 1
-            // message(format(D0));
-         UNTIL D0 = DateFin;
-
-
-         //ERROR('%1',QtéCons);
-         IF (NJ - NJ_Repos) <> 0 THEN
-             CMJ := QtéCons / ((NJ - NJ_Repos) + 1);
-
-
-         exit(CMJ);
-
-     end;
-  */
-
-
-    ///## fin besoin Achat AM 
 }
+

@@ -12,9 +12,7 @@ tableextension 50012 BinContent extends "Bin Content"
             DataClassification = ToBeClassified;
         }
         Field(80000; Disponibilité; decimal)
-        {
-
-        }
+        { }
     }
     keys
     {

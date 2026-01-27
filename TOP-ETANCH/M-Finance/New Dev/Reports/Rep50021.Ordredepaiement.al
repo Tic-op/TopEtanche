@@ -68,7 +68,7 @@ report 50021 "Ordre de paiement "
             column(Code_RS; "Code RS") { }
             column(Nom; Nom) { }
             column(External_Document_No_; "External Document No.") { }
-            column(picture; CompanyInfo.Picture) { }
+            column(HeaderJPG; CompanyInfo.Picture) { }
             //     Column(HeaderJPG; CompanyInfo."Header JPG") { }
             //   column(FooterJPG; CompanyInfo."Footer JPG") { }
 

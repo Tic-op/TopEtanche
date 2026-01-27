@@ -244,7 +244,7 @@ report 50002 BL
         MontantNet2: Decimal;
         SalesPersonPhone: text;
         Solde: decimal;
-        reference: Code[20];
+        reference: text;
         Vendorref: Boolean;
 
 

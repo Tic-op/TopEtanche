@@ -3,6 +3,7 @@ using Microsoft.Sales.Document;
 using Microsoft.Sales.History;
 
 codeunit 50015 "Sales Document Line Mngmt"
+
 {
     procedure InsertLinesFromSalesDoc(SalesDocNo: Code[20]; SalesDocType: Integer; var LDV: Record "Ligne DocVente Regroupée" temporary)
 
@@ -10,7 +11,7 @@ codeunit 50015 "Sales Document Line Mngmt"
         if SalesDocNo = '' then
             exit;
         LDV.DeleteAll();
-        IF SalesDocType > 0 then
+        IF SalesDocType = 0 then
             InsertLinesFromSalesDocument(SalesDocNo, SalesDocType, LDV);
         IF SalesDocType = 110 then
             InsertLinesFromSalesShipment(SalesDocNo, LDV);
@@ -34,7 +35,7 @@ codeunit 50015 "Sales Document Line Mngmt"
 
         if Lines.FindSet() then
             repeat
-                InsertOrAccumulateLDV(
+                InsertOrAccumulateLDV('',
                     Lines."No.",
                     Lines.Description,
                     Lines.Quantity,
@@ -61,7 +62,7 @@ codeunit 50015 "Sales Document Line Mngmt"
 
         if Lines.FindSet() then
             repeat
-                InsertOrAccumulateLDV(
+                InsertOrAccumulateLDV('',
                     Lines."No.",
                     Lines.Description,
                     Lines.Quantity,
@@ -78,28 +79,53 @@ codeunit 50015 "Sales Document Line Mngmt"
     local procedure InsertLinesFromSalesInvoice(SalesDocNo: Code[20]; var LDV: Record "Ligne DocVente Regroupée" temporary)
     var
         Lines: Record "Sales Invoice Line";
+        ShipNoForComment: Code[25];
+        SSH: Record "Sales Shipment Header";
 
     begin
         Lines.SetRange("Document No.", SalesDocNo);
-        Lines.SetRange(Type, Lines.Type::Item);
+        Lines.setfilter(Type, '%1|%2', Lines.Type::Item, Lines.Type::" ");
 
         if Lines.FindSet() then
             repeat
-                InsertOrAccumulateLDV(
-                    Lines."No.",
-                    Lines.Description,
-                    Lines.Quantity,
-                    Lines."Unit Price",
-                    Lines."Line Discount %",
-                    Lines.Amount,
-                    Lines."VAT %",
-                    Lines."Amount Including VAT",
-                    Lines."Unit of Measure Code",
-                    LDV);
+
+
+                if Lines.Type = Lines.Type::Item then
+                    InsertOrAccumulateLDV(Lines."Shipment No.",
+                        Lines."No.",
+                        Lines.Description,
+                        Lines.Quantity,
+                        Lines."Unit Price",
+                        Lines."Line Discount %",
+                        Lines.Amount,
+                        Lines."VAT %",
+                        Lines."Amount Including VAT",
+                        Lines."Unit of Measure Code",
+                        LDV)
+
+                else
+
+                    if TryGetShipmentNoFromDesc(Lines.Description, ShipNoForComment) then begin//Chercher le no BL dans la descr du commentaire
+
+                        SSH.GET(ShipNoForComment);
+                        InsertOrAccumulateLDV(ShipNoForComment,
+                             '',
+                              Lines.Description + ' du ' + Format(SSH."Posting Date"),
+                              Lines.Quantity,
+                              Lines."Unit Price",
+                              Lines."Line Discount %",
+                              Lines.Amount,
+                              Lines."VAT %",
+                              Lines."Amount Including VAT",
+                              Lines."Unit of Measure Code",
+                              LDV);
+                    end;
+
             until Lines.Next() = 0;
     end;
 
-    local procedure InsertLinesFromSalesCreditMemo(SalesDocNo: Code[20]; var LDV: Record "Ligne DocVente Regroupée" temporary)
+    local procedure InsertLinesFromSalesCreditMemo(SalesDocNo: Code[20]; var
+                                                                             LDV: Record "Ligne DocVente Regroupée" temporary)
     var
         Lines: Record "Sales Cr.Memo Line";
 
@@ -109,7 +135,7 @@ codeunit 50015 "Sales Document Line Mngmt"
 
         if Lines.FindSet() then
             repeat
-                InsertOrAccumulateLDV(
+                InsertOrAccumulateLDV('',
                     Lines."No.",
                     Lines.Description,
                     Lines.Quantity,
@@ -125,6 +151,7 @@ codeunit 50015 "Sales Document Line Mngmt"
 
 
     local procedure InsertOrAccumulateLDV(
+        ShipmentNo: Code[20];
         ItemNo: Code[20];
         Description: Text[100];
         Quantity: Decimal;
@@ -142,6 +169,7 @@ codeunit 50015 "Sales Document Line Mngmt"
 
 
         if LDV.Get(
+            ShipmentNo,
             ItemNo,
             UnitPrice,
             LineDiscountPct,
@@ -156,6 +184,7 @@ codeunit 50015 "Sales Document Line Mngmt"
         end else begin
             //  insertion
             LDV.Init();
+            LDV."Shipment No." := ShipmentNo;
             LDV."Item No." := ItemNo;
             LDV.Description := Description;
             LDV.Quantity := Quantity;
@@ -168,6 +197,41 @@ codeunit 50015 "Sales Document Line Mngmt"
             LDV."Unit of Measure Code" := UOMCode;
             LDV.Insert();
         end;
+    end;
+
+
+    local procedure TryGetShipmentNoFromDesc(SourceTxt: Text; var ShipmentNo: Code[20]): Boolean
+    var
+        StartPos: Integer;
+        EndPos: Integer;
+        Prefix: Text;
+    begin
+        Clear(ShipmentNo);
+
+        Prefix := 'N° expédition ';
+
+        if SourceTxt = '' then
+            exit(false);
+
+
+        StartPos := StrPos(SourceTxt, Prefix);
+        if StartPos = 0 then
+            exit(false);
+
+        StartPos := StartPos + StrLen(Prefix);
+
+        EndPos := StrPos(SourceTxt, ':');
+        if (EndPos = 0) or (EndPos <= StartPos) then
+            exit(false);
+
+        ShipmentNo := CopyStr(SourceTxt, StartPos, EndPos - StartPos);
+
+        ShipmentNo := DelChr(ShipmentNo, '=', ' ');
+
+        if ShipmentNo = '' then
+            exit(false);
+
+        exit(true);
     end;
 
 

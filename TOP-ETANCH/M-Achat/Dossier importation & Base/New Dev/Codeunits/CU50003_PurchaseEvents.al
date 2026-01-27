@@ -359,7 +359,7 @@ codeunit 50113 PurchaseEvents
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Purchase Line",
-           'OnAfterValidateEvent', 'Location Code', false, false)]
+           OnAfterValidateEvent, 'Location Code', false, false)]
     local procedure PurchaseLine_OnAfterValidateLocation(
            var Rec: Record "Purchase Line";
            xRec: Record "Purchase Line")
@@ -369,6 +369,159 @@ codeunit 50113 PurchaseEvents
             // Et si BC l’a écrasé
             if Rec."Direct Unit Cost" <> xRec."Direct Unit Cost" then begin
                 Rec.Validate("Direct Unit Cost", xRec."Direct Unit Cost");
+            end;
+        end;
+
+        if xRec."Line Discount %" <> 0 then begin
+            // Et si BC l’a écrasé
+            if Rec."Line Discount %" <> xRec."Line Discount %" then begin
+                Rec.Validate("Line Discount %", xRec."Line Discount %");
+            end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Page, Page::"Document Attachment Factbox", OnBeforeDrillDown, '', false, false)]
+    local procedure OnBeforeDrillDown(DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef);
+    var
+
+        ImportFolder: Record "Import Folder";
+
+    begin
+        case DocumentAttachment."Table ID" of
+
+            Database::"Import Folder":
+                begin
+                    RecRef.Open(DATABASE::"Import Folder");
+                    if ImportFolder.Get(DocumentAttachment."No.") then
+                        RecRef.GetTable(ImportFolder);
+                end;
+
+
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Page, Page::"Document Attachment Details", OnAfterOpenForRecRef, '', false, false)]
+    local procedure OnAfterOpenForRecRef(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef);
+    var
+        FieldRef: FieldRef;
+        RecNo: Code[20];
+    begin
+        case RecRef.Number of
+
+            DATABASE::"Import Folder":
+                begin
+                    FieldRef := RecRef.Field(1);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.SetRange("No.", RecNo);
+                end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Document Attachment", OnAfterInitFieldsFromRecRef, '', false, false)]
+    local procedure OnAfterInitFieldsFromRecRef(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef)
+    var
+        FieldRef: FieldRef;
+        RecNo: Code[20];
+    begin
+        case RecRef.Number of
+
+            DATABASE::"Import Folder":
+                begin
+                    FieldRef := RecRef.Field(1);
+                    RecNo := FieldRef.Value;
+                    DocumentAttachment.Validate("No.", RecNo);
+                end;
+        end;
+    end;
+
+    procedure CancelSalesPrice(Group: Code[25]; "No.": Code[25]; Date0: Date)
+    var
+        SalesPrice: Record "Price List Line";
+    // SalesPriceLine: record "Price List Line";
+    begin
+        SalesPrice.RESET;
+        SalesPrice.SETFILTER("Product No.", "No.");
+        SalesPrice.SETRANGE("Source Type", SalesPrice."Source Type"::"Customer Price Group");
+        SalesPrice.setrange("Source No.", Group);
+
+        IF SalesPrice.FINDFIRST THEN
+            REPEAT
+                IF SalesPrice."Starting Date" = 0D THEN
+                    ERROR('Date début est nulle dans la quantitative %1', "No.");
+
+
+                IF (SalesPrice."Ending Date" = 0D) OR (SalesPrice."Ending Date" >= TODAY) THEN BEGIN
+                    SalesPrice."Ending Date" := CALCDATE('<-1D>', Date0);
+                    SalesPrice.Status := SalesPrice.Status::Inactive;
+
+                    SalesPrice.Modify();
+                END;
+
+            UNTIL SalesPrice.NEXT = 0;
+
+
+
+    end;
+
+
+    procedure InsertSalesPrice(Group: Code[25]; "No.": Code[25]; Date0: Date; Price: Decimal)
+    var
+        SalesPrice: Record "Price List Line";
+        SalesPriceHeader: Record "Price List header";
+        SalesPriceLine: record "Price List Line";
+        ItemRec: Record Item;
+
+    begin
+
+        SalesPriceHeader.SetRange("Source Type", SalesPriceHeader."Source Type"::"Customer Price Group");
+        SalesPriceHeader.setrange("Source No.", Group);
+
+        if SalesPriceHeader.FindFirst() then begin
+            clear(SalesPrice);
+            SalesPrice.init();
+            SalesPrice."Source Type" := SalesPrice."Source Type"::"Customer Price Group";
+            SalesPrice.validate("Source No.", Group);
+            SalesPrice.validate("Product No.", "No.");
+            SalesPrice.Validate("Starting Date", Date0);
+            SalesPrice.validate("Ending Date", 0D);
+            SalesPrice.Validate("Allow Invoice Disc.", false);
+            SalesPrice.validate("Minimum Quantity", 1);
+            SalesPrice.Validate(Status, SalesPrice.Status::Active);//By AM
+            SalesPrice.Validate("Prix standard", Price);// BY AM 230126
+            SalesPrice.Validate("Price List Code", SalesPriceHeader.Code);
+
+
+            if not SalesPrice.Insert() then begin
+                message('SalesPrice n''est pas inserée');
+                modifySalesPrice(Group, "No.", Date0, Price);
+
+
+            end;
+            SalesPrice.Verify();
+            // ItemRec.get("No.");
+            // ItemRec.InsertArchivePrix(Group, Price);
+
+
+
+        end
+        else
+            message('vous devez créer une liste des prix pour le group %1', group);
+
+    end;
+
+    procedure ModifySalesPrice(Group: Code[25]; "No.": Code[25]; Date0: Date; Price: Decimal)
+    var
+        SalesPrice: Record "Price List Line";
+        SalesPriceHeader: Record "Price List header";
+        SalesPriceLine: record "Price List Line";
+        item: Record item;
+    begin
+        if item.get("No.") then begin
+            if SalesPrice.get("No.", SalesPrice."Source Type"::"Customer Price Group", Group, date0, '', '', item."Sales Unit of Measure", 1) then begin
+                SalesPrice.Validate("Prix standard", Price);// AM 23012026
+                SalesPrice."Ending Date" := 0D;
+                SalesPrice.Status := SalesPrice.Status::active;//By AM
+                SalesPrice.Modify();
             end;
         end;
     end;

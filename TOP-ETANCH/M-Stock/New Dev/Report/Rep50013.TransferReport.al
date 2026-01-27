@@ -1,28 +1,28 @@
-namespace Pharmatec.Pharmatec;
+namespace TopEtanch.TopEtanch;
+
 
 using Microsoft.Inventory.Transfer;
-using Microsoft.CRM.Contact;
-using Microsoft.Sales.Customer;
 using Microsoft.Foundation.Company;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Sales.Customer;
 
-report 50051 "TransferShipReport Complete"
+report 50049 "Transfer Report"
 {
     ApplicationArea = All;
-    Caption = 'Transfer Shipment Report';
+    Caption = 'Transfer Report';
     UsageCategory = ReportsAndAnalysis;
-    RDLCLayout = 'Transfert Shipment.RDL';
+    RDLCLayout = 'Transfert.RDL';
     DefaultLayout = RDLC;
     Permissions = tabledata "Item Ledger Entry" = RImd,
-                  tabledata "Transfer shipment Header" = Rimd;
+                  tabledata "Transfer Header" = Rimd;
 
     dataset
     {
-        dataitem(TransferHeader; "Transfer Shipment Header")
+        dataitem(TransferHeader; "Transfer Header")
         {
             column(PostingDate; "Posting Date") { }
-            column(No; "No.") { }
+            column(No; "Last Shipment No.") { }
 
             column(TransfertoCode; "Transfer-to Code") { }
             column(TransferfromCode; "Transfer-from Code") { }
@@ -34,31 +34,30 @@ report 50051 "TransferShipReport Complete"
             column(NomDestination; NomDestination) { }
             column(NomSource; NomSource) { }
 
-            column(Commentaire; Commentaire) { }
+            column(TransportMethod; "Transport Method") { }
+
             column(CompanyAdress; CompanyAdress) { }
             column(Companyphone; Companyphone) { }
             column(CompanyVatnum; CompanyVatnum) { }
             column(picture; companyinfo.Picture) { }
             column(EMAIL; companyinfo."E-Mail") { }
+            column(item_UP; item_UP) { }
 
-
-
-
-            dataitem("Transfer Shipment Line"; "Transfer Shipment Line")
+            dataitem("Transfer Line"; "Transfer Line")
             {
-                DataItemLink = "Document No." = FIELD("No.");
+                DataItemLink = "Document No." = field("No.");
                 DataItemLinkReference = TransferHeader;
+                DataItemTableView = where("Outstanding Qty. (Base)" = const(0));
                 UseTemporary = true;
 
+
                 column(ILE_Qty; Abs(Quantity)) { }
-                column(Item_No_; "Item No.") { }
+                column(reference; reference) { }
                 column(item_description; item_description) { }
+                column(Unit_of_Measure; "Unit of Measure Code") { }
+
                 column(Document_No_; "Document No.") { }
                 column(item_vat; item_vat) { }
-                column(item_UP; item_UP) { }
-                column(reference; reference) { }
-
-                column(Unit_of_Measure; "Unit of Measure Code") { }
 
                 trigger OnAfterGetRecord()
                 var
@@ -73,19 +72,20 @@ report 50051 "TransferShipReport Complete"
                         item_UP := item."Unit Price";
                         reference := item."Vendor Item No.";
 
-                    end;
 
+                    end;
 
                 end;
             }
 
+
             trigger OnAfterGetRecord()
             var
-                Cust: Record Customer;
-                TL: Record "Transfer shipment Line";
+                TL: Record "Transfer Line";
                 j: Integer;
                 line: Integer;
                 temp_i: Integer;
+
             begin
                 companyinfo.Get();
                 companyinfo.CalcFields(Picture);
@@ -98,6 +98,7 @@ report 50051 "TransferShipReport Complete"
                 MagasinDestination := Format("Transfer-to Code");
                 NomSource := "Transfer-from Name";
                 NomDestination := "Transfer-to Name";
+
                 Clear(TL);
                 ;
                 TL.SetRange("Document No.", "No.");
@@ -105,11 +106,11 @@ report 50051 "TransferShipReport Complete"
                 j := TL.count;
 
                 repeat
-                    "Transfer Shipment Line".init;
+                    "Transfer Line".init;
 
 
-                    "Transfer Shipment Line" := TL;
-                    "Transfer Shipment Line".Insert();
+                    "Transfer Line" := TL;
+                    "Transfer Line".Insert();
 
                     line := TL."Line No.";
 
@@ -118,25 +119,14 @@ report 50051 "TransferShipReport Complete"
 
                 for temp_i := j MOD 22 to 21 do begin
                     line += 11;
-                    "Transfer Shipment Line".Init();
-                    "Transfer Shipment Line"."Document No." := TransferHeader."No.";
-                    "Transfer Shipment Line"."Line No." := line;
-                    "Transfer Shipment Line".insert(false);
+                    "Transfer Line".Init();
+                    "Transfer Line"."Document No." := TransferHeader."No.";
+                    "Transfer Line"."Line No." := line;
+                    "Transfer Line".insert(false);
                 end;
-
-
             end;
 
-            trigger OnPostDataItem()
-            var
-                ILE: record "Item Ledger Entry";
-            begin
-                ILE.SetRange("Document No.", TransferHeader."No.");
-                ILE.SetRange("Document Type", ILE."Document Type"::"Transfer Shipment", ILE."Document Type"::"Direct Transfer");
 
-                if not ILE.FindFirst() then
-                    error('il n''y a rien à imprimer %1 %2 %3', ILE."Order No.", ILE."Document Type", "No.");
-            end;
         }
     }
 
@@ -148,6 +138,7 @@ report 50051 "TransferShipReport Complete"
             {
                 group("Options du rapport")
                 {
+
                 }
             }
         }
@@ -156,19 +147,22 @@ report 50051 "TransferShipReport Complete"
     var
         item_description: Text;
         companyinfo: Record "Company Information";
+        titre: Text;
+        Commentaire: Text;
 
         CompanyAdress: Text;
         Companyphone: Text;
-        CompanyVatnum, ClientCity, ClientAdress2, ClientAdress : Text;
+        CompanyVatnum: Text;
 
         MagasinDestination: Text;
         Magasinsource: Text;
         NomDestination: Text;
-        NomSource: Text;
+        NomSource, ClientCity, ClientAdress2, ClientAdress : Text;
 
-        Commentaire: Text;
+        TypeDocument: Option "Bon de livraison","Bon de sortie";
 
-        item_vat: Code[20];
-        reference: code[25];
+        ClientNo, item_vat : Code[20];
+        ClientName: Text;
         item_UP: Decimal;
+        reference: text;
 }

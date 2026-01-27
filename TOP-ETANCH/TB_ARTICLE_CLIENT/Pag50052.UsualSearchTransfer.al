@@ -298,7 +298,7 @@ page 50052 "Usual Search Transfer"
                 TransferL.validate("Item No.", Rec."No.");
                 TransferL.Validate(Quantity, Rec."Reorder Quantity");
 
-                if TransferL.insert() then begin
+                if TransferL.insert(true) then begin
                     rec."Reorder Quantity" := 0;
                 end;
 
@@ -382,7 +382,7 @@ page 50052 "Usual Search Transfer"
         // message(FiltreRecherche);
         //Message(SearchFilter);
         //Message(FiltrerecharcheClean);
-        Itemrec.setfilter("Usual search", '*' + FiltrerecharcheClean + '*');
+        Itemrec.setfilter("Usual search", FiltrerecharcheClean);
 
         TotalCount := ItemRec.Count();
         CurrentCount := 0;
@@ -453,7 +453,8 @@ page 50052 "Usual Search Transfer"
         foreach Token in InputText.Split('*') do begin
             /*    Token := DelChr(Token, '<>', ' ');
                if Token <> '' then */
-            Tokens.Add(Token);
+            if Token <> '' then
+                Tokens.Add(Token);
         end;
 
         if Tokens.Count = 0 then
@@ -531,7 +532,8 @@ page 50052 "Usual Search Transfer"
         i: Integer;
     begin
         if StartIndex = Tokens.Count then begin
-            Result.Add(JoinTokens(Tokens));
+            if not Result.Contains(JoinTokens(Tokens)) then
+                Result.Add(JoinTokens(Tokens));
             exit;
         end;
 

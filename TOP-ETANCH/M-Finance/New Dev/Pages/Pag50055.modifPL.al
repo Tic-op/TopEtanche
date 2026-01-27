@@ -61,7 +61,44 @@ page 50055 "modif PL"
                 {
                     ToolTip = 'Specifies the file reference which will be used in the electronic payment (ETEBAC) file.';
                 }
+                field(Posted; Rec.Posted)
+                { }
             }
         }
     }
+    actions
+    {
+        area(Navigation)
+        {
+            action(Modify)
+            {
+                ApplicationArea = All;
+                Caption = 'Refresh';
+                Image = Refresh;
+                ToolTip = 'Refresh the page to show the latest data.';
+                trigger OnAction()
+                var
+                    PL: Record "Payment Line";
+
+                begin
+                    pl.SetFilter(PL."No.", 'CC2600017');
+
+                    if pl.FindFirst() then begin
+
+                        repeat
+                            pl.Posted := true;
+                            pl.Modify(false);
+                            Commit();
+                        until pl.Next() = 0;
+                        Message('Payment Line modified successfully.');
+
+                    end
+                    else
+                        Message('Payment Line not found.');
+
+                end;
+            }
+        }
+    }
+
 }

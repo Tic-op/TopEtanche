@@ -248,11 +248,15 @@ codeunit 50052 SalesEvents
     Procedure ONbeforePost(var SalesHeader: Record "Sales Header")
     var
     begin
+        CheckMargin(SalesHeader);
         ControlSalesPerson(SalesHeader);
         CheckBlocage(SalesHeader);
         CheckApprobation(SalesHeader);
         //  ControlSource(SalesHeader);//Momentary
+        ControlDateComptabilisation(SalesHeader);
         StampEvent(SalesHeader);
+
+
 
 
 
@@ -637,7 +641,7 @@ codeunit 50052 SalesEvents
 
 
 
-    [EventSubscriber(ObjectType::Codeunit, codeunit::"sales-post", OnbeforePostSalesDoc, '', false, false)]
+    // [EventSubscriber(ObjectType::Codeunit, codeunit::"sales-post", OnbeforePostSalesDoc, '', false, false)]
     procedure StampEvent(SalesHeader: Record "Sales Header")
     var
         i: Enum "Sales Document Status";
@@ -862,5 +866,36 @@ codeunit 50052 SalesEvents
             PAGE.Run(PAGE::"Posted Sales Shipment", SalesShipmentHeader)
         else
             Message('Aucune expédition vente postée trouvée.');
+    end;
+
+    Procedure ControlDateComptabilisation(var SalesHeader: Record "Sales Header") // AM220126
+    begin
+        if SalesHeader."Document Type" <> SalesHeader."Document Type"::Order then exit;
+
+        if ((SalesHeader."Posting Date" <> Today) and (SalesHeader.Ship)) then error('Date comptabilisation doit être égale à aujourd''hui');
+
+
+    end;
+
+    procedure CheckMargin(SalesHeader: Record "Sales Header")
+    var
+        SalesLine: Record "Sales Line";
+        Item: Record Item;
+
+    begin
+
+        if (SalesHeader."Document Type" = SalesHeader."Document Type"::"Credit Memo") OR
+         (SalesHeader."Document Type" = SalesHeader."Document Type"::"Return Order") then
+            exit;
+        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+        SalesLine.SetRange("Document No.", SalesHeader."No.");
+        SalesLine.SetRange(Type, SalesLine.Type::Item);
+        if SalesLine.FindSet() then
+            repeat
+                if Item.get(SalesLine."No.") and (SalesLine.Quantity <> 0) then
+                    if (Item."Unit Cost" * SalesLine.Quantity) >= SalesLine.amount then
+                        Error('La marge doit être positive dans %1', SalesLine."No.");
+            until SalesLine.Next() = 0;
+
     end;
 }

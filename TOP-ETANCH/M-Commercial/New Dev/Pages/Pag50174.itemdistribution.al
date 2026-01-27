@@ -257,10 +257,11 @@ page 50174 "itemdistribution"
                 repeat
                     SL."Line No." := SL.GetLastLineNo() + 1000;
                     SL."Location Code" := Rec."Location Code";
-                    if rec."Bin Code" <> '' then
-                        SL.Validate("Bin Code", Rec."Bin Code"); // new AM 301225
+
                     SL.Validate("Quantity (Base)", Rec."Qty to assign");
                     SL.Validate("Qty. to Ship (Base)", Rec."Qty to assign");
+                    if rec."Bin Code" <> '' then
+                        SL.Validate("Bin Code", Rec."Bin Code"); // new AM 301225
                     SL.Validate("Unit Price", SlToDelete."Unit Price");
                     SL.Validate("Line Discount %", SlToDelete."Line Discount %");
                     SL.Insert();

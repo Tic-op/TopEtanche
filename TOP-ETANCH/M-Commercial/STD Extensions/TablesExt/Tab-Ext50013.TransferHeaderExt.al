@@ -27,16 +27,36 @@ tableextension 50013 TransferHeaderExt extends "Transfer Header"
         {
             FieldClass = FlowField;
             //CalcFormula = count("Ordre de preparation" where("Order No" = field("No."), Statut = filter("Créé" | "Regroupé" | "Préparé" | "En cours")));
-            CalcFormula = count("Ordre de preparation" where("Order No" = field("No.")));
+            CalcFormula = count("Ordre de preparation" where("Order No" = field("No."), "document type" = const("Transfert")));
 
         }
-   Field(50103; "Num récéption"; code[20])
+        Field(50103; "Num récéption"; code[20])
         {
 
         }
-
+        modify("Transfer-from Code")
+        {
+            trigger OnAfterValidate()
+            var
+            begin
+                CalcFields("Bon de preparation");
+                if "Bon de preparation" > 0 then
+                    error('Impossible de changer le magasin, des bon de préparations ont été générés');
+            end;
+        }
+        modify("Transfer-To Code")
+        {
+            trigger OnAfterValidate()
+            var
+            begin
+                CalcFields("Bon de preparation");
+                if "Bon de preparation" > 0 then
+                    error('Impossible de changer le magasin, des bon de préparations ont été générés');
+            end;
+        }
 
     }
+
 
 
 }

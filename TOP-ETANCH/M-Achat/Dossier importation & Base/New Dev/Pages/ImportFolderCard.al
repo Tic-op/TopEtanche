@@ -98,9 +98,7 @@ page 50059 "Import folder card"
             part(DocumentsAttach; "Document Attachment Factbox")
             {
                 ApplicationArea = All;
-
-                SubPageLink = "Table ID" = CONST(50009), "No." = FIELD("No.");
-
+                SubPageLink = "Table ID" = CONST(50119), "No." = FIELD("No.");
             }
         }
     }
@@ -156,6 +154,22 @@ page 50059 "Import folder card"
                     end else
                         Message('Aucune réception n''est associée au dossier %1', Rec."No.");
                 end;
+            }
+            action("Gérer les prix de vente")
+            {
+                Image = PriceWorksheet;
+                ApplicationArea = all;
+                trigger OnAction()
+                var
+                    RcptLine: Record "Purch. Rcpt. Line";
+                    RcptHeader: Record "Purch. Rcpt. Header";
+                begin
+                    RcptHeader.SetRange("DI No.", Rec."No.");
+                    RcptHeader.FindFirst();
+                    RcptLine.SetRange("Document No.", RcptHeader."No.");
+                    Page.RunModal(Page::"Purch Rcpt Pricing Worksheet", RcptLine);
+                end;
+
             }
         }
     }

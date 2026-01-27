@@ -1,11 +1,11 @@
-namespace Ticop_pharmatec.Ticop_pharmatec;
+namespace Top.Top;
 
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
 using Microsoft.Finance.GeneralLedger.Setup;
 using System.Security.User;
 using Microsoft.CRM.Team;
-using PHARMATECCLOUD.PHARMATECCLOUD;
+
 using Microsoft.Inventory.Location;
 using Microsoft.Sales.Setup;
 using Microsoft.Foundation.NoSeries;
@@ -286,6 +286,18 @@ tableextension 50132 SalesHeader extends "Sales Header"
                 Error('Vous ne pouvez pas supprimer un document qui a déjà été facturé : %1', "Posting No.");
         end; */
 
+    trigger OnBeforeDelete()
+
+
+    begin
+        if ("Posting No." <> '') then
+            Error('Ce document comporte un numéro de facture réservé %1', "Posting No.");
+        ;
+        if ("Shipping No." <> '') then
+            Error('Ce document comporte un numéro de BL réservé %1', "Shipping No.");
+        ;
+    end;
+
     trigger OnAfterDelete()
     var
         salesL: Record "Sales Line";
@@ -450,12 +462,12 @@ tableextension 50132 SalesHeader extends "Sales Header"
             Message('Attention !! Client en %1', "VAT Bus. Posting Group");
             Validate("VAT Bus. Posting Group", VatSusp."VAT Bus. Posting Group");
             validate("Gen. Bus. Posting Group", VatSusp."Bus. Posting Group");
-            "External Document No." := VatSusp.Description;
+            "Your reference" := VatSusp.Description;
         end
         ELSE begin
             Validate("VAT Bus. Posting Group", Cust."VAT Bus. Posting Group");
             validate("Gen. Bus. Posting Group", Cust."Gen. Bus. Posting Group");
-            "External Document No." := '';
+            "Your reference" := '';
 
         end;
 

@@ -112,7 +112,7 @@ tableextension 50140 CustomerExtension extends Customer
                 /*         Salessetup.Get();
               If Not Salessetup."PEC Type facturation" then exit ; */
 
-                "Combine Shipments" := (("Type de facturation" = "Type de facturation"::"Commande Totale") AND ("Type de facturation" = "Type de facturation"::"Fact. Mensuelle"));
+                // "Combine Shipments" := (("Type de facturation" = "Type de facturation"::"Commande Totale") OR ("Type de facturation" = "Type de facturation"::"Fact. Mensuelle"));
                 if "Type de facturation" <> "Type de facturation"::"Fact. Plafond" then Seuil := 0;
                 modify();
             end;

@@ -17,13 +17,13 @@ pageextension 50083 "item ledger entries" extends "Item Ledger Entries"
 
             }
 
-            field(Fam; GetFamillyFromItem(Rec."Item No."))
-            {
+            /*   field(Fam; GetFamillyFromItem(Rec."Item No."))
+              {
 
-                ApplicationArea = all;
-                Caption = 'Famille';
-                Editable = false;
-            }
+                  ApplicationArea = all;
+                  Caption = 'Famille';
+                  Editable = false;
+              } */
             field("Sous-famille 1"; Rec."Sous-famille 1")
             {
                 ApplicationArea = all;
@@ -32,11 +32,19 @@ pageextension 50083 "item ledger entries" extends "Item Ledger Entries"
             {
                 ApplicationArea = all;
             }
+            field("Sous-famille 3"; Rec."Sous-famille 3")
+            {
+                ApplicationArea = all;
+            }
+            field("Sous-famille 4"; Rec."Sous-famille 4")
+            {
+                ApplicationArea = all;
+            }
             field("Désignation"; Rec."Designation")
             {
                 ApplicationArea = all;
             }
-            field("code vendeur"; rec."code vendeur")
+            field("code vendeur"; rec."codevendeur")
             {
                 ApplicationArea = all;
             }
@@ -136,7 +144,11 @@ pageextension 50083 "item ledger entries" extends "Item Ledger Entries"
         }
         addafter("Item No.")
         {
-            field("reference fournisseur"; Rec."reference fournisseur")
+            field("reference fournisseur"; Rec."referencefournisseur")
+            {
+                ApplicationArea = all;
+            }
+            field("reference origine"; Rec."reference origine")
             {
                 ApplicationArea = all;
             }

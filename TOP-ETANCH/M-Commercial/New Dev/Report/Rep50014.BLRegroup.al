@@ -28,7 +28,16 @@ report 50014 "BL RGRP"
             {
 
             }
+
+            column(Your_Reference; "Your Reference")
+            {
+
+            }
             column(Posting_Date; "Posting Date")
+            {
+
+            }
+            column(VAT_Registration_No_; "VAT Registration No.")
             {
 
             }
@@ -79,7 +88,10 @@ report 50014 "BL RGRP"
                 column(Quantity; Quantity) { }
                 column(Unit_Price; "Unit Price") { }
                 column(Unit_of_Measure_Code; "Unit of Measure Code") { }
-                column(VAT__; "VAT %") { }
+                column(VAT__; "VAT %")
+                {
+
+                }
                 column(Line_Discount__; "Line Discount %") { }
                 column(Amount; Amount) { }
 

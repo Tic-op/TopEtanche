@@ -1,4 +1,5 @@
-namespace PHARMATECCLOUD.PHARMATECCLOUD;
+namespace TopEtanch.TopEtanch;
+
 using Microsoft.Finance.RoleCenters;
 using System.Security.User;
 

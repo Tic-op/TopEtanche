@@ -1,4 +1,4 @@
-namespace BSPCloud.BSPCloud;
+namespace TopEtanch.TopEtanch;
 
 page 50039 "Offre de prix"
 {

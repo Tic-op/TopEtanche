@@ -1,4 +1,5 @@
-namespace PHARMATEC.PHARMATEC;
+
+namespace TopEtanch.TopEtanch;
 
 using Microsoft.Purchases.Payables;
 using Microsoft.Purchases.Vendor;

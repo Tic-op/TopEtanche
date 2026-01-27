@@ -31,7 +31,7 @@ report 50006 "facture non validée"
             column(CompanyEmail; companyInf."E-Mail") { }
             column(CompanyWeb; companyInf."Home Page") { }
 
-            column(Sell_to_Customer_Name; "Sell-to Customer Name")
+            column(Sell_to_Customer_Name; NomClient)
             {
 
             }
@@ -211,6 +211,9 @@ report 50006 "facture non validée"
                 item: Record Item;
                 SE: Codeunit SalesEvents;
             begin
+                If NomClient = '' then
+                    NomClient := "Sell-to Customer Name";
+                if "Sell-to Customer Name 2" <> '' then NomClient := "Sell-to Customer Name 2";
                 companyInf.get;
                 companyInf.CalcFields(Picture);
                 ncommande := '';
@@ -255,6 +258,12 @@ report 50006 "facture non validée"
                         ApplicationArea = all;
                         // Editable = IsEditable;
 
+                    }
+                    field(NomClient; NomClient)
+                    {
+                        ApplicationArea = all;
+                        Caption = 'Nom du client passager';
+                        // visible = false;
                     }
                     /*  field(SansRemise; SansRemise)
                      {
@@ -301,6 +310,7 @@ report 50006 "facture non validée"
         OptionReference: Option "Article","Origine","Vide";
         //  SansRemise: Boolean;
         Vendorref: Boolean;
+        NomClient: Text[100];
 
 
 

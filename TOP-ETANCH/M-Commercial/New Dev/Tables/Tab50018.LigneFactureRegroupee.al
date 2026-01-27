@@ -8,27 +8,32 @@ table 50018 "Ligne DocVente Regroupée"
 
     fields
     {
-        field(1; "Item No."; Code[20])
+
+        field(1; "Shipment No."; Code[20])
+        {
+            Caption = 'Livraison No.';
+        }
+        field(2; "Item No."; Code[20])
         {
             Caption = 'Item No.';
         }
 
-        field(2; "Unit Price"; Decimal)
+        field(3; "Unit Price"; Decimal)
         {
             Caption = 'Unit Price';
             DecimalPlaces = 0 : 5;
         }
 
-        field(3; "Line Discount %"; Decimal)
+        field(4; "Line Discount %"; Decimal)
         {
             Caption = 'Line Discount %';
             DecimalPlaces = 0 : 5;
         }
-        field(4; "Unit of Measure Code"; Code[10])
+        field(5; "Unit of Measure Code"; Code[10])
         {
             Caption = 'Unit of Measure';
         }
-        field(5; Quantity; Decimal)
+        field(6; Quantity; Decimal)
         {
             Caption = 'Quantity';
             DecimalPlaces = 0 : 5;
@@ -68,6 +73,7 @@ table 50018 "Ligne DocVente Regroupée"
 
         // ajouter "VAT %" si tu veux éviter de fusionner plusieurs taux
         key(PK;
+        "Shipment No.",
         "Item No.",
             "Unit Price",
             "Line Discount %",

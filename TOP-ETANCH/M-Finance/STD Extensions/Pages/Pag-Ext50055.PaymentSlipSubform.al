@@ -188,6 +188,14 @@ pageextension 50055 "Payment Slip Subform" extends "Payment Slip Subform"
         //Message('%1', rec."Status No.");
     end;
 
+    trigger OnDeleteRecord(): Boolean// OD 
+    begin
+        if Rec."Copied To No." <> '' then
+            Error('vous ne pouvez pas supprimer cette ligne');
+        if rec."Created from No." <> '' then
+            Error('vous ne pouvez pas supprimer cette ligne');
+    end;
+
 
     var
         boolVisibleRS: Boolean;
