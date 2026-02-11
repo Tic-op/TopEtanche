@@ -149,6 +149,12 @@ tableextension 50076 purchaseRcpLineExt extends "Purch. Rcpt. Line"
             DataClassification = ToBeClassified;
             Caption = 'Montant';
         }
+        /*   Field(50301; "Vendor Shipment No."; Code[35])
+          {
+              Caption = 'No BL fournisseur';
+              CalcFormula = lookup("Purchase Header"."Vendor Shipment No." where("Document Type" = const("Purchase Document Type"::Order), "No." = field("Order No.")));
+              FieldClass = FlowField;
+          } */
     }
     /*trigger OnInsert()
     begin

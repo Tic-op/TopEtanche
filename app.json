@@ -2,7 +2,7 @@
   "id": "81af0749-041f-4309-a93e-b13779a2f137",
   "name": "Top",
   "publisher": "Ticop",
-  "version": "2.0.01.65",
+  "version": "2.0.02.26",
   "brief": "",
   "description": "",
   "privacyStatement": "",
@@ -15,9 +15,8 @@
   "platform": "1.0.0.0",
   "application": "25.0.0.0",
   "idRanges": [
-    {
-       "from": 50000,
-       "to": 70100
+    {"from": 50000,
+      "to": 70100
     }
   ],
   "resourceExposurePolicy": {

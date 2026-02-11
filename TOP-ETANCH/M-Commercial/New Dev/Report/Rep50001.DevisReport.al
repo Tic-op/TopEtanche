@@ -156,8 +156,6 @@ report 50100 DevisReport
                     Cust: record Customer;
                     item: Record Item;
                 begin
-                    if "Sales Line"."No." = '' then
-                        CurrReport.Skip();
 
                     montant := Round("Sales Line".Amount);
 
@@ -269,6 +267,7 @@ report 50100 DevisReport
                     {
                         Caption = 'Afficher référence fournisseur';
                         ApplicationArea = all;
+
                         // Editable = IsEditable;
 
                     }
@@ -292,6 +291,7 @@ report 50100 DevisReport
     trigger OnInitReport()
     begin
         //  SansRemise := false;
+        Vendorref := true;
     end;
 
     var

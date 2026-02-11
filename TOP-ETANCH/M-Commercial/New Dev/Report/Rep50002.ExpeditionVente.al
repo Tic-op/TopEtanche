@@ -225,7 +225,13 @@ report 50002 BL
             {
             }
         }
+
     }
+    trigger OnInitReport()
+    begin
+        //  SansRemise := false;
+        Vendorref := true;
+    end;
 
 
     var

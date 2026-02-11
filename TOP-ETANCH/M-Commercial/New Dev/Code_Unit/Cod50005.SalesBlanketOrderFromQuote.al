@@ -2,6 +2,7 @@ namespace Top.Top;
 using Microsoft.Sales.Document;
 using Microsoft.Sales.Customer;
 using Microsoft.Sales.Archive;
+using Microsoft.Foundation.NoSeries;
 using Microsoft.Sales.Setup;
 using Microsoft.Utilities;
 
@@ -120,5 +121,118 @@ codeunit 50005 SalesBlanketOrderFromQuote
         SalesSetup: Record "Sales & Receivables Setup";
     begin
         ArchiveManagement.StoreSalesDocument(SalesHeader, false);
+    end;
+
+    procedure CreateDocumentsQuote(QuoteNo: Code[20])
+    var
+        OrderNo, BlanketOrderNo : Code[20];
+        SH: record "Sales Header";
+    begin
+        if confirm('Ce devis va être transformer en une commande et une commande cadre, puis va être archivé et supprimé, voulez vous confirmer cette action', false)
+        then begin
+            OrderNo := CreateAvailableItemsOrderFromQuote(QuoteNo);
+            BlanketOrderNo := CreateAvItemsBlanketOrderFromQuote(QuoteNo);
+            SH.get("Sales Document Type"::Quote, QuoteNo);
+            ArchiveSalesQuote(SH);// ?? 
+            SH.Delete(true);
+        end;
+
+
+
+
+        /*  if OrderNo <> '' then begin
+             If Confirm('Commande %1 a été crée depuis ce devis, voulez-vous l''ouvrir ?', true, OrderNo) then begin
+
+                 SH.setrange("Document Type", "Sales Document Type"::Order);
+                 SH.SetRange("No.", OrderNo);
+                 if SH.findset() then
+                     PAge.RunModal(Page::"Sales Order", SH);
+             end;
+
+         end; */
+        /*  if BlanketOrderNo <> '' then begin
+             If Confirm('Commande cadre %1 a été crée depuis ce devis, voulez-vous l''ouvrir ?', true, BlanketOrderNo) then begin
+
+                 SH.setrange("Document Type", "Sales Document Type"::"Blanket Order");
+                 SH.SetRange("No.", BlanketOrderNo);
+                 if SH.findset() then
+                     PAge.RunModal(Page::"Blanket Sales Order", SH);
+             end;
+
+         end*/
+    end;
+
+    Procedure CreateAvailableItemsOrderFromQuote(QuoteNo: code[20]): Code[20]
+    var
+        SalesQuoteH, SalesOrderH : Record "Sales Header";
+        SalesQuoteL, SalesOrderL : record "Sales Line";
+        CuseriesNo: Codeunit "No. Series";
+        salesSetup: Record "Sales & Receivables Setup";
+    begin
+        salesSetup.Get();
+        SalesQuoteH.get("Sales Document Type"::Quote, QuoteNo);
+        SalesQuoteL.setrange("Document Type", "Sales Document Type"::Quote);
+        SalesQuoteL.setrange("Document No.", QuoteNo);
+        SalesQuoteL.Setfilter("Qté à commander", '>%1', 0);
+        IF SalesQuoteL.FindSet() then begin
+            SalesOrderH.Init();
+            SalesOrderH := SalesQuoteH;
+            SalesOrderH."Document Type" := "Sales Document Type"::Order;
+
+            SalesOrderH."No." := CuseriesNo.GetNextNo(salesSetup."Order Nos.", WorkDate(), true);
+            SalesOrderH.Status := "Sales Document Status"::Open;
+            SalesOrderH."Document Date" := Today;
+            SalesOrderH."Quote No." := QuoteNo;
+            SalesOrderH.insert(true);
+            repeat
+                SalesOrderL := SalesQuoteL;
+                SalesOrderL."Document Type" := "Sales Document Type"::Order;
+                SalesOrderL.validate("Document No.", SalesOrderH."No.");
+                SalesOrderL.Insert(true);
+                SalesOrderL.validate(Quantity, SalesQuoteL."Qté à commander");//To make sure it throws an error if Dispo < qty 
+                SalesOrderL.Modify();
+            until SalesQuoteL.next = 0;
+
+            exit(SalesOrderH."No.");
+        end;
+        exit('');
+
+
+    end;
+
+    Procedure CreateAvItemsBlanketOrderFromQuote(QuoteNo: code[20]): Code[20]
+    var
+        SalesQuoteH, BlanketSalesOrderH : Record "Sales Header";
+        SalesQuoteL, BlanketSalesOrderL : record "Sales Line";
+        CuseriesNo: Codeunit "No. Series";
+        salesSetup: Record "Sales & Receivables Setup";
+    begin
+        salesSetup.Get();
+        SalesQuoteH.get("Sales Document Type"::Quote, QuoteNo);
+        SalesQuoteL.setrange("Document Type", "Sales Document Type"::Quote);
+        SalesQuoteL.setrange("Document No.", QuoteNo);
+        SalesQuoteL.Setfilter("Qté panier", '>%1', 0);
+        IF SalesQuoteL.FindSet() then begin
+            BlanketSalesOrderH.Init();
+            BlanketSalesOrderH := SalesQuoteH;
+            BlanketSalesOrderH."Document Type" := "Sales Document Type"::"Blanket Order";
+            BlanketSalesOrderH."No." := CuseriesNo.GetNextNo(salesSetup."Blanket Order Nos.", WorkDate(), true);
+            BlanketSalesOrderH.Status := "Sales Document Status"::Open;
+            BlanketSalesOrderH."Document Date" := Today;
+            BlanketSalesOrderH."Quote No." := QuoteNo;
+            BlanketSalesOrderH.insert(true);
+            repeat
+                BlanketSalesOrderL := SalesQuoteL;
+                BlanketSalesOrderL."Document Type" := "Sales Document Type"::"Blanket Order";
+                BlanketSalesOrderL.validate("Document No.", BlanketSalesOrderH."No.");
+                BlanketSalesOrderL.validate(Quantity, SalesQuoteL."Qté panier");
+                BlanketSalesOrderL.Insert(true);
+            until SalesQuoteL.next = 0;
+
+            exit(BlanketSalesOrderH."No.");
+        end;
+        exit('');
+
+
     end;
 }

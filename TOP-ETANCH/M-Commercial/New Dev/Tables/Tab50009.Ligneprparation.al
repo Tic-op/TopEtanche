@@ -95,4 +95,5 @@ table 50009 "Ligne préparation"
         key(IndicateurKey; Statut, "Source type.", Location, "Préparateur") { }
 
     }
+
 }

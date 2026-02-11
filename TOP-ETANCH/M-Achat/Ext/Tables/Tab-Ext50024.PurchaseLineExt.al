@@ -134,6 +134,9 @@ tableextension 50024 PurchaseLineExtt extends "Purchase Line"
             FieldClass = FlowField;
             CalcFormula = sum("Purch. Rcpt. Line".Quantity where("DOP No." = field("Document No."), "DOP Line No." = field("Line No.")));
         }
+
+
+
         /* modify("Expected Receipt Date")  ///// IS070325 A REVISER
         {
 
@@ -159,11 +162,12 @@ tableextension 50024 PurchaseLineExtt extends "Purchase Line"
     }
 
 
-    trigger OnDelete()
+    trigger OnbeforeModify()////AM ????
     begin
         if "Document Type" = "Document Type"::Order then
-            //MAJ_Qté_Restante();
-            Restant := Quantity;
+            MAJ_Qté_Restante();
+        //Restant := Quantity;
+        Modify(false);
     end;
 
     procedure MAJ_Qté_Restante()

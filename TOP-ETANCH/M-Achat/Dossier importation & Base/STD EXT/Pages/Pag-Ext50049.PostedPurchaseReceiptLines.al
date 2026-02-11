@@ -2,6 +2,7 @@ namespace TopEtanch.TopEtanch;
 
 
 using Microsoft.Purchases.History;
+using Microsoft.Purchases.Document;
 
 pageextension 50149 "Posted Purchase Receipt Lines" extends "Posted Purchase Receipt Lines"
 {
@@ -17,4 +18,5 @@ pageextension 50149 "Posted Purchase Receipt Lines" extends "Posted Purchase Rec
 
         }
     }
+
 }

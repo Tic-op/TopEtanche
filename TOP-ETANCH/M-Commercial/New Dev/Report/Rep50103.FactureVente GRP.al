@@ -246,6 +246,11 @@ report 50109 FactureVenteGRP
             }
         }
     }
+    trigger OnInitReport()
+    begin
+        //  SansRemise := false;
+        Vendorref := true;
+    end;
 
 
     procedure BuildTempVATEntriesFromSalesInvoice()

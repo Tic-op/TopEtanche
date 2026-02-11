@@ -11,6 +11,7 @@ report 50032 "Importer Qté Achat"
     ProcessingOnly = true;
     ApplicationArea = All;
 
+
     dataset
     {
         dataitem(ItemLedgEntry; "Item Ledger Entry")

@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-01-17T13:56:22.2950496Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-02-11T15:05:53.4308915Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -755,7 +755,7 @@
             <Top>0.26048in</Top>
             <Left>0.0625in</Left>
             <Height>0.5in</Height>
-            <Width>7.71678in</Width>
+            <Width>7.71679in</Width>
             <Style>
               <Border>
                 <Style>None</Style>
@@ -783,7 +783,7 @@
               </Paragraph>
             </Paragraphs>
             <Top>2.5736cm</Top>
-            <Left>9.59455cm</Left>
+            <Left>8.07055cm</Left>
             <Height>0.25in</Height>
             <Width>1in</Width>
             <ZIndex>1</ZIndex>
@@ -823,7 +823,7 @@
               </Paragraph>
             </Paragraphs>
             <Top>2.5736cm</Top>
-            <Left>12.13455cm</Left>
+            <Left>10.61055cm</Left>
             <Height>0.25in</Height>
             <Width>1in</Width>
             <ZIndex>2</ZIndex>
@@ -903,9 +903,9 @@
               </Paragraph>
             </Paragraphs>
             <Top>2.5736cm</Top>
-            <Left>14.67934cm</Left>
+            <Left>13.15534cm</Left>
             <Height>0.25in</Height>
-            <Width>1in</Width>
+            <Width>1.01299in</Width>
             <ZIndex>4</ZIndex>
             <Style>
               <Border>
@@ -943,7 +943,7 @@
               </Paragraph>
             </Paragraphs>
             <Top>3.19452cm</Top>
-            <Left>12.13456cm</Left>
+            <Left>10.61056cm</Left>
             <Height>0.635cm</Height>
             <Width>2.54cm</Width>
             <ZIndex>5</ZIndex>
@@ -1013,7 +1013,7 @@
               </Paragraph>
             </Paragraphs>
             <Top>1.25768in</Top>
-            <Left>3.7774in</Left>
+            <Left>3.1774in</Left>
             <Height>0.25in</Height>
             <Width>1in</Width>
             <ZIndex>7</ZIndex>
@@ -1048,7 +1048,7 @@
               </Paragraph>
             </Paragraphs>
             <Top>1.25769in</Top>
-            <Left>5.77927in</Left>
+            <Left>5.17927in</Left>
             <Height>0.25in</Height>
             <Width>1in</Width>
             <ZIndex>8</ZIndex>
@@ -1722,6 +1722,81 @@
             <Height>0.6cm</Height>
             <Width>7.95861cm</Width>
             <ZIndex>13</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox24">
+            <rd:DefaultName>Textbox16</rd:DefaultName>
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Timbre</Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>2.57361cm</Top>
+            <Left>15.72834cm</Left>
+            <Height>0.25in</Height>
+            <Width>0.58701in</Width>
+            <ZIndex>14</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <BottomBorder>
+                <Color>Black</Color>
+                <Style>Solid</Style>
+                <Width>0.25pt</Width>
+              </BottomBorder>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="MontantNet3">
+            <rd:DefaultName>MontantNet</rd:DefaultName>
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Fields!Timbre.Value</Value>
+                    <Style>
+                      <FontSize>9pt</FontSize>
+                      <Format>#,0.000;(#,0.000);''</Format>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <Top>3.19453cm</Top>
+            <Left>15.72834cm</Left>
+            <Height>0.635cm</Height>
+            <Width>1.491cm</Width>
+            <ZIndex>15</ZIndex>
             <Style>
               <Border>
                 <Style>None</Style>

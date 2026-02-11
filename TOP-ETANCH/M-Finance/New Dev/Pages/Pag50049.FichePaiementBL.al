@@ -204,7 +204,7 @@ page 50049 "Fiche Paiement BL"
         ShipLine.FindSet();
         repeat
             MttTTC += ShipLine.Quantity * ShipLine."Unit Price" * (1 - ShipLine."Line Discount %" / 100) * (1 + ShipLine."VAT %" / 100);
-            if ShipLine."Quantity Invoiced" <> 0 then
+            if ((ShipLine."Quantity Invoiced" <> 0) and (not ShipLine.Correction)) then ///AM 030226
                 Error('Attention !! BL facturé');
         until ShipLine.next = 0;
         exit(ROUND(MttTTC, 0.001, '='));

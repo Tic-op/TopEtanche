@@ -549,8 +549,8 @@ page 50027 HistVenteArticleSubform
             rec."Customer Name" := InvoiceLine."Sell-to Customer Name";
 
             rec."Document No" := InvoiceLine."Document No.";
-            rec."Price HT" := InvoiceLine."Unit Price" * (1 - InvoiceLine."Line Discount %" / 100);
-            rec."Price TTC" := InvoiceLine."Unit Price" * (1 - InvoiceLine."Line Discount %" / 100) * (1 + InvoiceLine."VAT %" / 100);
+            rec."Price HT" := InvoiceLine."Unit Price"; //* (1 - InvoiceLine."Line Discount %" / 100); commented by chb
+            rec."Price TTC" := InvoiceLine."Unit Price" * (1 + InvoiceLine."VAT %" / 100);//* (1 - InvoiceLine."Line Discount %" / 100) commented by chb
             rec.Remise := InvoiceLine."Line Discount %";
             rec."Date Document" := InvoiceLine."Planned Shipment Date";
             if rec.insert(true) then;

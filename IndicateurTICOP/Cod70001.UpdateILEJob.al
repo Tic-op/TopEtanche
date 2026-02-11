@@ -9,6 +9,7 @@ using Microsoft.Sales.Customer;
 using Microsoft.Sales.Document;
 using Microsoft.CRM.Opportunity;
 using Microsoft.Inventory.Tracking;
+using Microsoft.Sales.Setup;
 using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Item;
 using Microsoft.Inventory.Posting;
@@ -114,16 +115,18 @@ codeunit 50101 "ILE UPDATE JOB "
         Customer: Record Customer;
         Vendor: Record Vendor;
         VE: record "Value Entry";
+        salesSetup: Record "Sales & Receivables Setup";
 
 
     begin
+        salesSetup.get;
         ILE.LockTable();
 
         ILE.SETCURRENTKEY("Item No.", "Posting Date");
         ILE.SETFILTER("Item No.", '<>%1', '');
         TypeHelper.GetHMSFromTime(Hour, Minute, Second, DT2Time(CurrentDateTime));
 
-        if not all and (Hour <= 16) then
+        if not all and (Hour <= 18) then
             ILE.SETRANGE("Posting Date", CALCDATE('<-1W>', TODAY), TODAY);
 
 
@@ -153,13 +156,23 @@ codeunit 50101 "ILE UPDATE JOB "
                 //AM Update
 
                 if ile."Entry Type" = ILE."Entry Type"::Sale then begin
+                    Customer.get(ILE."Source No.");
+                    ILE."Nom Origine" := Customer.Name;
+
+
+                    if (ILE."Sales Operation Amount" = 0) and (ILE."Source No." = salesSetup."Client Divers") then // le client divers n'est calculé qu'une seule fois
+                        ILE."Sales Operation Amount" := ILE."Sales Amount (Actual)" + ILE."Sales Amount (Expected)"
+                    else
+                        ILE."Sales Operation Amount" := ILE."Sales Amount (Actual)" + ILE."Sales Amount (Expected)";
+
+
+
                     ILE."Sales Operation Amount" := ILE."Sales Amount (Actual)" + ILE."Sales Amount (Expected)";
+
                     MontantMarge := ILE."Sales Operation Amount" + IlE."Operation Cost";
 
                     ILE."Profit Amount" := MontantMarge;
 
-                    Customer.get(ILE."Source No.");
-                    ILE."Nom Origine" := Customer.Name;
                     //////OD 270225
                     // ILE."Groupe Compta Client" := Customer."Customer Posting Group";
                     //////

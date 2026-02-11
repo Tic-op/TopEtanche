@@ -39,9 +39,36 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
         Modify("No.")
         {
             trigger OnAfterValidate()
+            var
+                disp: decimal;
             begin
 
-                ControlDisponibilitéSaleslines();
+
+                begin
+
+                    // ControlDisponibilitéSaleslines();
+
+                    If Quantity = 0 then exit;
+                    if "Shipment No." <> '' then exit;
+                    if (type <> type::Item) then
+                        exit;
+                    if ("Document Type" = "Sales Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice) then begin
+                        if "Location Code" = '' then
+                            disp := GetDisponibilite(true)
+                        else
+                            disp := GetDisponibilite(false);
+                        if disp + xRec."Quantity (Base)" < "Quantity (Base)" then
+                            error('Quantité non disponible.');
+                    end;
+                    IF ("Document Type" = "Sales Document Type"::Quote) then begin
+                        disp := GetDisponibilite(true);
+                        if ("Quantity (Base)" > disp) then
+                            Validate("Qté à commander", disp)
+                        else
+                            Validate("Qté à commander", "Quantity (Base)");
+
+                    end;
+                end;
             end;
         }
 
@@ -191,6 +218,38 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
             Editable = false;
         }
 
+
+
+        //Dispatching Devis
+        field(50114; "Qté à commander"; Decimal)
+        {
+            Caption = 'Quantité à commander';
+            MinValue = 0;
+            Trigger OnValidate()
+            var
+            begin
+                if (GetDisponibilite(true) < "Qté à commander") and ("Qté à commander" <> 0) then Error('Qté à commander Non disponible');
+                If "Qté à commander" > Quantity then error('Qté à commander ne doit pas dépasser %1', Quantity);
+
+                "Qté panier" := "Quantity (Base)" - "Qté à commander";
+                // Modify(false);
+
+            end;
+        }
+        Field(50115; "Qté panier"; decimal)
+        {
+            MinValue = 0;
+            Caption = 'Quanité vers panier';
+            trigger onvalidate()
+            var
+            begin
+                If "Qté panier" > Quantity then error('Qté panier ne diot pas dépasser %1', Quantity);
+
+                validate("Qté à commander", "Quantity (Base)" - "Qté panier");
+                // modify(false);
+            end;
+        }
+
         modify("Location Code")
         {
             trigger OnAfterValidate()
@@ -230,6 +289,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
                 disp: decimal;
             begin
                 if "Shipment No." <> '' then exit;
+                If Quantity = 0 then exit;
                 if (type <> type::Item) then
                     exit;
                 if ("Document Type" = "Sales Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice) then begin
@@ -239,6 +299,14 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
                         disp := GetDisponibilite(false);
                     if disp + xRec."Quantity (Base)" < "Quantity (Base)" then
                         error('Quantité non disponible.');
+                end;
+                IF ("Document Type" = "Sales Document Type"::Quote) then begin
+                    disp := GetDisponibilite(true);
+                    if ("Quantity (Base)" > disp) then
+                        Validate("Qté à commander", disp)
+                    else
+                        Validate("Qté à commander", "Quantity (Base)");
+
                 end;
             end;
 
@@ -285,6 +353,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
     var //location : record location; 
         SalesH: record "Sales Header";
         ORdreprep: Record "Ordre de preparation";
+        Cust: record Customer;
     begin
         SalesH.get("Document Type", "Document No.");
         if type = "Sales Line Type"::Item then
@@ -304,7 +373,16 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
             ORdreprep.SetRange(Statut, ORdreprep.Statut::"Créé", ORdreprep.Statut::"En cours");
             if ORdreprep.FindFirst() then
                 error('veuillez préparer les préparations existantes avant d''ajouter des lignes');
-        end
+        end;
+
+
+        if "Shipment No." = '' then begin
+
+            Cust.get("Sell-to Customer No.");
+            If Cust."Cause du blocage" <> Cust."Cause du blocage"::"Non bloqué" then
+                error('Client %2  bloqué à cause du %1', Cust."Cause du blocage", Cust.Name);
+        end;
+
     end;
 
     /* trigger OnBeforeInsert()
@@ -544,6 +622,7 @@ tableextension 50130 SalesLinesExt extends "Sales Line"
     var
         disp: decimal;
     begin
+        If Quantity = 0 then exit;
         if "Shipment No." <> '' then exit;
         if ("Document Type" = "Sales Document Type"::Order) or ("Document Type" = "Sales Document Type"::Invoice) then begin
             if "Location Code" = '' then

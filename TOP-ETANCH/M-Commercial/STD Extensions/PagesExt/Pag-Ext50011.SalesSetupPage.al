@@ -25,6 +25,10 @@ pageextension 50011 SalesSetupPage extends "Sales & Receivables Setup"
             {
                 ApplicationArea = all;
             }
+            field("Client Divers"; Rec."Client Divers")
+            {
+                ApplicationArea = all;
+            }
         }
     }
 

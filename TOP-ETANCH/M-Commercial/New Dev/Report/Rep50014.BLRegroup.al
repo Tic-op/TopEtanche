@@ -83,7 +83,7 @@ report 50014 "BL RGRP"
             dataitem("LDVR"; "Ligne DocVente Regroupée")
             {
                 UseTemporary = true;
-                column(Item_No_; "Item No.") { }
+                column(Item_No_; reference) { }
                 column(Description; Description) { }
                 column(Quantity; Quantity) { }
                 column(Unit_Price; "Unit Price") { }
@@ -106,6 +106,7 @@ report 50014 "BL RGRP"
                 var
                     CUTextMontant: Codeunit "Montant Toute Lettres";
                     SalesishipLinesTotaux: record "Sales Shipment Line";
+                    itemrec: record item;
                 begin
                     SalesishipLinesTotaux.SetRange("Document No.", SalesShipmentHeader."No.");
                     // SalesishipLines.CalcSums("Line Amount","Line Discount Amount","Amount Including VAT",Amount,"VAT Base Amount");
@@ -126,6 +127,15 @@ report 50014 "BL RGRP"
 
                     if txtMntTLettres = '' then
                         CUTextMontant."Montant en texte"(txtMntTLettres, NetaPayer);
+
+
+                    reference := "Item No.";
+                    if Vendorref then begin
+                        itemrec.get("Item No.");
+                        reference := itemrec."Vendor Item No.";
+                    end
+
+
                 end;
             }
             dataitem(TempVATEntry; "VAT Entry")
@@ -210,6 +220,12 @@ report 50014 "BL RGRP"
             }
         }
     }
+    trigger OnInitReport()
+    begin
+        //  SansRemise := false;
+        Vendorref := true;
+    end;
+
     procedure BuildTempVATEntriesFromSalesShipment()
     var
         SalesshipLine: Record "Sales Shipment Line";
@@ -270,6 +286,7 @@ report 50014 "BL RGRP"
         SalesPersonPhone: text;
         Solde: decimal;
         Vendorref: Boolean;
+        reference: Text;
 
 
         MttBrut, totalRemise, totalTVA, netApayer, TotalHT, TotalBrut : decimal;

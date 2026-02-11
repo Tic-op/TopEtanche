@@ -126,12 +126,15 @@ codeunit 50020 "Purch Rcpt Pricing Mgt"
         RcptLine.SetRange(Type, RcptLine.Type::Item);
         RcptLine.SetFilter(Quantity, '>0');
         RcptLine.FindSet(true);
-        repeat
+        if TotalCharges = 0 then
+            RcptLine.ModifyAll(OtherUnitCost, 0)
+        else
+            repeat
 
-            RcptLine.OtherUnitCost := (TotalCharges * (CalcPurchaseAmount(DocumentNo, RcptLine."No.", '') / TotalCostValue))
-                                                       ;
-            RcptLine.Modify();
-        until RcptLine.Next() = 0;
+                RcptLine.OtherUnitCost := (TotalCharges * (CalcPurchaseAmount(DocumentNo, RcptLine."No.", '') / TotalCostValue))
+                                                           ;
+                RcptLine.Modify();
+            until RcptLine.Next() = 0;
     end;
 
 
@@ -160,6 +163,7 @@ codeunit 50020 "Purch Rcpt Pricing Mgt"
         RcptLine.SetRange("No.", ItemNo);
         if FiltreDescription <> '' then
             RcptLine.setfilter(Description, FiltreDescription);
+
 
         if RcptLine.findset(true) then
             repeat
@@ -231,15 +235,19 @@ codeunit 50020 "Purch Rcpt Pricing Mgt"
             if RcptLine."P. Marché" <> 0 then begin
                 RcptLine."Ecart Marché" := RcptLine."Prix Std" - RcptLine."P. Marché";
                 RcptLine."% Ecart Marché" := ((RcptLine."Prix Std" - RcptLine."P. Marché") * 100 / RcptLine."P. Marché") DIV 1;
-                RcptLine.Modify();
+                // RcptLine.Modify();
 
-            end;
+            end
+            else
+                RcptLine."% Ecart Marché" := 0;
             if RcptLine."P. Marché Gros" <> 0 then begin
 
                 RcptLine."Ecart Marché Gros" := RcptLine."Prix Std" - RcptLine."P. Marché Gros";
                 RcptLine."% Ecart Marché Gros" := ((RcptLine."Prix Gros" - RcptLine."P. Marché Gros") * 100 / RcptLine."P. Marché Gros") DIV 1;
-                RcptLine.Modify();
-            end;
+                //RcptLine.Modify();
+            end
+            else
+                RcptLine."% Ecart Marché Gros" := 0;
 
             RcptLine.Modify();
         until RcptLine.Next() = 0;

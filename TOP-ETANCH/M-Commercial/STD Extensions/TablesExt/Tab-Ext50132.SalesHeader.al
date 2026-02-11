@@ -195,7 +195,9 @@ tableextension 50132 SalesHeader extends "Sales Header"
                     if CustomerRec.Get("Sell-to Customer No.") and CustomerRec.Stamp then begin
                         "Stamp Amount" := GLSetup."Montant timbre fiscal";
                         // BY AM 090125
-                        If ("Document Type" = "Sales Document Type"::Order) OR ("Document Type" = "Sales Document Type"::Invoice) then
+                        If ("Document Type" = "Sales Document Type"::Order)
+                        // OR ("Document Type" = "Sales Document Type"::Invoice)
+                         then
                             if (CustomerRec."Cause du blocage" <> CustomerRec."Cause du blocage"::"Non bloqué") then
                                 error('Client bloqué à cause du %1', CustomerRec."Cause du blocage");
                         // END AM 090125

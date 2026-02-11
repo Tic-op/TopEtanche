@@ -1,11 +1,23 @@
 namespace TopEtanch.TopEtanch;
 
 using Microsoft.Purchases.Document;
+using Top.Top;
 
 pageextension 50018 BlanketPurchaseOrderSubformExt extends "Blanket Purchase Order Subform"
 {
     layout
     {
+        addafter("No.")
+        {
+            Field("Country region origin code"; Rec."Country region origin code")
+            {
+                ApplicationArea = all;
+            }
+            Field("Tariff No."; Rec."Tariff No.")
+            {
+                ApplicationArea = all;
+            }
+        }
         addafter(Quantity)
         {
             field("Planning de réception"; Rec."Expected Receipt Date") //IS 07082025
@@ -29,6 +41,14 @@ pageextension 50018 BlanketPurchaseOrderSubformExt extends "Blanket Purchase Ord
 
                 end;
             }
+            Field("Requested Receipt Date"; Rec."Requested Receipt Date")
+            {
+                ApplicationArea = all;
+            }
+            Field("Promised Receipt Date"; Rec."Promised Receipt Date")
+            {
+                ApplicationArea = all;
+            }
             field("Confirmé par fournisseur"; Rec."Confirmé par fournisseur")
             {
                 ApplicationArea = all;
@@ -47,7 +67,9 @@ pageextension 50018 BlanketPurchaseOrderSubformExt extends "Blanket Purchase Ord
             }
 
 
+
         }
+
 
 
 
@@ -87,6 +109,34 @@ pageextension 50018 BlanketPurchaseOrderSubformExt extends "Blanket Purchase Ord
 
             }
         }
+        addafter(Invoices)
+        {
+            Action(Recherche_Ticop)
+
+            {
+                ShortcutKey = 'Alt+W';
+                ApplicationArea = all;
+                Image = AddWatch;
+                trigger OnAction()
+                var
+                    RS: Page "Usual search Purchase";
+                    PurchaseHeader: record "Purchase Header";
+                begin
+                    PurchaseHeader.Get(Rec."Document Type", Rec."Document No.");
+                    PurchaseHeader.TestField(Status, PurchaseHeader.Status::Open);
+                    RS.initvarPurch(PurchaseHeader."Document Type", PurchaseHeader."No.");
+                    //RS.Run();
+                    rs.RunModal();
+
+                    // Page.RunModal(50029);
+                    CurrPage.Update();
+
+
+
+                end;
+            }
+        }
+
 
 
     }

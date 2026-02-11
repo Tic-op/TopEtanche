@@ -5,6 +5,62 @@ codeunit 50052 SalesEvents
 
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", OnBeforePostLines, '', false, false)]
+    procedure "control facture Susp"(SalesHeader: Record "Sales Header")
+    var
+        VatSusp: Record "Customer VAT Suspension";
+        SalesLine: Record "Sales Line";
+
+    begin
+
+        //Finale vérification de la facture exo
+        if not SalesHeader.Invoice then
+            exit;
+        if (SalesHeader."Document Type" = SalesHeader."Document Type"::Invoice)
+        or (SalesHeader."Document Type" = SalesHeader."Document Type"::Order) then begin
+
+            if SalesHeader."Sell-to Customer No." <> SalesHeader."Bill-to Customer No." then
+                Error('Problème de client');
+
+
+            VatSusp.Reset();
+            VatSusp.SetRange("Customer No.", SalesHeader."Sell-to Customer No.");
+            VatSusp.SetFilter("Start Date", '<=%1', SalesHeader."Posting Date");
+            VatSusp.SetFilter("End Date", '>=%1', SalesHeader."Posting Date");
+
+            if VatSusp.FindFirst() then begin
+
+                SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                SalesLine.SetRange("Document No.", SalesHeader."No.");
+                SalesLine.SetRange(Type, SalesLine.Type::Item);
+                SalesLine.FindSet();
+                repeat
+                    if (SalesLine."VAT Bus. Posting Group" <> VatSusp."Bus. Posting Group")
+                     or (SalesLine."Gen. Bus. Posting Group" <> VatSusp."Bus. Posting Group") then
+                        Error('Vous avez un un problème de TVA dans %1    %2', SalesLine."No.", SalesLine."Shipment No.");
+                until SalesLine.next = 0;
+
+
+            end;
+
+
+
+
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", OnBeforePostLines, '', false, false)]
+
+    procedure "control Client à facturer"(SalesHeader: Record "Sales Header")
+    var
+    begin
+
+        if SalesHeader."Sell-to Customer No." <> SalesHeader."Bill-to Customer No." then
+            Error('Problème de client');
+    end;
+
+
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Post", OnBeforePostLines, '', false, false)]
     procedure "control facture"(SalesHeader: Record "Sales Header")
     var
         customer: Record Customer;
@@ -110,6 +166,12 @@ codeunit 50052 SalesEvents
         //SalesOrderHeader.validate("Location Code", BlanketOrderSalesHeader."Location Code");
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Blanket Sales Order to Order", OnBeforeInsertSalesOrderLine, '', false, false)]
+    Procedure qsd()
+    var
+    begin
+
+    end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Sales-Quote to Invoice", OnBeforeOnRun, '', false, false)]
     Procedure CheckConditionsbeforeQuotetoinvoice(var SalesHeader: Record "Sales Header")
@@ -154,7 +216,6 @@ codeunit 50052 SalesEvents
     begin
         CheckBlocageClient(SalesHeader);
         ControlVentecomptoir(SalesHeader);
-        CheckSuspension(SalesHeader);
         CheckDispo(SalesHeader);
         CheckCustomerCredit(SalesHeader);
 
@@ -790,28 +851,6 @@ codeunit 50052 SalesEvents
     end;
 
 
-    procedure CheckSuspension(SalesHeader: Record "Sales Header")
-    var
-        CPP: Record "Customer Posting Group";
-        Customer: record Customer;
-    begin
-        if SalesHeader."Document Type" = "Sales Document Type"::"Blanket Order" then begin
-            Customer.get(SalesHeader."Sell-to Customer No.");
-            CPP.get(SalesHeader."Customer Posting Group");
-            if SalesHeader."Customer Posting Group" = customer."Customer Posting Group" then begin
-
-                if CPP.Suspension then begin
-                    if not SalesHeader."Documents vérifiés" then
-                        error('Veuillez vérifier les documents du clients ou bien changer le group client %1 pour cette affaire ', CPP.Code);
-
-                end
-            end
-
-
-        end
-
-
-    end;
 
     procedure ArchiveDevis(noDevis: text) //IS12092025
     var
@@ -826,9 +865,22 @@ codeunit 50052 SalesEvents
 
     procedure ControlSalesPerson(SH: record "Sales Header")
     var
+        SL: record "Sales Line";
     begin
-        if SH."Salesperson Code" = '' then
+        SL.setrange("Document Type", "Sales document type"::Invoice);
+        SL.setrange("Document No.", SH."No.");
+        SL.setfilter("Shipment No.", '<>%1', '');
+        //if SL.count=0 
+
+
+        if (SH."Salesperson Code" = '') and (SH."Posting No." = '') and (SL.Count = 0) then begin
+
             error('Veuillez mentionner le code vendeur');
+        end;
+
+
+
+
 
 
     end;
@@ -881,8 +933,11 @@ codeunit 50052 SalesEvents
     var
         SalesLine: Record "Sales Line";
         Item: Record Item;
+        userSetup: Record "User Setup";
 
     begin
+
+
 
         if (SalesHeader."Document Type" = SalesHeader."Document Type"::"Credit Memo") OR
          (SalesHeader."Document Type" = SalesHeader."Document Type"::"Return Order") then
@@ -890,12 +945,34 @@ codeunit 50052 SalesEvents
         SalesLine.SetRange("Document Type", SalesHeader."Document Type");
         SalesLine.SetRange("Document No.", SalesHeader."No.");
         SalesLine.SetRange(Type, SalesLine.Type::Item);
+
         if SalesLine.FindSet() then
             repeat
-                if Item.get(SalesLine."No.") and (SalesLine.Quantity <> 0) then
-                    if (Item."Unit Cost" * SalesLine.Quantity) >= SalesLine.amount then
-                        Error('La marge doit être positive dans %1', SalesLine."No.");
+                if Item.get(SalesLine."No.") and (SalesLine.Quantity <> 0) then begin
+                    if (Item."Unit Cost" * SalesLine.Quantity) >= SalesLine.amount then begin
+                        if not userSetup.get(UserId) then
+                            Error('La marge doit être positive dans %1', SalesLine."No.")
+                        else
+                            if not userSetup."Marge vente négative" then
+                                Error('La marge doit être positive dans %1', SalesLine."No.");
+                    end;
+                end;
             until SalesLine.Next() = 0;
 
     end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Sales Header", OnBeforeConfirmBillToCustomerChange, '', false, false)]
+    procedure Hidedialog(var confirmed: Boolean; var IsHandled: Boolean)
+    var
+
+    begin
+        confirmed := true;
+        IsHandled := true;
+    end;
+
+
+
+
+
+
 }

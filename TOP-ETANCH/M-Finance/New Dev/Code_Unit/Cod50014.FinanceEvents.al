@@ -608,7 +608,7 @@ codeunit 50014 FinanceEvents
 
 
         Customer.get(CustomerNo);
-        //if Customer.Timbre THEN 
+        //if Customer.Timbre THEN
         //  Error('Le client %1 n''est pas publique',CustomerNo);
 
         if Customer."Currency Code" <> '' THEN

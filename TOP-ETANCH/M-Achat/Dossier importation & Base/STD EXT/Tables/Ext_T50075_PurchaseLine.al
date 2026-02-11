@@ -22,12 +22,17 @@ tableextension 50075 PurchaseLineExt extends "Purchase Line"
             Caption = 'No Origine';
             TableRelation = "Country/Region";
         }
+        /*  Field(50301; "Vendor Shipment No."; Code[35])
+         {
+             Caption = 'No BL fournisseur';
+         } */
         modify("No.")
         {
             trigger OnAfterValidate()
             var
                 itm: Record item;
                 ItemCharge: Record "Item Charge";
+
             begin
                 if rec.Type = Rec.type::Item then begin
                     itm.get(rec."No.");
@@ -48,9 +53,12 @@ tableextension 50075 PurchaseLineExt extends "Purchase Line"
     trigger OnInsert()
     var
         CompInfo: record "Company Information";
+        PH: record "Purchase Header";
     begin
         CompInfo.get();
         "Location Code" := CompInfo."Location Code";
+        /*    PH.get("Document Type", "Document No.");
+           "Vendor Shipment No." := PH."Vendor Shipment No."; */
 
     end;
 

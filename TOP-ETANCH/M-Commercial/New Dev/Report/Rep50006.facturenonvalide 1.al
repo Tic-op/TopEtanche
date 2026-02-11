@@ -284,7 +284,8 @@ report 50006 "facture non validée"
     }
     trigger OnInitReport()
     begin
-        // SansRemise := false;
+        //  SansRemise := false;
+        Vendorref := true;
     end;
 
     var

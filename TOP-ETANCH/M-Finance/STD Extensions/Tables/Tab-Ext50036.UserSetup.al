@@ -15,5 +15,9 @@ tableextension 50036 "User Setup" extends "User Setup"
         {
 
         }
+        field(50004; "Marge vente négative"; Boolean)
+        {
+
+        }
     }
 }

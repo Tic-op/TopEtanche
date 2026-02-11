@@ -14,8 +14,17 @@ pageextension 50010 "Item Card" extends "Item Card"
         {
             Visible = false;
         }
+        addafter("Qty. on Purch. Order")
+        {
+            field("Qty Confirmed in Blanket Order"; Rec."Qty Confirmed in Blanket Order")
+            {
+                ApplicationArea = all;
+                editable = false;
+            }
+        }
         addafter(Inventory)
         {
+
             field(Emplacement; rec.ListeEmplacementDispo())
             {
                 Caption = 'Emplacement dispo ';

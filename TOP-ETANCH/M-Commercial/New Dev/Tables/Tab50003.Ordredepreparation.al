@@ -174,14 +174,22 @@ table 50003 "Ordre de preparation"
         exit(Preplines.count < 2);
     end;
 
-    local procedure CheckIfSalesDocIsConfirmed()
+    local procedure CheckIfSalesDocIsConfirmed() //AM A vérivier Avec CB 
     var
         SH: Record "Sales Header";
+        ShipL: record "Sales Shipment Line";
     begin
         if SH.GET(SH."Document Type"::Order, "Order No") then begin
             SH.CalcFields(Shipped);
-            if SH.Shipped then
-                Error('Vous ne pouvez pas faire cette action car la commande reliée est déjà livrée...');
+            if SH.Shipped then begin
+                // ShipL.setrange("Document No.", "Num document validé");
+                ShipL.setrange("Order No.", "Order No");
+                ShipL.setrange(Correction, true);
+                if ShipL.count = 0 then
+                    Error('Vous ne pouvez pas faire cette action car la commande reliée est déjà livrée, et aucune ligne correction n''existe dans l''expédition');
+            end;
+
+
         end;
     end;
 

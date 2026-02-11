@@ -92,15 +92,16 @@ pageextension 50033 SalesinvoiceList extends "Sales Invoice List"
                 begin
 
                     CurrPage.SetSelectionFilter(SalesHeader);
+                    SalesHeader.MarkedOnly(true);
+                    if SalesHeader.IsEmpty() then
+                        Error('Veuillez sélectionner au moins une facture.');
 
                     if not Confirm('Voulez vous attribuer des numéros de validation pour %1 factures ? \fitlres : %2', false, SalesHeader.Count, Rec.GetFilters) then
                         exit;
 
 
 
-                    if SalesHeader.IsEmpty() then
-                        Error('Veuillez sélectionner au moins une facture.');
-                    SalesHeader.MarkedOnly(true);
+
 
 
                     ReserveInvoiceNumbers(SalesHeader);
@@ -132,6 +133,7 @@ pageextension 50033 SalesinvoiceList extends "Sales Invoice List"
         NoSeriesMgt: Codeunit "No. Series";
         NewNo: Code[20];
         Date0: Date;
+        Souche: Record "No. Series Line";
     begin
         SalesSetup.Get();
         SalesSetup.TestField("Posted Invoice Nos.");
@@ -140,6 +142,8 @@ pageextension 50033 SalesinvoiceList extends "Sales Invoice List"
         SalesHeader.SetAutoCalcFields(Amount);
         if SalesHeader.FindSet(true) then begin
             repeat
+                if SalesHeader."Posting No." <> '' then
+                    continue;
                 if Date0 = 0D then
                     Date0 := SalesHeader."Posting Date";
 
@@ -154,9 +158,13 @@ pageextension 50033 SalesinvoiceList extends "Sales Invoice List"
                     Error('Montant doit être positif');
 
                 CheckCombinedLines(SalesHeader."No.");
+                Souche.setrange("Series Code", Salessetup."Posted Invoice Nos.");
+                Souche.SetCurrentKey("Last Date Used");
+                Souche.findlast();
+                If souche."Last Date Used" > SalesHeader."Posting Date" then
+                    error('impossible de reserver des numéros pour des dates de comptabilisations antérieures à ' + Souche."Last Date Used".ToText());
 
-                NewNo :=
-                    NoSeriesMgt.GetNextNo(SalesSetup."Posted Invoice Nos.", SalesHeader."Posting Date", true);
+                NewNo := NoSeriesMgt.GetNextNo(SalesSetup."Posted Invoice Nos.", SalesHeader."Posting Date", true);
 
                 SalesHeader.Validate("Posting No.", NewNo);
                 SalesHeader.Modify(true);
@@ -176,7 +184,7 @@ pageextension 50033 SalesinvoiceList extends "Sales Invoice List"
         SL.SetRange(Type, SL.Type::Item);
         SL.SetRange("Shipment No.", '');
         if SL.FindFirst() then
-            Error('La facture %1 n''est pas regroupée !');
+            Error('La facture %1 n''est pas regroupée !', SL."Document No.");
 
     end;
 

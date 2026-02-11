@@ -1,9 +1,9 @@
 codeunit 50113 PurchaseEvents
 {
     //<<< Check Affectaion des frais droit douane montant facture par rapport a la répartion du montant par NGP 
-    Permissions = tabledata "Purch. Rcpt. Line" = m;
+    Permissions = tabledata "Purch. Rcpt. Line" = m, tabledata "Purch. Rcpt. Header" = m;
     //et Origine 
-    [EventSubscriber(ObjectType::Codeunit, codeunit::"Purch.-Post", 'OnbeforepostPurchaseDoc', '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Purch.-Post", OnbeforepostPurchaseDoc, '', false, false)]
     local procedure CheckDroitDouane(PurchaseHeader: Record "Purchase Header")
     var
         DD: Record DroitDouaneLedgerEntry;
@@ -25,7 +25,7 @@ codeunit 50113 PurchaseEvents
     end;
 
 
-    [EventSubscriber(ObjectType::Codeunit, codeunit::"Purch.-Post", 'OnbeforepostPurchaseDoc', '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Purch.-Post", OnbeforepostPurchaseDoc, '', false, false)]
     local procedure OnbeforepostPurchaseDoc(var PurchaseHeader: Record "Purchase Header"; PreviewMode: Boolean; CommitIsSupressed: Boolean; var HideProgressWindow: Boolean; var ItemJnlPostLine: Codeunit "Item Jnl.-Post Line"; var IsHandled: Boolean)
     var
         ImpFolder: Record "Import Folder";
@@ -44,7 +44,7 @@ codeunit 50113 PurchaseEvents
 
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, codeunit::"Purch.-Post", 'OnbeforepostPurchaseDoc', '', false, false)]
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Purch.-Post", OnbeforepostPurchaseDoc, '', false, false)]
     local procedure StampEvent(PurchaseHeader: Record "Purchase Header")
     var
         i: Enum "Purchase Document Status";
@@ -123,53 +123,55 @@ codeunit 50113 PurchaseEvents
 
     begin
         Vend.get(rec."Buy-from Vendor No.");
-        if not Vend.Stamp then exit;
+        if Vend.Stamp then begin
 
-        GLSetup.GET;
-        GLSetup.TestField("Montant timbre fiscal");
-        GLSetup.TestField("Frais timbre/Achat");
-        GLSetup.TestField("Compte timbre/Achat");
+            GLSetup.GET;
+            GLSetup.TestField("Montant timbre fiscal");
+            GLSetup.TestField("Frais timbre/Achat");
+            GLSetup.TestField("Compte timbre/Achat");
 
-        RecLPurchLine.RESET;
-        RecLPurchLine.SETRANGE("Document Type", Rec."Document Type");
-        RecLPurchLine.SETRANGE("Document No.", Rec."No.");
-        if frais then begin
-            RecLPurchLine.SETRANGE(RecLPurchLine.Type, RecLPurchLine.Type::"Charge (Item)");
-            RecLPurchLine.SETRANGE(RecLPurchLine."No.", GLSetup."Frais timbre/Achat");
-        end else begin
-            RecLPurchLine.SETRANGE(RecLPurchLine.Type, RecLPurchLine.Type::"G/L Account");
-            RecLPurchLine.SETRANGE(RecLPurchLine."No.", GLSetup."Compte timbre/Achat");
-        end;
-        IF RecLPurchLine.FIND('-') THEN BEGIN
-            REPEAT
-                RecLPurchLine.DELETE;
-            UNTIL RecLPurchLine.NEXT = 0;
-        END;
+            RecLPurchLine.RESET;
+            RecLPurchLine.SETRANGE("Document Type", Rec."Document Type");
+            RecLPurchLine.SETRANGE("Document No.", Rec."No.");
+            if frais then begin
+                RecLPurchLine.SETRANGE(RecLPurchLine.Type, RecLPurchLine.Type::"Charge (Item)");
+                RecLPurchLine.SETRANGE(RecLPurchLine."No.", GLSetup."Frais timbre/Achat");
+            end else begin
+                RecLPurchLine.SETRANGE(RecLPurchLine.Type, RecLPurchLine.Type::"G/L Account");
+                RecLPurchLine.SETRANGE(RecLPurchLine."No.", GLSetup."Compte timbre/Achat");
+            end;
+            IF RecLPurchLine.FIND('-') THEN BEGIN
+                REPEAT
+                    RecLPurchLine.DELETE;
+                UNTIL RecLPurchLine.NEXT = 0;
+            END;
 
-        RecLPurchLine.RESET;
-        RecLPurchLine.SETRANGE("Document Type", rec."Document Type");
-        RecLPurchLine.SETRANGE("Document No.", Rec."No.");
-        IF RecLPurchLine.FIND('-') THEN BEGIN
-            IF RecLPurchLine.FINDLAST THEN
-                VarILineNo := RecLPurchLine."Line No." + 50;
-            IF rec."Document Type" IN [rec."Document Type"::Invoice, rec."Document Type"::Order, rec."Document Type"::"Credit Memo",
-               rec."Document Type"::"Return Order"] THEN BEGIN
-                RecLPurchLine1.VALIDATE("Document Type", rec."Document Type");
-                RecLPurchLine1.VALIDATE("Document No.", rec."No.");
-                RecLPurchLine1."Line No." := VarILineNo;
-                if frais then begin
-                    RecLPurchLine1.VALIDATE(Type, RecLPurchLine1.Type::"Charge (Item)");
-                    RecLPurchLine1.VALIDATE("No.", GLSetup."Frais timbre/Achat");
-                end else begin
-                    RecLPurchLine1.VALIDATE(Type, RecLPurchLine1.Type::"G/L Account");
-                    RecLPurchLine1.VALIDATE("No.", GLSetup."Compte timbre/Achat");
+            RecLPurchLine.RESET;
+            RecLPurchLine.SETRANGE("Document Type", rec."Document Type");
+            RecLPurchLine.SETRANGE("Document No.", Rec."No.");
+            IF RecLPurchLine.FIND('-') THEN BEGIN
+                IF RecLPurchLine.FINDLAST THEN
+                    VarILineNo := RecLPurchLine."Line No." + 50;
+                IF rec."Document Type" IN [rec."Document Type"::Invoice, rec."Document Type"::Order, rec."Document Type"::"Credit Memo",
+                   rec."Document Type"::"Return Order"] THEN BEGIN
+                    RecLPurchLine1.VALIDATE("Document Type", rec."Document Type");
+                    RecLPurchLine1.VALIDATE("Document No.", rec."No.");
+                    RecLPurchLine1."Line No." := VarILineNo;
+                    if frais then begin
+                        RecLPurchLine1.VALIDATE(Type, RecLPurchLine1.Type::"Charge (Item)");
+                        RecLPurchLine1.VALIDATE("No.", GLSetup."Frais timbre/Achat");
+                    end else begin
+                        RecLPurchLine1.VALIDATE(Type, RecLPurchLine1.Type::"G/L Account");
+                        RecLPurchLine1.VALIDATE("No.", GLSetup."Compte timbre/Achat");
+
+                    end;
+                    RecLPurchLine1.VALIDATE("Buy-from Vendor No.", rec."Buy-from Vendor No.");
+                    RecLPurchLine1.Description := 'Timbre Fiscal Loi 93/53';
+                    RecLPurchLine1.VALIDATE(Quantity, 1);
+                    RecLPurchLine1.VALIDATE("Direct Unit Cost", GLSetup."Montant timbre fiscal");
+                    RecLPurchLine1.INSERT;
 
                 end;
-                RecLPurchLine1.VALIDATE("Buy-from Vendor No.", rec."Buy-from Vendor No.");
-                RecLPurchLine1.Description := 'Timbre Fiscal Loi 93/53';
-                RecLPurchLine1.VALIDATE(Quantity, 1);
-                RecLPurchLine1.VALIDATE("Direct Unit Cost", GLSetup."Montant timbre fiscal");
-                RecLPurchLine1.INSERT;
 
                 //Affectation du frais
                 if RecLPurchLine1.Type = RecLPurchLine1.type::"Charge (Item)" then
@@ -359,7 +361,7 @@ codeunit 50113 PurchaseEvents
     end;
 
     [EventSubscriber(ObjectType::Table, Database::"Purchase Line",
-           OnAfterValidateEvent, 'Location Code', false, false)]
+           OnAfterValidateEvent, "Location Code", false, false)]
     local procedure PurchaseLine_OnAfterValidateLocation(
            var Rec: Record "Purchase Line";
            xRec: Record "Purchase Line")
@@ -368,7 +370,8 @@ codeunit 50113 PurchaseEvents
         if xRec."Direct Unit Cost" <> 0 then begin
             // Et si BC l’a écrasé
             if Rec."Direct Unit Cost" <> xRec."Direct Unit Cost" then begin
-                Rec.Validate("Direct Unit Cost", xRec."Direct Unit Cost");
+                // Rec.Validate("Direct Unit Cost", xRec."Direct Unit Cost");
+                rec.validate("Direct Unit Cost", xrec."Direct Unit Cost");
             end;
         end;
 
@@ -378,6 +381,7 @@ codeunit 50113 PurchaseEvents
                 Rec.Validate("Line Discount %", xRec."Line Discount %");
             end;
         end;
+        // rec.modify(false);
     end;
 
     [EventSubscriber(ObjectType::Page, Page::"Document Attachment Factbox", OnBeforeDrillDown, '', false, false)]
@@ -434,6 +438,8 @@ codeunit 50113 PurchaseEvents
         end;
     end;
 
+
+
     procedure CancelSalesPrice(Group: Code[25]; "No.": Code[25]; Date0: Date)
     var
         SalesPrice: Record "Price List Line";
@@ -453,10 +459,8 @@ codeunit 50113 PurchaseEvents
                 IF (SalesPrice."Ending Date" = 0D) OR (SalesPrice."Ending Date" >= TODAY) THEN BEGIN
                     SalesPrice."Ending Date" := CALCDATE('<-1D>', Date0);
                     SalesPrice.Status := SalesPrice.Status::Inactive;
-
                     SalesPrice.Modify();
                 END;
-
             UNTIL SalesPrice.NEXT = 0;
 
 
@@ -524,6 +528,35 @@ codeunit 50113 PurchaseEvents
                 SalesPrice.Modify();
             end;
         end;
+    end;
+
+    procedure UpdateShipmtNoReception(OrderNo: Code[20]; ShipmentCA: Code[20])
+    var
+        ReceiptHeader: Record "Purch. Rcpt. Header";
+    begin
+
+        ReceiptHeader.SetCurrentKey("Order No.");
+        ReceiptHeader.SetRange("Order No.", OrderNo);
+        ReceiptHeader.Modifyall("Vendor Shipment No.", ShipmentCA);
+
+    end;
+
+    procedure UpdateDocInExtractReceipt(Reception: Code[20]; Line: Integer)
+    var
+        RecLine: Record "Purch. Rcpt. Line";
+        Order: Record "Purchase Header";
+        RecHeader: Record "Purch. Rcpt. Header";
+    begin
+        RecLine.get(Reception, Line);
+        RecHeader.get(Reception);
+        if RecHeader."Order No." = '' then exit;
+
+        Order.get(Order."Document Type"::Order, RecHeader."Order No.");
+
+        RecLine.Order := RecHeader."Order No.";
+        RecLine."Vendor Shipment No." := Order."Vendor Shipment No.";
+        RecLine.Modify();
+
     end;
 
 

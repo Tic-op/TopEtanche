@@ -289,6 +289,12 @@ report 50103 FactureVente
             }
         }
     }
+    trigger OnInitReport()
+    begin
+        //  SansRemise := false;
+        Vendorref := true;
+    end;
+
     local procedure CalculerTotal()
     var
         SalesInvLine: Record "Sales Invoice Line";

@@ -18,6 +18,11 @@ pageextension 50060 "User Setup" extends "User Setup"
                 ApplicationArea = All;
 
             }
+            field("Marge vente négative"; Rec."Marge vente négative")
+            {
+                ApplicationArea = All;
+
+            }
         }
     }
 }

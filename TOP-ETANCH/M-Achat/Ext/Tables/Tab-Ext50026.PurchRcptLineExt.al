@@ -25,7 +25,18 @@ tableextension 50026 "Purch. Rcpt. Line Ext." extends "Purch. Rcpt. Line"
             Editable = false;
         }
 
+        field(50020; "Vendor Shipment No."; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'BL fourn.';
 
+        }
+        field(50021; Order; Code[20])
+        {
+            DataClassification = ToBeClassified;
+            Caption = 'Commande';
+
+        }
     }
     keys
     {

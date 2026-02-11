@@ -289,6 +289,7 @@ report 50029 "Devisarchivé"
     trigger OnInitReport()
     begin
         //  SansRemise := false;
+        Vendorref := true;
     end;
 
     var

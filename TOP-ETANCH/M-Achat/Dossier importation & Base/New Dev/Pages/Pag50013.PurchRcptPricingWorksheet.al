@@ -321,13 +321,14 @@ page 50180 "Purch Rcpt Pricing Worksheet"
                             ProgressDlg.Update(2, Round(CurrentCount / TotalCount * 10000, 1));
 
 
-                            Rec.OtherUnitCost := 0;
-                            if OtherCharges <> 0 then
-                                PricingMgt.AssignAdditionnalCharges(Rec."Document No.", OtherCharges);
+                            // Rec.OtherUnitCost := 0;
+                            //if OtherCharges <> 0 then
+                            PricingMgt.AssignAdditionnalCharges(Rec."Document No.", OtherCharges);
 
                             PricingMgt.CalcCostAmountFromILE(Rec."Document No.", rec."No.", GlobalCalcBase); // Prix de revient
                             PricingMgt.CalcPurchaseAmount(Rec."Document No.", rec."No.", ''); // prix d'achat en tnd
                         until Rec.next = 0;
+
                         ProgressDlg.Close();
 
                         rec.FindFirst();
@@ -351,7 +352,12 @@ page 50180 "Purch Rcpt Pricing Worksheet"
                 trigger OnAction()
                 begin
                     IF Confirm('Vous êtes sur le point de calculer les PV thèoriques ..', false) then begin
+                        If rec.getfilter(Description) = '' then begin
 
+                            If not Confirm('Filtre description vide. Cette action va calculer les prix théorique selon les valeurs des marges pas défaut dans les articles, Voulez vous continuer ou arrêter l''execution?', False, false)
+                            then
+                                exit;
+                        end;
                         rec.findset();
                         repeat
                             PricingMgt.CalcTheoreticalSalesPrice(Rec."Document No.", rec."No.", MargeStdToapply, MargeGrosToAPPLY, rec.getfilter(Description));

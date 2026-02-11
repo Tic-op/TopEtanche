@@ -33,6 +33,10 @@ page 50055 "modif PL"
                 {
                     ToolTip = 'Specifies the number of the account that the entry on the journal line will be posted to.';
                 }
+                field(Designation; Rec.Designation)
+                {
+
+                }
                 field("Copied To No."; Rec."Copied To No.")
                 {
                     ToolTip = 'Specifies the value of the Copied To No. field.', Comment = '%';

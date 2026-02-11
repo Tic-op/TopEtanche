@@ -47,6 +47,7 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
 
 
 
+
         movebefore("Location Code"; Quantity)
 
 
@@ -105,6 +106,17 @@ pageextension 50030 SalesQuoteSubform extends "Sales Quote Subform"
                         PreparationTransfert(Rec."Document Type", Rec."Document No.", rec."Line No.");
                 end;
 
+            }
+            field("Qté à commander"; Rec."Qté à commander")
+            {
+                DecimalPlaces = 0 : 3;
+                ApplicationArea = all;
+
+            }
+            field("Qté panier"; Rec."Qté panier")
+            {
+                DecimalPlaces = 0 : 3;
+                ApplicationArea = all;
             }
 
         }

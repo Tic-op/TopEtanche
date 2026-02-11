@@ -427,55 +427,6 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
 
                 begin
                     "PrépEvent"."GénérerOrdredePréparation"(OrdrePrep."document type"::Commande, rec."No.");
-
-                    /*   OrdrePrep.SetRange("Order No", Rec."No.");
-                      if OrdrePrep.FindFirst() then
-                          Error('Un bon de préparation existe déjà pour cette commande');
-
-
-
-                      OrdrePrep.SetRange("Order No", Rec."No.");
-                      OrdrePrep.SetFilter(Statut, '<>%1', OrdrePrep.Statut::"Créé");
-                      if OrdrePrep.FindFirst() then
-                          Error('La commande %1 est en cours de préparation.', OrdrePrep."Order No");
-
-                      SalesLine.SetCurrentKey("Document Type", "Document No.");
-                      SalesLine.SetRange("Document Type", SalesLine."Document Type"::Invoice);
-                      SalesLine.SetRange("Document No.", Rec."No.");
-                      if SalesLine.FindFirst() then
-                          repeat
-                              if SalesLine."Location Code" = '' then
-                                  Error('Il faut avoir un magasin dans les lignes de commande', SalesLine."No.")
-
-                          until SalesLine.Next() = 0;
-
-                      SalesLine.Reset();
-                      SalesLine.SetCurrentKey("Document Type", "Document No.");
-                      SalesLine.SetRange("Document Type", SalesLine."Document Type"::invoice);
-                      SalesLine.SetRange("Document No.", Rec."No.");
-
-                      if SalesLine.FindFirst() then
-                          repeat
-                              LocationCode := SalesLine."Location Code";
-                              OrdrePrep.Reset();
-                              OrdrePrep.SetRange("Order No", Rec."No.");
-                              OrdrePrep.SetRange("Magasin", LocationCode);
-                              if not OrdrePrep.FindFirst() then begin
-                                  OrdrePrep.Init();
-                                  OrdrePrep."Order No" := Rec."No.";
-                                  OrdrePrep."Magasin" := LocationCode;
-                                  OrdrePrep."Creation date" := CurrentDateTime;
-                                  OrdrePrep.Statut := OrdrePrep.Statut::"Créé";
-                                  OrdrePrep."document type" := OrdrePrep."document type"::Facture;
-                                  SalesSetup.Get();
-                                  OrdrePrep.Insert(true);
-                              end;
-                          until SalesLine.Next() = 0;
-                      Message('Un bon de préparation a été créé avec succés'); */
-                    /*   OrdrePrep.Reset();
-                      OrdrePrep.SetRange("Order No", Rec."No.");
-                      OrdrePrepPage.SetTableView(OrdrePrep);
-                      OrdrePrepPage.Run(); */
                 end;
 
             }
@@ -499,6 +450,48 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                 end;
             }
 
+        }
+        addafter(MoveNegativeLines)
+        {
+            action(ExtractAvailableBlanketOrderLines)
+            {
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+                ApplicationArea = All;
+                Image = CollapseAll;
+                visible = true;
+                enabled = not (rec."Type de facturation" = rec."Type de facturation"::"Commande Totale");
+                Caption = 'Extraire lignes commande cadre disponible';
+                trigger OnAction()
+                var
+                    BODialog: Page "Dialog BO Extraction";
+                    ExtractLinkedOrderOnly: Boolean;
+                    InsertInSameOrder: Boolean;
+                    BOExtractionHandler: Codeunit "BO Extraction Handler";
+                    Cust: record Customer;
+                begin
+                    Cust.get(rec."Sell-to Customer No.");
+                    if Cust."Type de facturation" = Cust."Type de facturation"::"Commande Totale" then error('Action interdite,Type facturation client doit être différent de "Commande totale"');
+                    // 1️⃣ Open the BO Extraction dialog
+                    if BODialog.RunModal() <> Action::OK then
+                        exit;
+
+                    // 2️⃣ Retrieve user choices
+                    BODialog.GetExtractionSelection(ExtractLinkedOrderOnly);
+                    BODialog.GetInsertionSelection(InsertInSameOrder);
+
+                    // 3️⃣ Call the codeunit to handle extraction & insertion
+                    BOExtractionHandler.ExtractFromBlanketOrdersWithMessage(
+                        Rec."Sell-to Customer No.",  // Customer No.
+                        Rec."No.",                   // Current sales order No.
+                        ExtractLinkedOrderOnly,      // true = only linked blanket order lines
+                        InsertInSameOrder);          // true = insert in current order, false = create new order
+                end;
+
+
+
+            }
         }
 
     }

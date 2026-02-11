@@ -154,6 +154,16 @@ page 50046 "Usual Search"
 
                 }
 
+
+                field("Qty Confirmed in Blanket Order"; Rec."Qty Confirmed in Blanket Order")
+                {
+                    Caption = 'Achat cadre';
+                    ApplicationArea = all;
+                    DecimalPlaces = 0 : 3;
+                    editable = false;
+                }
+
+
                 field("Unit Price"; Rec."Unit Price")
                 {
                     Editable = false;

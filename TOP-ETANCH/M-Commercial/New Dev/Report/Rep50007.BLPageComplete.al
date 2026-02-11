@@ -244,7 +244,6 @@ report 50007 BLPageComplete
                     Caption = 'Afficher référence fournisseur';
                     ApplicationArea = all;
                     // Editable = IsEditable;
-
                 }
 
             }
@@ -261,6 +260,7 @@ report 50007 BLPageComplete
 
         sansremise := false;
         "BL_Valorisé" := true;
+        Vendorref := true;
 
     end;
 

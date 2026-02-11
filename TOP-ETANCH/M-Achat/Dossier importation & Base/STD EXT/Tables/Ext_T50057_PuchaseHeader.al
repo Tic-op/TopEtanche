@@ -1,7 +1,10 @@
 tableextension 50057 PurchaseHeaderExt extends "Purchase Header"
 {
+
     fields
     {
+
+
 
         modify("Buy-from Vendor No.")
         {
@@ -12,6 +15,22 @@ tableextension 50057 PurchaseHeaderExt extends "Purchase Header"
             begin
                 Vend.get("Buy-from Vendor No.");
                 Stamp := Vend.Stamp;
+            end;
+        }
+        modify("Vendor Shipment No.")
+        {
+            trigger OnAfterValidate()
+            var
+                PL: Record "Purchase Line";
+                CU: Codeunit PurchaseEvents;
+            begin
+                /*   PL.setrange("Document Type", "Document Type");
+                  PL.setrange("Document No.", "No.");
+                  PL.ModifyAll("Vendor Shipment No.", "Vendor Shipment No."); */
+
+                if "Vendor Shipment No." <> '' then
+                    CU.UpdateShipmtNoReception(rec."No.", "Vendor Shipment No.");
+
             end;
         }
         field(50001; "DI No."; code[20])

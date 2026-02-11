@@ -5,7 +5,7 @@ using Microsoft.Foundation.NoSeries;
 
 tableextension 50101 ParamStockExt extends "Inventory Setup"
 {
-    fields
+    /* fields
     {
         field(50000; "Inventory No."; Code[25])
         {
@@ -14,5 +14,5 @@ tableextension 50101 ParamStockExt extends "Inventory Setup"
             TableRelation = "No. Series";
         }
 
-    }
+    }*/
 }

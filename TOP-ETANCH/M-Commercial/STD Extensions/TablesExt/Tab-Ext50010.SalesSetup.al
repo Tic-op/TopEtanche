@@ -2,6 +2,7 @@ namespace TopEtanch.TopEtanch;
 
 using Microsoft.Sales.Setup;
 using Microsoft.Foundation.NoSeries;
+using Microsoft.Sales.Customer;
 
 tableextension 50010 SalesSetup extends "Sales & Receivables Setup"
 {
@@ -25,10 +26,18 @@ tableextension 50010 SalesSetup extends "Sales & Receivables Setup"
             DataClassification = ToBeClassified;
 
         }
-      /*   Field(50003;"PEC Type facturation";Boolean)
+
+        field(50003; "Client Divers"; Code[20])
         {
-            Caption= 'Prise en considération du type facturation';
-            DataClassification= ToBeClassified;
-        } */
+            Caption = 'Client Divers';
+            DataClassification = ToBeClassified;
+            TableRelation = Customer;
+
+        }
+        /*   Field(50003;"PEC Type facturation";Boolean)
+          {
+              Caption= 'Prise en considération du type facturation';
+              DataClassification= ToBeClassified;
+          } */
     }
 }

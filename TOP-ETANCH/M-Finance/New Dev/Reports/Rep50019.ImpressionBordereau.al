@@ -20,11 +20,9 @@ report 50019 "Bordereau Envoi à la banque"
         {
             column(No_; "No.") { }
 
-
             Column(CurrencyCode; "Currency Code") { }
             Column(PaymentClass; "Payment Class") { }
             Column(StatusName; "Status Name") { }
-
             Column(Amount; Amount) { }
             Column(BankName; BankName) { }
             Column(societe; CompanyInfo.Name) { }

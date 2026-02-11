@@ -160,6 +160,23 @@ tableextension 50005 Itemext extends Item
                FieldClass = FlowField;
                CalcFormula = count("Purchase Line" where("Document Type" = const("Purchase Document Type"::Quote), "No." = field("No.")));
            } */
+
+        Field(50070; "Qty Confirmed in Blanket Order"; Decimal)
+        {
+            Caption = 'Quantité confirmée sur commande cadre achat';
+            FieldClass = FlowField;
+            CalcFormula = Sum("Purchase Line".Restant where("Document Type" = const("Purchase Document Type"::"Blanket Order"), Type = const("Purchase Line Type"::Item),
+           "No." = field("No."), "Confirmé par fournisseur" = const(true)));
+            DecimalPlaces = 0 : 3;
+        }
+        Field(50199; "Qty Correction in Shipments"; Decimal)
+        {
+            FieldClass = flowfield;
+            Calcformula = Sum("Sales Shipment Line"."Quantity (Base)" where("No." = field("No."), Correction = const(true),
+             "Quantity (Base)" = filter(< 0), "Qty. Invoiced (Base)" = const(0)));
+        }
+
+
         field(50200; "Qty on invoice"; Decimal) //IS12092025
         {
             Caption = 'Qté à facturer';

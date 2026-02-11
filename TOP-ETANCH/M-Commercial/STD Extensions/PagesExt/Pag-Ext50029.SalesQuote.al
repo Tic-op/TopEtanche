@@ -120,7 +120,7 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
         }
         modify(MakeOrder)
         {
-            Caption = 'générer expédition vente';
+            // Caption = 'générer expédition vente';
             Enabled = rec."Type de facturation" <> rec."Type de facturation"::"Contre remboursement"; //AM à faire
 
 
@@ -164,6 +164,26 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
 
                 end;
             }
+            action(Créer_Document)
+            {
+                ApplicationArea = All;
+                Caption = 'Créer documents vente ';
+                image = CreateDocuments;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    CVCMAKER: Codeunit SalesBlanketOrderFromQuote;
+                begin
+                    Rec.TestField(Status, "Sales Document Status"::Open);
+                    CVCMAKER.CreateDocumentsQuote(rec."No.");
+
+                end;
+
+
+            }
+
         }
     }
 

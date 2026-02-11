@@ -30,10 +30,10 @@ page 53026 "Détail vente article"
                     Caption = 'Prix TTC';
                 }
                 field("Unit Cost"; Rec."Unit Cost") { editable = false; }
-                Field("Last Direct Cost"; Rec."Last Direct Cost") { Editable = false; }
                 field("Sur Cmde Vente"; Rec."Qty. on Sales Order") { }
                 field("Sur Cmde Achat"; Rec."Qty. on Purch. Order") { }
                 //Field("Sur facture Vente"; rec."Qty on invoice") { } 
+                field("Sur Cmde Cadre Achat"; rec."Qty Confirmed in Blanket Order") { }
                 field(Tout_les_Client; Tout_les_Client)
                 {
                     Caption = 'Tout les clients';

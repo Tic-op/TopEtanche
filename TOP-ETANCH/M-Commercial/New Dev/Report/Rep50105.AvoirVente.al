@@ -224,7 +224,11 @@ report 50105 AvoirVente
         }
     }
 
-
+    trigger OnInitReport()
+    begin
+        //  SansRemise := false;
+        Vendorref := true;
+    end;
 
 
     procedure CalcStampAmount(): Decimal
