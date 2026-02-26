@@ -77,6 +77,7 @@ report 50014 "BL RGRP"
             column(CompanyPhone2; companyInf."Phone No. 2") { }
             column(CompanyEmail; companyInf."E-Mail") { }
             column(CompanyWeb; companyInf."Home Page") { }
+            column(MFS; Companyinf."VAT Registration No.") { }
             column(txtMntTLettres; txtMntTLettres) { }
 
 

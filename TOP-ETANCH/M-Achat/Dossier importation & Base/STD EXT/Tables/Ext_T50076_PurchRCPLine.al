@@ -59,7 +59,11 @@ tableextension 50076 purchaseRcpLineExt extends "Purch. Rcpt. Line"
         }
         field(50056; OtherUnitCost; decimal)
         {
-
+            trigger OnValidate()
+            begin
+                MargeStd();
+                MargeGros();
+            end;
 
         }
         field(50057; "% Marge théorique"; decimal)
@@ -163,9 +167,9 @@ tableextension 50076 purchaseRcpLineExt extends "Purch. Rcpt. Line"
     local procedure MargeStd()
     begin
         if CalcBase = CalcBase::PR then
-            "Prix Std" := ROUND(PRCost * (1 + "% Marge Std" / 100), 0.001, '=')
+            "Prix Std" := ROUND((PRCost + OtherUnitCost) * (1 + "% Marge Std" / 100), 0.001, '=')
         else
-            "Prix Std" := ROUND(PMPCost * (1 + "% Marge Std" / 100), 0.001, '=');
+            "Prix Std" := ROUND((PMPCost + OtherUnitCost) * (1 + "% Marge Std" / 100), 0.001, '=');
 
 
     end;
@@ -173,17 +177,17 @@ tableextension 50076 purchaseRcpLineExt extends "Purch. Rcpt. Line"
     local procedure MargeGros()
     begin
         if CalcBase = CalcBase::PR then
-            "Prix Gros" := ROUND(PRCost * (1 + "% Marge Gros" / 100), 0.001, '=')
+            "Prix Gros" := ROUND((PRCost + OtherUnitCost) * (1 + "% Marge Gros" / 100), 0.001, '=')
         else
-            "Prix Gros" := ROUND(PMPcost * (1 + "% Marge Gros" / 100), 0.001, '=')
+            "Prix Gros" := ROUND((PMPCost + OtherUnitCost) * (1 + "% Marge Gros" / 100), 0.001, '=')
     end;
 
     local procedure MargeAuto()
     begin
         if CalcBase = CalcBase::PR then
-            "Prix Auto" := ROUND(PRCost * (1 + "% Marge Auto" / 100), 0.001, '=')
+            "Prix Auto" := ROUND((PRCost + OtherUnitCost) * (1 + "% Marge Auto" / 100), 0.001, '=')
         else
-            "Prix Auto" := ROUND(PMPCost * (1 + "% Marge Auto" / 100), 0.001, '=')
+            "Prix Auto" := ROUND((PMPCost + OtherUnitCost) * (1 + "% Marge Auto" / 100), 0.001, '=')
 
     end;
 

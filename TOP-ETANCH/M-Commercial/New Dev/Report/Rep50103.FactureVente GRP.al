@@ -91,10 +91,10 @@ report 50109 FactureVenteGRP
             column(CompanyPhone2; companyinfo."Phone No. 2") { }
             column(CompanyEmail; companyinfo."E-Mail") { }
             column(CompanyWeb; companyinfo."Home Page") { }
+            Column(MFS; companyInfo."VAT Registration No.") { }
             column(Timbre; "Stamp Amount") { }
             column(MontantNetHeader; MontantNetHeader) { }
             column(txtMntTLettres; txtMntTLettres) { }
-
             column(PaiementText; PaiementText) { }
 
             dataitem("LDVR"; "Ligne DocVente Regroupée")

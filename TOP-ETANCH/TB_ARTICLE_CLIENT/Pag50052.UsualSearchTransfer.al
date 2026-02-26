@@ -180,31 +180,31 @@ page 50052 "Usual Search Transfer"
         Inserer();
     end;
 
-    Trigger OnOpenPage()
+    /*   Trigger OnOpenPage()
 
-    var
-        item: Record item;
-        i: integer;
-    begin
-        // item.SetCurrentKey("Usual search");
-        //   item.setrange("Usual search", '');
-        i := 0;
+      var
+          item: Record item;
+          i: integer;
+      begin
+          // item.SetCurrentKey("Usual search");
+          //   item.setrange("Usual search", '');
+          i := 0;
 
-        item.findfirst();
-        repeat
-            if (item."Usual search" = '')
-             //OR
-             // (item."Usual search" <> item.Description + ' ' + item."Vendor Item No." + ' ' + item."reference Origine")
-             then begin
-                item."Usual search" := item.Description + ' ' + item."Vendor Item No." + ' ' + item."reference Origine";
-                item.Modify();
-                i := i + 1;
-            end;
-        until (item.Next() = 0);
+          item.findfirst();
+          repeat
+              if (item."Usual search" = '')
+               //OR
+               // (item."Usual search" <> item.Description + ' ' + item."Vendor Item No." + ' ' + item."reference Origine")
+               then begin
+                  item."Usual search" := item.Description + ' ' + item."Vendor Item No." + ' ' + item."reference Origine";
+                  item.Modify();
+                  i := i + 1;
+              end;
+          until (item.Next() = 0);
 
-        //  Message('End');
+          //  Message('End');
 
-    end;
+      end; */
 
 
     /*   procedure initvar(TypeDoc: Enum "Sales Document Type"; noDoc: Code[20])
@@ -282,72 +282,52 @@ page 50052 "Usual Search Transfer"
         //SalesL: record "Sales Line";
         // BO, CurrDoc : record "Sales Header";
         //PurchL: record "Purchase Line";
+        ItemNoList: List of [Code[20]];
+        itemNo: code[20];
         TransferL: record "Transfer Line";
     begin
+
+        Rec.Reset();
         Rec.SetFilter("Reorder Quantity", '>%1', 0);
-
-        if rec.FindSet() then
+        if Rec.FindSet() then
             repeat
-                TransferL.Reset();
-                TransferL.Init();
+                ItemNoList.Add(Rec."No.");
+            until Rec.Next() = 0;
 
-                TransferL."Document No." := TransferH."No.";
-                TransferL."Line No." := TransferL.GetLastLineNo() + 10000;
-                //TransferL.validate(Type, TransferL.type::Item);
+        // Supprimer le filtre immédiatement
+        Rec.Reset();
 
-                TransferL.validate("Item No.", Rec."No.");
-                TransferL.Validate(Quantity, Rec."Reorder Quantity");
-
-                if TransferL.insert(true) then begin
-                    rec."Reorder Quantity" := 0;
-                end;
-
-            until rec.next = 0;
+        if ItemNoList.Count = 0 then
+            exit;
 
 
 
+
+        foreach itemno in itemnolist do begin
+
+            if not Rec.Get(ItemNo) then
+                continue;
+            TransferL.Reset();
+            TransferL.Init();
+
+            TransferL."Document No." := TransferH."No.";
+            TransferL."Line No." := TransferL.GetLastLineNo() + 10000;
+            //TransferL.validate(Type, TransferL.type::Item);
+
+            TransferL.validate("Item No.", itemNo);
+            TransferL.Validate(Quantity, Rec."Reorder Quantity");
+
+            if TransferL.insert(true) then begin
+                rec."Reorder Quantity" := 0;
+                rec.modify();//AM 170226
+            end;
+
+        end;
+
+        Clear(ItemNoList);
         rec.Reset();
 
-        /*  if not panierVisible then begin
-             rec.Reset();
-             exit;
-         end;
-         //  Rec.SetCurrentKey("Budget Quantity");
-         rec.setfilter("Budget Quantity", '>%1', 0);
 
-         if rec.FindSet() then
-             repeat
-                 CurrDoc.setrange("Document Type", salesType);
-                 CurrDoc.SetRange("No.", SalesOrderNo);
-                 CurrDoc.FindSet();
-                 BO.init;
-                 BO := CurrDoc;
-                 BO."Document Type" := SalesHeader."Document Type"::"Blanket Order";
-                 // BO.Validate("Posting Date", Today);
-                 if BO.insert then BO.Validate("Posting Date", Today);
-
-
-
-                 SalesL.Init();
-                 SalesL."Document Type" := SalesHeader."Document Type"::"Blanket Order";
-                 SalesL."Document No." := SalesHeader."No.";
-                 SalesL."Line No." := SalesL.GetLastLineNo() + 10000;
-                 SalesL.validate(Type, "Sales Line Type"::Item);
-
-                 SalesL.validate("No.", Rec."No.");
-                 SalesL.Validate(Quantity, Rec."Budget Quantity");
-
-                 if SalesL.insert() then begin
-                     rec."Budget Quantity" := 0;
-                     SalesL.Validate("Unit Price", rec."Unit Price");
-                     SalesL.Modify();
-                 end
-
-             until rec.next = 0;
-
-
-         rec.Reset();
-  */
 
     end;
 

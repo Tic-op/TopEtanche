@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-01-14T09:25:53.2306827Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-02-16T08:07:20.4633098Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -2454,7 +2454,7 @@
                           </Style>
                         </TextRun>
                         <TextRun>
-                          <Value>=First(Fields!Sell_to_Phone_No_.Value, "DataSet_Result")</Value>
+                          <Value>=First(Fields!VAT_Registration_No_.Value, "DataSet_Result")</Value>
                           <Style>
                             <FontWeight>Bold</FontWeight>
                           </Style>
@@ -2628,6 +2628,26 @@
                     </TextRun>
                     <TextRun>
                       <Value>=Fields!CompanyCity.Value</Value>
+                      <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontSize>8pt</FontSize>
+                        <FontWeight>Normal</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#000000</Color>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value>  MF: </Value>
+                      <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontSize>8pt</FontSize>
+                        <FontWeight>Normal</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#000000</Color>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value>=Fields!MFS.Value</Value>
                       <Style>
                         <FontStyle>Normal</FontStyle>
                         <FontSize>8pt</FontSize>

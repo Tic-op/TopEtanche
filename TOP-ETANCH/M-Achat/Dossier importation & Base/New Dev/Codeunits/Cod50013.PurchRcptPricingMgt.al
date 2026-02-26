@@ -199,11 +199,13 @@ codeunit 50020 "Purch Rcpt Pricing Mgt"
                     end;
 
                     if RcptLine."% Marge Std" > 0 then
-                        RcptLine.Validate("Prix Std", ROUND(BaseCost * (1 + RcptLine."% Marge Std" / 100), 0.001, '='))
+                        // RcptLine.Validate("Prix Std", ROUND(BaseCost * (1 + RcptLine."% Marge Std" / 100), 0.001, '='))
+                        RcptLine."Prix Std" := ROUND(BaseCost * (1 + RcptLine."% Marge Std" / 100), 0.001, '=')
                     else
                         RcptLine.Validate("Prix Std", 0); // pas de marge !!!
                     if RcptLine."% Marge Gros" > 0 then
-                        RcptLine.Validate("Prix Gros", ROUND(BaseCost * (1 + RcptLine."% Marge Gros" / 100), 0.001, '='))
+                        // RcptLine.Validate("Prix Gros", ROUND(BaseCost * (1 + RcptLine."% Marge Gros" / 100), 0.001, '='))
+                        RcptLine."Prix Gros" := ROUND(BaseCost * (1 + RcptLine."% Marge Gros" / 100), 0.001, '=')
                     else
                         RcptLine.Validate("Prix Gros", 0);// pas de marge !!!
 

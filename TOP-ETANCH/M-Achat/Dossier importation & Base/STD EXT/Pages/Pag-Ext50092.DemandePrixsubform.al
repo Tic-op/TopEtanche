@@ -1,4 +1,8 @@
-pageextension 50075 purchaseorderSubFormExtt extends "Purchase Order Subform"
+namespace Top.Top;
+
+using Microsoft.Purchases.Document;
+
+pageextension 50092 "Demande Prix subform" extends "Purchase Quote Subform"
 {
     layout
     {
@@ -18,11 +22,14 @@ pageextension 50075 purchaseorderSubFormExtt extends "Purchase Order Subform"
                 ApplicationArea = all;
             }
         }
+
+
+
     }
     actions
     {
 
-        addafter(BlanketOrder)
+        addafter(DocAttach)
         {
 
 
@@ -54,6 +61,4 @@ pageextension 50075 purchaseorderSubFormExtt extends "Purchase Order Subform"
 
         }
     }
-
-
 }

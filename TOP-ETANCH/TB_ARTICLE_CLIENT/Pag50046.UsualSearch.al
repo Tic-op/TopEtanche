@@ -355,37 +355,53 @@ or
     var
         SalesL: record "Sales Line";
         BO, CurrDoc : record "Sales Header";
+        ItemNoList: List of [Code[20]];
+        itemNo: code[20];
     begin
+
+        // 1️⃣ Collecter les items à traiter
+        Rec.Reset();
         Rec.SetFilter("Reorder Quantity", '>%1', 0);
 
-        if rec.FindSet() then
+        if Rec.FindSet() then
             repeat
-                SalesL.Reset();
-                SalesL.Init();
-                SalesL."Document Type" := SalesHeader."Document Type";
-                SalesL."Document No." := SalesHeader."No.";
-                SalesL."Line No." := SalesL.GetLastLineNo() + 10000;
-                SalesL.validate(Type, "Sales Line Type"::Item);
+                ItemNoList.Add(Rec."No.");
+            until Rec.Next() = 0;
 
-                SalesL.validate("No.", Rec."No.");
+        // Supprimer le filtre immédiatement
+        Rec.Reset();
 
-                if rec."Reorder Quantity" <= rec.AvailabilityByLocation then
-                    SalesL.Validate(Quantity, Rec."Reorder Quantity")
-                else begin
-                    SalesL.validate("Location Code", '');
-                    SalesL.Validate(Quantity, Rec."Reorder Quantity")
-                end;
-                //SalesL.Quantity := rec."Reorder Quantity";
-                //  SalesL."Qty. to Ship" := rec."Reorder Quantity";
 
-                if SalesL.insert(true) then begin
-                    rec."Reorder Quantity" := 0;
-                end;
-                SalesL.Validate("Unit Price", rec."Unit Price");
-                SalesL.Modify();
 
-            until rec.next = 0;
+        foreach itemNo in itemnolist do begin
+            if not Rec.Get(ItemNo) then
+                continue;
+            SalesL.Reset();
+            SalesL.Init();
+            SalesL."Document Type" := SalesHeader."Document Type";
+            SalesL."Document No." := SalesHeader."No.";
+            SalesL."Line No." := SalesL.GetLastLineNo() + 10000;
+            SalesL.validate(Type, "Sales Line Type"::Item);
+            SalesL.validate("No.", itemNo);
 
+            if rec."Reorder Quantity" <= rec.AvailabilityByLocation then
+                SalesL.Validate(Quantity, Rec."Reorder Quantity")
+            else begin
+                SalesL.validate("Location Code", '');
+                SalesL.Validate(Quantity, Rec."Reorder Quantity")
+            end;
+            //SalesL.Quantity := rec."Reorder Quantity";
+            //  SalesL."Qty. to Ship" := rec."Reorder Quantity";
+
+            if SalesL.insert(true) then begin
+                rec."Reorder Quantity" := 0;
+
+                rec.Modify();
+            end;
+            SalesL.Validate("Unit Price", rec."Unit Price");
+            SalesL.Modify();
+
+        end;
 
 
         rec.Reset();
@@ -395,39 +411,47 @@ or
             exit;
         end;
         //  Rec.SetCurrentKey("Budget Quantity");
+        Clear(ItemNoList);
         rec.setfilter("Budget Quantity", '>%1', 0);
-
-        if rec.FindSet() then
+        if Rec.FindSet() then
             repeat
-                CurrDoc.setrange("Document Type", salesType);
-                CurrDoc.SetRange("No.", SalesOrderNo);
-                CurrDoc.FindSet();
-                BO.init;
-                BO := CurrDoc;
-                BO."Document Type" := SalesHeader."Document Type"::"Blanket Order";
-                // BO.Validate("Posting Date", Today);
-                if BO.insert() then BO.Validate("Posting Date", Today);
+                ItemNoList.Add(Rec."No.");
+            until Rec.Next() = 0;
+        Rec.Reset();
 
 
 
-                SalesL.Init();
-                SalesL."Document Type" := SalesHeader."Document Type"::"Blanket Order";
-                SalesL."Document No." := SalesHeader."No.";
-                SalesL."Line No." := SalesL.GetLastLineNo() + 10000;
-                SalesL.validate(Type, "Sales Line Type"::Item);
+        foreach ItemNo in itemNolist do begin
 
-                SalesL.validate("No.", Rec."No.");
-                SalesL.Validate(Quantity, Rec."Budget Quantity");
-
-                if SalesL.insert(true) then begin
-                    rec."Budget Quantity" := 0;
-                    SalesL.Validate("Unit Price", rec."Unit Price");
-                    SalesL.Modify();
-                end
-
-            until rec.next = 0;
+            if not Rec.Get(ItemNo) then
+                continue;
+            CurrDoc.setrange("Document Type", salesType);
+            CurrDoc.SetRange("No.", SalesOrderNo);
+            CurrDoc.FindSet();
+            BO.init;
+            BO := CurrDoc;
+            BO."Document Type" := SalesHeader."Document Type"::"Blanket Order";
+            // BO.Validate("Posting Date", Today);
+            if BO.insert() then BO.Validate("Posting Date", Today);
 
 
+
+            SalesL.Init();
+            SalesL."Document Type" := SalesHeader."Document Type"::"Blanket Order";
+            SalesL."Document No." := BO."No.";
+            SalesL."Line No." := SalesL.GetLastLineNo() + 10000;
+            SalesL.validate(Type, "Sales Line Type"::Item);
+
+            SalesL.validate("No.", itemNo);
+            SalesL.Validate(Quantity, Rec."Budget Quantity");
+            if SalesL.insert(true) then begin
+                rec."Budget Quantity" := 0;
+                rec.Modify();
+                SalesL.Validate("Unit Price", rec."Unit Price");
+                SalesL.Modify();
+            end
+        end;
+        Clear(ItemNoList);
         rec.Reset();
 
 
@@ -537,18 +561,14 @@ or
     begin
         if Texte = '' then
             exit('');
-
         Resultat := '';
         CarPrecedent := 0;
-
         for i := 1 to StrLen(Texte) do begin
             if (Texte[i] = Car) and (CarPrecedent = Car) then
                 continue;
-
             Resultat += Texte[i];
             CarPrecedent := Texte[i];
         end;
-
         exit(Resultat);
     end;
 

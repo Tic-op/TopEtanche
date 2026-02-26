@@ -7,53 +7,7 @@ using Microsoft.Inventory.Item;
 
 codeunit 50001 FindItemRec
 {
-    /*  procedure FindItemReception(SalesOrderNo: Code[20]; Barcode: Code[50]): Text
-     var
-         SalesHeader: Record "Purchase Header";
-         SalesLine: Record "Purchase Line";
-         ItemIdentifier: Record "Item Identifier";
-         Item: Record Item;
-         ItemUnit: Record "Item Unit of Measure";
-         ItemNo: Code[20];
-         Result: Text;
-         Qty: Decimal;
-         UOMCode: Code[10];
-     begin
-         Result := '';
 
-         if not ItemIdentifier.Get(Barcode) then
-             Result := '-1'
-         else begin
-             ItemNo := ItemIdentifier."Item No.";
-             UOMCode := ItemIdentifier."Unit of Measure Code";
-
-             if not SalesHeader.Get(SalesHeader."Document Type"::Order, SalesOrderNo) then
-                 Result := '-2'
-             else begin
-                 SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
-                 SalesLine.SetRange("Document No.", SalesOrderNo);
-                 SalesLine.SetRange("No.", ItemNo);
-
-                 if SalesLine.FindFirst() then begin
-                     if Item.Get(ItemNo) then begin
-                         Qty := 0;
-                         if ItemUnit.Get(Item."No.", UOMCode) then
-                             Qty := ItemUnit."Qty. per Unit of Measure";
-
-                         Result :=
-                             'Item No: ' + Item."No." + ' | ' +
-                             'Description: ' + Item.Description + ' | ' +
-                             'Unité: ' + UOMCode + ' | ' + 'Future dépot:' + Item."Default depot";
-                         // + ' | Qty/UOM: ' + Format(Qty)
-                     end else
-                         Result := '-1';
-                 end else
-                     Result := '0';
-             end;
-         end;
-
-         exit(Result);
-     end; */
 
     procedure FindItemReception(SalesOrderNo: Code[20]; Barcode: Code[50]; desc: Text): Text
     var
@@ -67,34 +21,37 @@ codeunit 50001 FindItemRec
         Qty: Decimal;
         UOMCode: Code[10];
     begin
+
         Result := '';
+
         if Barcode <> '' then begin
-            if not ItemIdentifier.Get(Barcode) then begin
-                Result := '-1';
-            end
-            else begin
-                ItemNo := ItemIdentifier."Item No.";
-                UOMCode := ItemIdentifier."Unit of Measure Code";
-            end;
-        end
-        else if desc <> '' then begin
-            if Item.Get(desc) then begin
+            if Item.Get(Barcode) then begin
                 ItemNo := Item."No.";
                 UOMCode := Item."Base Unit of Measure";
-            end else begin
-                if Item.FindFirst() then begin
-                    repeat
-                        if Item.Description = desc then begin
-                            ItemNo := Item."No.";
-                            UOMCode := Item."Base Unit of Measure";
-                        end;
-                    until Item.Next() = 0;
+            end
+            else
+                if ItemIdentifier.Get(Barcode) then begin
+                    ItemNo := ItemIdentifier."Item No.";
+                    UOMCode := ItemIdentifier."Unit of Measure Code";
+                end
+                else
+                    Result := '-1';
+        end
 
-                    if ItemNo = '' then
-                        Result := 'Description not found';
-                end;
+        else if desc <> '' then begin
+            Item.SetFilter(Description, desc);
+            if Item.FindFirst() then begin
+                repeat
+                    if Item.Description = desc then begin
+                        ItemNo := Item."No.";
+                        UOMCode := Item."Base Unit of Measure";
+                    end;
+                until Item.Next() = 0;
             end;
-        end;
+        end
+        else
+            Result := 'Code à barre vide';
+
         if ItemNo <> '' then begin
             if not PurchHeader.Get(PurchHeader."Document Type"::Order, SalesOrderNo) then begin
                 Result := '-2';
@@ -105,33 +62,30 @@ codeunit 50001 FindItemRec
                     PurchLine.SetRange("Document Type", PurchLine."Document Type"::Order);
                     PurchLine.SetRange("Document No.", SalesOrderNo);
                     PurchLine.SetRange("No.", ItemNo);
+
                     if PurchLine.FindFirst() then begin
                         Qty := 0;
                         if ItemUnit.Get(Item."No.", UOMCode) then
                             Qty := ItemUnit."Qty. per Unit of Measure";
 
                         Result := 'Item No: ' + Item."No." + ' | ' +
-                             'Description: ' + Item.Description + 'Fournisseur: ' + ' | ' + Item."Vendor Name" + ' | ' +
-                             'Unité: ' + UOMCode + ' | ' +
-                             'Future dépot: ' + Item."Default depot" + ' | ';
+                                  'Description: ' + Item.Description + ' | ' +
+                                  'Unité: ' + Qty.ToText() + '| 1';
                     end
                     else begin
                         Result := 'Item No: ' + Item."No." + ' | ' +
-                            'Description: ' + Item.Description + 'Fournisseur: ' + ' | ' + Item."Vendor Name" + ' | ' +
-                            'Unité: ' + UOMCode + ' | ' +
-                            'Future dépot: ' + Item."Default depot" + ' | ' + '0';
+                                  'Description: ' + Item.Description + ' | ' +
+                                  'Unité: ' + Qty.ToText() + '| 0';
                     end;
+
                 end
-                else begin
+                else
                     Result := '-1';
-                end;
             end;
         end;
 
         exit(Result);
     end;
-
-
 
 
 }

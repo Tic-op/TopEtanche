@@ -1,6 +1,7 @@
 namespace Top.Top;
 
 using Microsoft.Inventory.Item;
+using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Sales.Document;
 using Microsoft.Pricing.PriceList;
@@ -139,13 +140,49 @@ pageextension 50028 ItemList extends "Item List"
                     Countitem: integer;
                     ILE: record "Item Ledger Entry";
                     SL: Record "Sales Line";
+                    IAVM: record "Item Attribute Value Mapping";
+                    Mq: record Marque;
+                    IAV: record "Item Attribute Value";
+                    IA: record "Item Attribute";
                 begin
 
-
-
-
                     begin
-                        /*   txt := '';
+                        Countitem := 0;
+                        IA.setrange(Name, 'R-Marque');
+                        IA.findfirst();
+                        IAV.setrange("Attribute ID", IA.ID);
+                        IAV.findset();
+                        repeat
+                            Mq.init();
+                            Mq.Code := IAV.Value;
+                            mq.Description := IAV.Value;
+
+                            if Mq.insert() then;
+                            IAVM.Reset();
+                            IAVM.setrange("Table ID", 27);
+                            IAVM.SetRange("Item Attribute ID", IAV."Attribute ID");
+                            IAVM.SetRange("Item Attribute Value ID", IAV.ID);
+                            if IAVM.findset() then
+                                repeat
+                                    Item.get(IAVM."No.");
+                                    ITem.validate(marque, mq.Code);
+                                    item.Modify();
+                                    Countitem += 1;
+
+                                until IAVM.next = 0;
+
+
+                        until IAV.Next() = 0;
+
+
+                        Message(Countitem.ToText() + ' Article modifiés')
+
+
+                    end;
+
+
+                    /*   begin
+                          txt := '';
                           Purchline.setrange("Document Type", "Purchase Document Type"::Order);
                           Purchline.findset();
 
@@ -166,33 +203,43 @@ pageextension 50028 ItemList extends "Item List"
                           until Purchline.next = 0;
 
                           message(txt);
-   */
-
-                    end;
 
 
+                      end; */
 
-                    begin
-                        Countitem := 0;
-                        Item.setfilter("Description 2", '*TOBEDELETED*');
+                    /*  begin
+                         Countitem := 0;
 
-                        Item.findset();
-                        repeat
-                            ILE.setrange("Item No.", item."No.");
-                            SL.SetRange("No.", item."No.");
-                            Purchline.setrange("No.", item."No.");
+                         IAVM.findset(true);
+                         repeat
+                             if IAVM.CheckValeur() then
+                                 Countitem += 1;
+                             IAVM.UpdateValeurAttribut();
+                         until IAVM.Next = 0;
+                         Message(Countitem.ToText());
+                     end; */
 
-                            if (ILE.Count = 0) and (SL.count = 0) and (Purchline.count = 0) then begin
-                                if item.delete(true)
-                                then
-                                    Countitem += 1;
-                            end;
+                    /*  begin
+                         Countitem := 0;
+                         Item.setfilter("Description 2", '*TOBEDELETED*');
+
+                         Item.findset();
+                         repeat
+                             ILE.setrange("Item No.", item."No.");
+                             SL.SetRange("No.", item."No.");
+                             Purchline.setrange("No.", item."No.");
+
+                             if (ILE.Count = 0) and (SL.count = 0) and (Purchline.count = 0) then begin
+                                 if item.delete(true)
+                                 then
+                                     Countitem += 1;
+                             end;
 
 
-                        until Item.Next() = 0;
-                        message('%1 articles Supprimés', Countitem);
-                        // Item.DeleteAll(false);
-                    end;
+                         until Item.Next() = 0;
+                         message('%1 articles Supprimés', Countitem);
+                         // Item.DeleteAll(false);
+                     end; */
 
 
                     /*  Item.findset;

@@ -8,6 +8,7 @@ using Microsoft.Finance.Currency;
 using Microsoft.Finance.GeneralLedger.Ledger;
 using Microsoft.Finance.GeneralLedger.Posting;
 using Microsoft.Finance.GeneralLedger.Journal;
+using Microsoft.Purchases.Document;
 using Microsoft.Finance.GeneralLedger.Setup;
 using Microsoft.Sales.Customer;
 
@@ -22,6 +23,7 @@ codeunit 50014 FinanceEvents
         PL: Record "Payment Line";
         Customer: Record Customer;
         CustomerListToBlock: code[250];
+        df: report 405;
     begin
 
         if (PaymentStep."Action Type" = PaymentStep."Action Type"::Ledger) and PaymentStep."Impayé Client" then begin

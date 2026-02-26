@@ -69,8 +69,8 @@ table 50017 "Item Identifier TICOP"
     trigger OnInsert()
     begin
         TestField("Item No.");
-        if VerifyItem() = false then
-            Error(Text000, "Item No.");
+        /* if VerifyItem() = false then
+            Error(Text000, "Item No."); */
     end;
 
     var
@@ -109,9 +109,9 @@ table 50017 "Item Identifier TICOP"
         if IsHandled then
             exit(true);
 
-        ItemIdent.SetRange("Item No.", "Item No.");
-        ItemIdent.SetRange("Variant Code", "Variant Code");
-        ItemIdent.SetRange("Unit of Measure Code", "Unit of Measure Code");
+        /* ItemIdent.SetRange("Item No.", "Item No.");
+         ItemIdent.SetRange("Variant Code", "Variant Code");
+         ItemIdent.SetRange("Unit of Measure Code", "Unit of Measure Code"); */
         exit(ItemIdent.IsEmpty);
     end;
 

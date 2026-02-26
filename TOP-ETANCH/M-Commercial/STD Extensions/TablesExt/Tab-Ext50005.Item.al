@@ -169,6 +169,7 @@ tableextension 50005 Itemext extends Item
            "No." = field("No."), "Confirmé par fournisseur" = const(true)));
             DecimalPlaces = 0 : 3;
         }
+
         Field(50199; "Qty Correction in Shipments"; Decimal)
         {
             FieldClass = flowfield;

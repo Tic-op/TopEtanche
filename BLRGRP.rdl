@@ -11,7 +11,7 @@
       <am:Name>MSRB</am:Name>
       <am:Version>15.1.30001.02</am:Version>
     </am:UpdatedBy>
-    <am:LastModifiedTimestamp>2026-01-28T10:42:20.3814213Z</am:LastModifiedTimestamp>
+    <am:LastModifiedTimestamp>2026-02-16T08:18:55.6394500Z</am:LastModifiedTimestamp>
   </am:AuthoringMetadata>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
@@ -2810,6 +2810,29 @@
                   </TextRuns>
                   <Style />
                 </Paragraph>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>MF: </Value>
+                      <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontWeight>Normal</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#000000</Color>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value>=Fields!MFS.Value</Value>
+                      <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontWeight>Normal</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#000000</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
               </Paragraphs>
               <Top>1.1356in</Top>
               <Left>0.25in</Left>
@@ -2942,6 +2965,9 @@ End Function
         </Field>
         <Field Name="CompanyWeb">
           <DataField>CompanyWeb</DataField>
+        </Field>
+        <Field Name="MFS">
+          <DataField>MFS</DataField>
         </Field>
         <Field Name="txtMntTLettres">
           <DataField>txtMntTLettres</DataField>
