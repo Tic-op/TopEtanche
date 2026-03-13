@@ -277,8 +277,8 @@ codeunit 50020 "Purch Rcpt Pricing Mgt"
             RcptLine.Modify();
             PurshEvent.CancelSalesPrice('GROS', Item."No.", CurrentDateTime.Date);
             PurshEvent.InsertSalesPrice('GROS', Item."No.", CurrentDateTime.date, RcptLine."Prix Gros");
-            PurshEvent.CancelSalesPrice('Auto', Item."No.", CurrentDateTime.Date);
-            PurshEvent.InsertSalesPrice('Auto', Item."No.", CurrentDateTime.date, RcptLine."Prix Auto");
+        /*   PurshEvent.CancelSalesPrice('Auto', Item."No.", CurrentDateTime.Date);
+          PurshEvent.InsertSalesPrice('Auto', Item."No.", CurrentDateTime.date, RcptLine."Prix Auto"); */
 
         until RcptLine.Next() = 0;
 

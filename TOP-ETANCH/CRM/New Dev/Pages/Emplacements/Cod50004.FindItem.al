@@ -66,25 +66,36 @@ codeunit 50004 FindItemEMP
          Result := 'Veuillez spécifier un code-barre, numéro d''article ou description';
      end; */
 
-    procedure FindItem(Search: Text[250]): Text
+    procedure FindItem(Search: Text[250]; magazin: Code[25]): Text
     var
         ItemIdentifier: Record "Item Identifier TICOP";
         Item: Record Item;
     begin
 
-        if Search = '' then
+        if (Search = '') or (magazin = '') then
             exit('Veuillez saisir un code-barre, numéro d''article ou description');
+        item.SetFilter("Location Filter", magazin);
+        item.SetAutoCalcFields(Inventory);
+        //item.CalcFields(Inventory);
 
-        if Item.Get(Search) then
-            exit('Item No: ' + Item."No." + ' | Description: ' + Item.Description + ' | Fournisseur: ' + Item."Vendor No." + ' | Unité: ' + Item."Base Unit of Measure");
-
+        if Item.Get(Search) then begin
+            item.SetFilter("Location Filter", magazin);
+            item.CalcFields(Inventory);
+            exit('Item No: ' + Item."No." + ' | Description: ' + Item.Description + ' | Fournisseur: ' + Item."Vendor No." + ' | Unité: ' + Item."Base Unit of Measure" + ' | stock: ' + format(Item.Inventory));
+        end;
         if ItemIdentifier.Get(Search) then
-            if Item.Get(ItemIdentifier."Item No.") then
-                exit('Item No: ' + Item."No." + ' | Description: ' + Item.Description + ' | Fournisseur: ' + Item."Vendor No." + ' | Unité: ' + ItemIdentifier."Unit of Measure Code");
+            if Item.Get(ItemIdentifier."Item No.") then begin
+                item.SetFilter("Location Filter", magazin);
+                item.CalcFields(Inventory);
+                exit('Item No: ' + Item."No." + ' | Description: ' + Item.Description + ' | Fournisseur: ' + Item."Vendor No." + ' | Unité: ' + ItemIdentifier."Unit of Measure Code" + ' | stock: ' + format(Item.Inventory));
 
+            end;
         Item.SetFilter(Description, '*' + Search + '*');
-        if Item.FindFirst() then
-            exit('Item No: ' + Item."No." + ' | Description: ' + Item.Description + ' | Fournisseur: ' + Item."Vendor No." + ' | Unité: ' + Item."Base Unit of Measure");
+        if Item.FindFirst() then begin
+            item.SetFilter("Location Filter", magazin);
+            item.CalcFields(Inventory);
+            exit('Item No: ' + Item."No." + ' | Description: ' + Item.Description + ' | Fournisseur: ' + Item."Vendor No." + ' | Unité: ' + Item."Base Unit of Measure" + ' | stock: ' + format(Item.Inventory));
+        end;
         exit('Aucun résultat trouvé pour: ' + Search);
     end;
 

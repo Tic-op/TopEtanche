@@ -8,7 +8,7 @@ page 50111 "xxxxxxPurch. Inv. Header"
     Caption = 'xxxxxxPurch. Inv. Header';
     PageType = List;
     SourceTable = "Purch. Inv. Header";
-    UsageCategory = Lists;
+    UsageCategory = None;
     Permissions = tabledata "Purch. Inv. Header" = rimd;
 
     layout

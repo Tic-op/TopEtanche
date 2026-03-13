@@ -8,7 +8,7 @@ page 50022 "Liste lignes commandes cadres"
     Caption = 'Liste des commandes cadres';
     PageType = List;
     SourceTable = "Purchase Line";
-    //UsageCategory = Lists;
+    //  UsageCategory = Lists;
     InsertAllowed = false;
     DeleteAllowed = false;
     SourceTableView = where("Document Type" = filter("Blanket Order"));// Restant = filter('>0')
@@ -26,12 +26,17 @@ page 50022 "Liste lignes commandes cadres"
                     ApplicationArea = all;
                     Editable = false;
                 }
-
                 field("Buy-from Vendor No."; Rec."Buy-from Vendor No.")
                 {
                     Caption = 'Fournisseur';
                     ApplicationArea = all;
                     Editable = false;
+                }
+                Field("Document fournisseur"; Rec.GetVendorDocument())
+                {
+                    editable = false;
+                    ApplicationArea = all;
+
                 }
                 field(Type; Rec.Type)
                 {
@@ -45,22 +50,35 @@ page 50022 "Liste lignes commandes cadres"
                     ApplicationArea = all;
                     Editable = false;
                 }
+                Field("Vendor Item No."; Rec."Vendor Item No.")
+                {
+                    editable = False;
+                    ApplicationArea = all;
+
+                }
+                Field("reference origine"; Rec."reference origine")
+                {
+                    Editable = false;
+                    ApplicationArea = all;
+                }
                 field(Description; Rec.Description)
                 {
                     Caption = 'Description';
                     ApplicationArea = all;
                     Editable = false;
                 }
+
+
                 field("Tariff No."; Rec."Tariff No.")
                 {
                     Caption = 'NGP';
                     ApplicationArea = all;
-                    Editable = false;
+                    Editable = true;
                 }
                 field("Country region origin code"; Rec."Country region origin code")
                 {
                     ApplicationArea = all;
-                    Editable = false;
+                    Editable = true;
                 }
 
                 field(Quantity; Rec.Quantity)
@@ -126,6 +144,29 @@ page 50022 "Liste lignes commandes cadres"
     {
         area(Processing)
         {
+            action("Mise à jour référence")
+            {
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedOnly = true;
+                Image = UpdateDescription;
+
+                trigger onAction()
+                var
+                begin
+                    if rec.FindSet(true) then
+                        repeat
+                            rec.UpdaterefOrigine();
+                        until Rec.next = 0;
+
+
+
+                end;
+
+
+
+            }
+
             /*   action(InsereLigne)
               {
                   Caption = 'Insérer ligne sélectionnée';

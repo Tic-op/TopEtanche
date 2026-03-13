@@ -87,7 +87,7 @@ page 50011 Reclassement
     var
         LastLine: Record "Item Journal Line";
     begin
-        Rec."Journal Template Name" := 'ARTICLE';
+        Rec."Journal Template Name" := 'TRANSFERT';
         Rec."Journal Batch Name" := 'DEFAUT';
         Rec."Entry Type" := Rec."Entry Type"::Transfer;
         Rec."Document Date" := Today;

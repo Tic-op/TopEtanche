@@ -6,7 +6,7 @@ page 50305 xxxdeleteItem
     Caption = 'xxxdeleteItem';
     PageType = List;
     SourceTable = "Détails Article";
-    UsageCategory = Lists;
+    UsageCategory = None;
     Permissions = tabledata "Détails Article" = rimd;
 
     layout

@@ -8,7 +8,7 @@ page 50002 "xxxxPurch. Inv. Line"
     Caption = 'xxxxPurch. Inv. Line';
     PageType = List;
     SourceTable = "Purch. Inv. Line";
-    UsageCategory = Lists;
+    UsageCategory = None;
     Permissions = tabledata "Purch. Inv. Line" = rimd;
 
 

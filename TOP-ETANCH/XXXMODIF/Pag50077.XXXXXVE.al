@@ -8,7 +8,7 @@ page 50077 XXXXXVE
     Caption = 'XXXXXVE';
     PageType = List;
     SourceTable = "Value Entry";
-    UsageCategory = Lists;
+    UsageCategory = none;
     Permissions = tabledata "Value Entry" = rimd;
 
     layout
@@ -29,6 +29,7 @@ page 50077 XXXXXVE
                 {
                     ToolTip = 'Specifies the date on the invoice document.';
                 }
+
             }
         }
     }

@@ -8,7 +8,7 @@ page 50065 "xxxxG/L Entry"
     Caption = 'xxxxG/L Entry';
     PageType = List;
     SourceTable = "G/L Entry";
-    UsageCategory = Lists;
+    UsageCategory = None;
     Permissions = tabledata "G/L Entry" = rimd;
 
     layout

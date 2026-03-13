@@ -216,5 +216,11 @@ permissionset 50000 GeneratedPermission
         tabledata Marque = RIMD,
         table Marque = X,
         page "Marque List" = X,
-        page Purchaselinexx = X;
+        page Purchaselinexx = X,
+        page XXXGL_Entry_Modif = X,
+        page XXXValueentryModif = X,
+        page XXXXSalesInvoiceLine = X,
+        page XXXVat_entry_Modif = X,
+        page XXXXSalesInvoiceLinesModif = X,
+        page XXXDTCLEModif = X;
 }

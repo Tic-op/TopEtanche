@@ -113,7 +113,7 @@ report 50109 FactureVenteGRP
                 column(TotalHT; TotalHT) { }
                 column(totalRemise; totalRemise) { }
                 column(totalTVA; totalTVA) { }
-                column(netApayer; netApayer) { }
+                column(netApayer; MontantNetHeader) { }
                 column(VAT_Amount; "VAT Amount") { }
 
                 trigger OnAfterGetRecord()

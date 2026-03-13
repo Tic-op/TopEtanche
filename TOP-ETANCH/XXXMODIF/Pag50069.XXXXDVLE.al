@@ -8,7 +8,7 @@ page 50069 XXXXDVLE
     Caption = 'XXXXDVLE';
     PageType = List;
     SourceTable = "Detailed Vendor Ledg. Entry";
-    UsageCategory = Lists;
+    UsageCategory = none;
     Permissions = tabledata "Detailed Vendor Ledg. Entry" = rimd;
 
     layout

@@ -1,6 +1,7 @@
 namespace TopEtanch.TopEtanch;
 
 using Microsoft.Purchases.Document;
+using Microsoft.Inventory.Item;
 using Microsoft.Foundation.Address;
 using Microsoft.Purchases.History;
 using Microsoft.Purchases.RoleCenters;
@@ -136,6 +137,11 @@ tableextension 50024 PurchaseLineExtt extends "Purchase Line"
         }
 
 
+        Field(50013; "reference origine"; Code[100])
+        {
+
+
+        }
 
         /* modify("Expected Receipt Date")  ///// IS070325 A REVISER
         {
@@ -163,7 +169,17 @@ tableextension 50024 PurchaseLineExtt extends "Purchase Line"
 
 
     trigger OnbeforeModify()////AM ????
+    var
+        itemrec: record Item;
     begin
+        If type = "Purchase Line Type"::Item then begin
+            if Itemrec.Get("No.") then begin
+
+                "reference origine" := Itemrec."reference origine";
+            end;
+
+        end;
+
         if "Document Type" = "Document Type"::Order then
             MAJ_Qté_Restante();
         //Restant := Quantity;
@@ -193,5 +209,34 @@ tableextension 50024 PurchaseLineExtt extends "Purchase Line"
     end;
 
 
+    Procedure UpdaterefOrigine()////AM ????
+    var
+        itemrec: record Item;
+    begin
+        If type = "Purchase Line Type"::Item then begin
+            if Itemrec.Get("No.") then begin
+
+                "reference origine" := Itemrec."reference origine";
+                Modify(false);
+            end;
+
+        end;
+
+
+    end;
+
+    Procedure GetVendorDocument(): Text
+
+    var
+        PH: record "Purchase Header";
+    begin
+
+        PH.Get("Document Type", "Document No.");
+
+        exit(PH."Vendor Invoice No." + '' + PH."Vendor Shipment No." + '' + PH."Vendor Order No.");
+
+
+
+    end;
 
 }

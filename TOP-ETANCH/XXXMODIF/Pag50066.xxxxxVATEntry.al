@@ -8,7 +8,7 @@ page 50066 "xxxxxVAT Entry"
     Caption = 'xxxxxVAT Entry';
     PageType = List;
     SourceTable = "VAT Entry";
-    UsageCategory = Lists;
+    UsageCategory = None;
     Permissions = tabledata "VAT Entry" = rimd;
 
     layout

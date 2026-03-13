@@ -8,6 +8,7 @@ page 50084 Purchaselinexx
     Caption = 'Purchaselinexx';
     PageType = List;
     SourceTable = "Purchase Line";
+    UsageCategory = None;
     Permissions = tabledata "Purchase Line" = Rimd;
     layout
     {

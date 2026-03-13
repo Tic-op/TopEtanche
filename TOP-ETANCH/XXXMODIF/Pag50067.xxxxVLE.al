@@ -8,7 +8,7 @@ page 50067 xxxxVLE
     Caption = 'xxxxVLE';
     PageType = List;
     SourceTable = "Vendor Ledger Entry";
-    UsageCategory = Lists;
+    UsageCategory = None;
     Permissions = tabledata "Vendor Ledger Entry" = rimd;
 
     layout
