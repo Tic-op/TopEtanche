@@ -5,6 +5,7 @@ using Microsoft.Inventory.Journal;
 using Microsoft.Inventory.Item;
 using BCSPAREPARTS.BCSPAREPARTS;
 using Microsoft.Inventory.Ledger;
+using Microsoft.Pricing.PriceList;
 
 codeunit 50020 "Purch Rcpt Pricing Mgt"
 {
@@ -262,6 +263,8 @@ codeunit 50020 "Purch Rcpt Pricing Mgt"
         RcptLine: Record "Purch. Rcpt. Line";
         Item: Record Item;
         PurshEvent: Codeunit PurchaseEvents;
+        Estimatedcost: decimal;
+        PL: record "Price List Line";
     begin
 
         RcptLine.SetRange("Document No.", DocumentNo);
@@ -271,12 +274,22 @@ codeunit 50020 "Purch Rcpt Pricing Mgt"
             Item.get(RcptLine."No.");
             if (RcptLine."Prix Gros" <= 0) or (RcptLine."Prix Std" <= 0) then
                 Error('Le prix de la référence %1 est soucieux !', Item."No.");
-            Item.validate("Prix standard", RcptLine."Prix Std");
+            // Juste pour être sur que c'est insérée 
+            // InsertSalesPriceIfNotExists('GROS', ITem."No.", CurrentDateTime.date, 1, RcptLine."% Marge Gros");
+            Estimatedcost := RcptLine.GetEstimatedUnitCost();
+            item.Validate(MrgStd, RcptLine."% Marge Std");                                                                                   // Item.validate("Prix standard", RcptLine."Prix Std");
+            Item.Validate("estimated cost", Estimatedcost);
+            // Item.Validate("Prix standard", RcptLine."Prix Std");
+            // Item.Modify();
+            //  ITem."Last Estimated Cost Source" := Item."Last Estimated Cost Source"::Import;
             Item.Modify();
+            PurshEvent.CancelSalesPrice('GROS', Item."No.", CurrentDateTime.Date);
+            PurshEvent.InsertSalesPrice('GROS', Item, CurrentDateTime.date, RcptLine."Prix Gros");
+            /*   PL.Validate("Estimated Cost", Item."estimated cost");
+              PL.modify(); */
             RcptLine."Price confirmation Date" := CurrentDateTime;
             RcptLine.Modify();
-            PurshEvent.CancelSalesPrice('GROS', Item."No.", CurrentDateTime.Date);
-            PurshEvent.InsertSalesPrice('GROS', Item."No.", CurrentDateTime.date, RcptLine."Prix Gros");
+        //, true);
         /*   PurshEvent.CancelSalesPrice('Auto', Item."No.", CurrentDateTime.Date);
           PurshEvent.InsertSalesPrice('Auto', Item."No.", CurrentDateTime.date, RcptLine."Prix Auto"); */
 
@@ -343,7 +356,70 @@ codeunit 50020 "Purch Rcpt Pricing Mgt"
         until RcptLine.Next() = 0;
     end;
 
+    procedure InsertSalesPriceIfNotExists(
+        CustomerPriceGroup: Code[20];
+        ItemNo: Code[20];
+        StartingDate: Date;
+        MinQty: Decimal;
+        MarginPct: Decimal)
+    var
+        PriceLine: Record "Price List Line";
+        PriceHeader: Record "Price List Header";
+        ItemRec: Record Item;
+        BaseCost: Decimal;
+    begin
+        // 🔹 1. Récupérer header
+        PriceHeader.SetRange("Source Type", PriceHeader."Source Type"::"Customer Price Group");
+        PriceHeader.SetRange("Source No.", CustomerPriceGroup);
 
+        if not PriceHeader.FindFirst() then
+            Error('Aucune liste de prix pour le groupe %1', CustomerPriceGroup);
+
+        // 🔹 2. Vérifier si ligne existe déjà
+        PriceLine.Reset();
+        PriceLine.SetRange("Price List Code", PriceHeader.Code);
+        //  PriceLine.SetRange("Asset Type", PriceLine."Asset Type"::Item);
+        PriceLine.SetRange("Product No.", ItemNo);
+        PriceLine.SetRange("Starting Date", StartingDate);
+        PriceLine.SetRange("Minimum Quantity", MinQty);
+
+        if PriceLine.FindFirst() then
+            exit; // ✅ existe déjà → on ne fait rien
+
+        // 🔹 3. Récupérer coût
+        if not ItemRec.Get(ItemNo) then
+            exit;
+
+        BaseCost := ItemRec.GetBaseCost();
+
+        if BaseCost = 0 then
+            Error('Coût nul pour l''article %1', ItemNo);
+
+        // 🔹 4. Création ligne
+        Clear(PriceLine);
+        PriceLine.Init();
+
+        PriceLine.Validate("Price List Code", PriceHeader.Code);
+        PriceLine.Validate("Source Type", PriceLine."Source Type"::"Customer Price Group");
+        PriceLine.Validate("Source No.", CustomerPriceGroup);
+
+        PriceLine.Validate("Asset Type", PriceLine."Asset Type"::Item);
+        PriceLine.Validate("Product No.", ItemNo);
+
+        PriceLine.Validate("Starting Date", StartingDate);
+        PriceLine.Validate("Ending Date", 0D);
+
+        PriceLine.Validate("Minimum Quantity", MinQty);
+        PriceLine.Validate("Allow Invoice Disc.", false);
+        PriceLine.Validate(Status, PriceLine.Status::Active);
+
+        // 🔥 TON MOTEUR (important)
+        PriceLine.MrgStd := MarginPct;
+        PriceLine.CalcPriceFromMargin(); // utilise GetBaseCost()
+        PriceLine.ApplyPrice();
+
+        PriceLine.Insert(true);
+    end;
 
 
 }

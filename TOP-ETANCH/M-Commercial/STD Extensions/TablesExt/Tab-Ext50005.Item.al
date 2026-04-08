@@ -170,6 +170,9 @@ tableextension 50005 Itemext extends Item
             DecimalPlaces = 0 : 3;
         }
 
+
+
+
         Field(50199; "Qty Correction in Shipments"; Decimal)
         {
             FieldClass = flowfield;
@@ -192,67 +195,7 @@ tableextension 50005 Itemext extends Item
 
             DecimalPlaces = 0 : 3;
         }
-        field(50201; "Prix marché"; decimal)
-        {
-            DecimalPlaces = 3 : 3;
 
-            trigger onvalidate()
-            var
-            begin
-                if "Prix marché" > "Prix standard" then
-                    validate("Unit Price", "Prix marché")
-                else
-                    Validate("Unit Price", "Prix standard");
-
-                SyncPriceAndMargin(1);
-
-
-            end;
-
-        }
-
-
-        Field(50202; "Prix standard"; decimal)
-        {
-
-            DecimalPlaces = 3 : 3;
-            trigger onvalidate()
-            var
-            begin
-                if "Prix marché" > "Prix standard" then
-                    validate("Unit Price", "Prix marché")
-                else
-                    Validate("Unit Price", "Prix standard");
-
-                SyncPriceAndMargin(1);
-
-
-            end;
-
-        }
-
-        Field(50203; MrgMarché; decimal)
-        {
-            DecimalPlaces = 0 : 2;
-            trigger onvalidate()
-            var
-            begin
-                SyncPriceAndMargin(2);
-
-            end;
-
-        }
-        Field(50204; MrgStd; decimal)
-        {
-            DecimalPlaces = 0 : 2;
-            trigger onvalidate()
-            var
-            begin
-                SyncPriceAndMargin(2);
-
-            end;
-
-        }
 
 
         modify("Base Unit of Measure")
@@ -375,47 +318,7 @@ tableextension 50005 Itemext extends Item
         exit(NB);
     end; */
 
-    procedure SyncPriceAndMargin(CalcSource: Integer)
-    begin
-        if Rec."Unit Cost" = 0 then begin
-            Rec.MrgMarché := 0;
-            Rec.MrgStd := 0;
-            exit;
-        end;
 
-        case CalcSource of
-            1:
-                begin
-                    // Prix → % marge
-                    if Rec."Prix marché" <> 0 then
-                        Rec.MrgMarché :=
-                            ((Rec."Prix marché" - Rec."Unit Cost") / Rec."Unit Cost") * 100
-                    else
-                        Rec.MrgMarché := 0;
-
-                    if Rec."Prix standard" <> 0 then
-                        Rec.MrgStd :=
-                              ((Rec."Prix standard" - Rec."Unit Cost") / Rec."Unit Cost") * 100
-                    else
-                        Rec.MrgStd := 0;
-                end;
-
-            2:
-                begin
-
-                    if Rec.MrgMarché <> xRec.MrgMarché then
-                        Rec.validate("Prix marché", ROUND(
-                            Rec."Unit Cost" * (1 + Rec.MrgMarché / 100), 0.001, '=')
-                        );
-
-                    if Rec.MrgStd <> xRec.MrgStd then
-                        Rec.validate("Prix standard", ROUND(
-                            Rec."Unit Cost" * (1 + Rec.MrgStd / 100), 0.001, '='));
-
-                end;
-
-        end;
-    end;
 
     procedure UpdateNewPrices(NewCost: Decimal) // the cost can be : Unit cost, or Cost in date (to be calculated)
     var
@@ -655,7 +558,38 @@ tableextension 50005 Itemext extends Item
 
     end;
 
+    procedure "Qté libre sur commande cadre Achat"(): decimal
+    var
+        BlanketPurchaseline: record "Purchase Line";
+        BlanketSalesLine: record "Sales Line";
+        venteouverte: decimal;
+        REstantAchat: decimal;
+    begin
+        venteouverte := 0;
+        BlanketSalesLine.setrange("Document Type", "Sales Document Type"::"Blanket Order");
+        BlanketSalesLine.setrange(type, "Sales Line Type"::Item);
+        BlanketSalesLine.setrange("No.", "No.");
+        BlanketSalesLine.SetAutoCalcFields("Qty in Orders");
+        if BlanketSalesLine.FindSet(true) then
+            repeat
 
+                venteouverte += (BlanketSalesLine."Quantity (Base)" - BlanketSalesLine."Qty. Shipped (Base)" - BlanketSalesLine."Qty in Orders");
+            until BlanketSalesLine.next = 0;
+
+        BlanketPurchaseline.setrange("Document Type", "Purchase Document Type"::"Blanket Order");
+        BlanketPurchaseline.setrange(type, "purchase Line Type"::Item);
+        BlanketPurchaseline.setrange("No.", "No.");
+        BlanketPurchaseline.CalcSums(Restant);
+        REstantAchat := BlanketPurchaseline.Restant;
+        // BlanketSalesLine.CalcSums("Quantity (Base)","Qty. Shipped (Base)","Qty in Orders")
+        //Purchase somme restant ;
+        // Sales Rec."Quantity (Base)" - rec."Qty. Shipped (Base)" - REc."Qty in Orders"
+        if REstantAchat >= venteouverte then
+            exit(REstantAchat - venteouverte)
+        else
+            exit(0);
+
+    end;
 
 
 

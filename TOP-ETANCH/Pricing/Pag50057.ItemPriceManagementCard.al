@@ -24,9 +24,20 @@ page 50057 "Item Price Management Card"
                     Caption = 'Dernier coût d''achat';
                     Editable = false;
                 }
+
             }
             group(Prix)
             {
+                /*  field("estimated cost"; Rec."estimated cost")
+                 {
+                     caption = 'Coût estimé';
+                     ApplicationArea = all;
+                     Trigger OnValidate()
+                     var
+                     begin
+                         //     rec."Last Estimated Cost Source" := rec."Last Estimated Cost Source"::Manual;
+                     end;
+                 } */
                 group("Marché")
                 {
                     field("Market Price"; rec."Prix marché")
@@ -88,7 +99,7 @@ page 50057 "Item Price Management Card"
     }
     trigger OnAfterGetCurrRecord()
     begin
-        rec.SyncPriceAndMargin(1);
+        //  rec.SyncPriceAndMargin(1);
     end;
 
 

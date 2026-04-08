@@ -39,6 +39,12 @@ tableextension 50057 PurchaseHeaderExt extends "Purchase Header"
             Caption = 'No DI';
             TableRelation = if ("Document Type" = Const(order)) "Import Folder" where("Vendor No." = field("Buy-from Vendor No."), Status = const(Open)) else
             "import folder" where(Status = const(open));
+            trigger OnValidate()
+            begin
+
+                if "DI No." <> '' then
+                    TestField("Currency Code");
+            end;
         }
         field(50002; Stamp; Boolean)
         {

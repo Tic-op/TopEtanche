@@ -24,6 +24,14 @@ tableextension 50024 PurchaseLineExtt extends "Purchase Line"
 
             end;
         }
+        modify("No.")
+        {
+            trigger OnBeforeValidate()
+            begin
+                if ("Blanket Order Line No." <> 0) then
+                    Error('Impossible de modifier le champ No. car la ligne est liée à une commande cadre. Si vous souhaitez le modifier, veuillez supprimer la ligne et la recréer');
+            end;
+        }
         /*  field(50000; Marked; Boolean)
          {
              Caption = 'Marked';
@@ -177,11 +185,7 @@ tableextension 50024 PurchaseLineExtt extends "Purchase Line"
 
                 "reference origine" := Itemrec."reference origine";
             end;
-
         end;
-
-        if "Document Type" = "Document Type"::Order then
-            MAJ_Qté_Restante();
         //Restant := Quantity;
         Modify(false);
     end;
@@ -235,6 +239,30 @@ tableextension 50024 PurchaseLineExtt extends "Purchase Line"
 
         exit(PH."Vendor Invoice No." + '' + PH."Vendor Shipment No." + '' + PH."Vendor Order No.");
 
+
+
+    end;
+
+    procedure CalcCostWithCharges() CostWithCharge: Decimal
+    var
+        ItemChrgAssigPur: Record "Item Charge Assignment (Purch)";
+    begin
+
+        CostWithCharge := "Direct Unit Cost";
+        if "Document Type" = "Document Type"::Order then begin
+
+            ItemChrgAssigPur.SetRange("Applies-to Doc. Type", ItemChrgAssigPur."Document Type"::Order);
+            ItemChrgAssigPur.SetRange("Applies-to Doc. No.", "Document No.");
+            ItemChrgAssigPur.SetRange("Applies-to Doc. Line No.", "Line No.");
+            if ItemChrgAssigPur.FindSet() then
+                repeat
+                    CostWithCharge += ItemChrgAssigPur."Amount to Assign" / Quantity;
+                until ItemChrgAssigPur.Next() = 0;
+
+            CostWithCharge := round(CostWithCharge, 0.00001, '=');
+            // message('Cost with charges ' + CostWithCharge.ToText());
+
+        end;
 
 
     end;

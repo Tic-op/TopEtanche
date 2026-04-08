@@ -162,6 +162,32 @@ page 50046 "Usual Search"
                     DecimalPlaces = 0 : 3;
                     editable = false;
                 }
+                Field("Qté libre sur commande cadre Achat"; rec."Qté libre sur commande cadre Achat"())
+                {
+                    ApplicationArea = all;
+                    DecimalPlaces = 0 : 3;
+                    editable = false;
+                    trigger OnDrillDown()
+                    var
+                        BlanketPurchaseline: record "Purchase Line";
+                    begin
+                        BlanketPurchaseline.setrange("Document Type", "Purchase Document Type"::"Blanket Order");
+                        BlanketPurchaseline.setrange(type, "purchase Line Type"::Item);
+                        BlanketPurchaseline.setrange("No.", rec."No.");
+                        BlanketPurchaseline.setfilter(Restant, '>%1', 0);
+                        BlanketPurchaseline.setrange("Confirmé par fournisseur", true);
+
+                        if Not BlanketPurchaseline.FindSet() then
+                            exit
+                        else
+                            Page.Run(page::"Purchase Lines", BlanketPurchaseline)
+
+
+
+
+                    end;
+
+                }
 
 
                 field("Unit Price"; Rec."Unit Price")

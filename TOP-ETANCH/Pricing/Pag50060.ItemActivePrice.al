@@ -76,6 +76,16 @@ page 50060 "Item Active Price "
                     ApplicationArea = All;
                     StyleExpr = StyleLine;
                 }
+                /*  Field("Unit Cost"; Rec."Unit Cost")
+                 {
+                     ApplicationArea = all;
+                     editable = false;
+                 }
+                 Field("Estimated Cost"; Rec."Estimated Cost")
+                 {
+                     ApplicationArea = all;
+                     editable = false;
+                 } */
             }
         }
     }
@@ -84,6 +94,9 @@ page 50060 "Item Active Price "
     begin
         rec.SetRange("Asset Type", rec."Asset Type"::Item);
         rec.SetFilter(Status, '%1|%2', rec.Status::Active, rec.Status::Draft);
+        // rec.setrange("Ending Date", today, 0D);
+        rec.SetFilter("Starting Date", '<=%1', Today);
+        rec.SetFilter("Ending Date", '%1|>=%2', 0D, Today);
     end;
 
     trigger OnAfterGetRecord()
@@ -102,8 +115,6 @@ page 50060 "Item Active Price "
                 if rec.Status <> Rec.Status::Active then
                     Error('Impossible de quitter cette page. Vous devez activer certains prix...');
             until rec.next = 0;
-
-
     end;
 
     var

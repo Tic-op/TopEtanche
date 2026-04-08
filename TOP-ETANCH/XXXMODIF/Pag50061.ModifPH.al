@@ -8,7 +8,7 @@ page 50061 "Modif PH"
     Caption = 'Modif PH';
     PageType = List;
     SourceTable = "Payment Header";
-    UsageCategory = Lists;
+    //  UsageCategory = Lists;
     Permissions = tabledata "Payment Header" = rimd;
 
     layout

@@ -44,6 +44,53 @@ codeunit 50113 PurchaseEvents
 
     end;
 
+    //  [EventSubscriber(ObjectType::Codeunit, codeunit::"Purch.-Post", OnPostPurchLineOnAfterPostByType, '', false, false)]
+    procedure EstimatedCostEvaluation(PurchHeader: Record "Purchase Header"; var PurchLine: Record "Purchase Line")// Wrong event et on peut pas "logiquement" définir les prix sur des cout éventuels car on va perdre la valeur de la marge si on synchronise
+    var
+        itemrec: record item;
+        LP: record "Price List Line";
+        mrggrostoapply: decimal;
+    begin
+
+        if PurchHeader."Document Type" = PurchHeader."Document Type"::Order then begin
+            if PurchHeader.Receive then begin
+                if PurchHeader."DI No." <> '' then exit;
+                if PurchHeader."Currency Code" <> '' then exit;
+                if not itemrec.get(PurchLine."No.") then exit;
+                itemrec.CalcFields(Inventory);
+                itemrec.validate("estimated cost", Round((((itemrec.Inventory * itemrec."unit cost") + (PurchLine.CalcCostWithCharges() * PurchLine."Qty. to Receive (Base)")) / (itemrec.Inventory + PurchLine."Qty. to Receive (Base)")), 0.001, '='));
+                // message('estimé ', itemrec."estimated cost".ToText());
+                // mrggrostoapply := itemrec.MargeGrosToAPPLY();
+                itemrec.modify(false);
+                /* 
+                                LP.SetCurrentKey("Asset Type", "Asset No.", "Source Type", "Source No.", "Starting Date", "Currency Code", "Variant Code", "Unit of Measure Code", "Minimum Quantity");
+                                LP.SetAscending("Starting Date", false);
+                                LP.SetRange("Source Type", LP."Source Type"::"Customer Price Group");
+                                LP.SetRange("Source No.", 'GROS');
+                                LP.setrange("Product No.", itemrec."No.");
+
+
+
+                                if LP.findlast() then begin
+
+                                    LP.Validate(MrgStd, Lp.MrgStd);
+                                    LP.validate(Status, LP.Status::Active);
+                                    LP.Verify();
+                                    LP.modify();
+                                end */
+
+                CancelSalesPrice('GROS', Itemrec."No.", CurrentDateTime.Date);
+                InsertSalesPrice('GROS', Itemrec, CurrentDateTime.date, itemrec."estimated cost" * (1 + itemrec.MargeGrosToAPPLY() / 100));//, false); */
+
+            end;
+        end;
+
+
+
+
+
+    end;
+
     [EventSubscriber(ObjectType::Codeunit, codeunit::"Purch.-Post", OnbeforepostPurchaseDoc, '', false, false)]
     local procedure StampEvent(PurchaseHeader: Record "Purchase Header")
     var
@@ -384,6 +431,35 @@ codeunit 50113 PurchaseEvents
         // rec.modify(false);
     end;
 
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Line", OnAfterModifyEvent, '', false, false)]
+    local procedure AfterModifyPurchaseLine(var Rec: Record "Purchase Line")
+    var
+        BlanketLine: Record "Purchase Line";
+    begin
+        if Rec."Document Type" = Rec."Document Type"::Order then
+            if (Rec."Blanket Order No." <> '') and (Rec."Blanket Order Line No." <> 0) then
+                if BlanketLine.Get(Rec."Document Type"::"Blanket Order", Rec."Blanket Order No.", Rec."Blanket Order Line No.") then begin
+                    BlanketLine.CalcFields("Qty commandée");
+                    BlanketLine.MAJ_Qté_Restante();
+                    BlanketLine.Modify();
+                end;
+    end;
+
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Line", OnAfterDeleteEvent, '', false, false)]
+    local procedure AfterDeletePurchaseLine(var Rec: Record "Purchase Line")
+    var
+        BlanketLine: Record "Purchase Line";
+    begin
+        if Rec."Document Type" = Rec."Document Type"::Order then
+            if (Rec."Blanket Order No." <> '') and (Rec."Blanket Order Line No." <> 0) then
+                if BlanketLine.Get(Rec."Document Type"::"Blanket Order", Rec."Blanket Order No.", Rec."Blanket Order Line No.") then begin
+                    BlanketLine.CalcFields("Qty commandée");
+                    BlanketLine.MAJ_Qté_Restante();
+                    BlanketLine.Modify();
+                end;
+    end;
+
+
     [EventSubscriber(ObjectType::Page, Page::"Document Attachment Factbox", OnBeforeDrillDown, '', false, false)]
     local procedure OnBeforeDrillDown(DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef);
     var
@@ -438,6 +514,48 @@ codeunit 50113 PurchaseEvents
         end;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, codeunit::"Purch.-Post", OnAfterPostPurchaseDoc, '', false, false)]
+    Procedure CheckChargAssignement(var PurchaseHeader: Record "Purchase Header")
+    var
+        Purchline: record "Purchase Line";
+        Cu: codeunit PricingMNG;
+        ItemChrgAssigPur: Record "Item Charge Assignment (Purch)";
+
+
+    begin
+
+        Purchline.setrange("Document Type", PurchaseHeader."Document Type");
+        Purchline.setrange("Document No.", PurchaseHeader."No.");
+        Purchline.setrange(Type, Purchline.Type::"Charge (Item)");
+        Purchline.SetAutoCalcFields("Qty. to Assign");
+        if Purchline.findset then
+            repeat
+                if Purchline."Quantity (Base)" <> Purchline."Qty. to Assign" then
+                    error(' Veuillez affecter les frais');
+
+
+
+
+
+
+            /* 
+                               ItemChrgAssigPur.SetRange("Document Type", Purchline."Document Type");
+                               ItemChrgAssigPur.SetRange("Document No.", Purchline."Document No.");
+                               ItemChrgAssigPur.SetRange("Document Line No.", Purchline."Line No.");
+                               if ItemChrgAssigPur.findset(true) then
+                                   repeat
+                                       Cu.RecalculateEstimatedCost(ItemChrgAssigPur."Item No.");
+
+                                   until ItemChrgAssigPur.next = 0; */
+
+            until Purchline.next = 0;
+
+    end;
+
+
+
+
+
 
 
     procedure CancelSalesPrice(Group: Code[25]; "No.": Code[25]; Date0: Date)
@@ -468,7 +586,7 @@ codeunit 50113 PurchaseEvents
     end;
 
 
-    procedure InsertSalesPrice(Group: Code[25]; "No.": Code[25]; Date0: Date; Price: Decimal)
+    procedure InsertSalesPrice(Group: Code[25]; item: record Item; Date0: Date; Price: Decimal)//: record "Price List Line";
     var
         SalesPrice: Record "Price List Line";
         SalesPriceHeader: Record "Price List header";
@@ -485,35 +603,50 @@ codeunit 50113 PurchaseEvents
             SalesPrice.init();
             SalesPrice."Source Type" := SalesPrice."Source Type"::"Customer Price Group";
             SalesPrice.validate("Source No.", Group);
-            SalesPrice.validate("Product No.", "No.");
+            SalesPrice.validate("Product No.", item."No.");
             SalesPrice.Validate("Starting Date", Date0);
             SalesPrice.validate("Ending Date", 0D);
             SalesPrice.Validate("Allow Invoice Disc.", false);
             SalesPrice.validate("Minimum Quantity", 1);
-            SalesPrice.Validate(Status, SalesPrice.Status::Active);//By AM
+            SalesPrice.Validate(Status, SalesPrice.Status::Active);
+            SAlesPrice.validate("Estimated Cost", item."estimated cost");
+            //By AM
+            //  if ValidateMArgin then
             SalesPrice.Validate("Prix standard", Price);// BY AM 230126
+                                                        /*    else begin
+                                                               salesPrice."Prix standard" := Price;
+                                                               if SalesPrice."Prix marché" > SalesPrice."Prix standard" then
+                                                                   SalesPrice.validate("Unit Price", SalesPrice."Prix marché")
+                                                               else
+                                                                   SalesPrice.Validate("Unit Price", SalesPrice."Prix standard");
+                                                               SalesPrice.SyncPriceAndMargin(2);
+
+                                                           end; */
             SalesPrice.Validate("Price List Code", SalesPriceHeader.Code);
 
 
             if not SalesPrice.Insert() then begin
                 message('SalesPrice n''est pas inserée');
-                modifySalesPrice(Group, "No.", Date0, Price);
+                // modifySalesPrice(Group, "No.", Date0, Price)//, ValidateMArgin);
 
 
             end;
+
+
             SalesPrice.Verify();
             // ItemRec.get("No.");
             // ItemRec.InsertArchivePrix(Group, Price);
 
-
+            //  exit(SalesPriceLine);
 
         end
         else
             message('vous devez créer une liste des prix pour le group %1', group);
 
+
     end;
 
-    procedure ModifySalesPrice(Group: Code[25]; "No.": Code[25]; Date0: Date; Price: Decimal)
+    procedure ModifySalesPrice(Group: Code[25]; "No.": Code[25]; Date0: Date; Price: Decimal)//; ValidateMargin: Boolean) logique érronée !!! //AM 
     var
         SalesPrice: Record "Price List Line";
         SalesPriceHeader: Record "Price List header";
@@ -522,7 +655,17 @@ codeunit 50113 PurchaseEvents
     begin
         if item.get("No.") then begin
             if SalesPrice.get("No.", SalesPrice."Source Type"::"Customer Price Group", Group, date0, '', '', item."Sales Unit of Measure", 1) then begin
-                SalesPrice.Validate("Prix standard", Price);// AM 23012026
+
+                //   if ValidateMArgin then
+                SalesPrice.Validate("Prix standard", Price);// BY AM 230126
+                                                            /*     else begin
+                                                                    salesPrice."Prix standard" := Price;
+                                                                    if SalesPrice."Prix marché" > SalesPrice."Prix standard" then
+                                                                        SalesPrice.validate("Unit Price", SalesPrice."Prix marché")
+                                                                    else
+                                                                        SalesPrice.Validate("Unit Price", SalesPrice."Prix standard");
+
+                                                                end; */
                 SalesPrice."Ending Date" := 0D;
                 SalesPrice.Status := SalesPrice.Status::active;//By AM
                 SalesPrice.Modify();

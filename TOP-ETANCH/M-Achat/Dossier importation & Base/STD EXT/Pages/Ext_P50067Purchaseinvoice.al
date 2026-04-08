@@ -11,6 +11,7 @@ pageextension 50167 purchaseinvoiceExt extends "Purchase Invoice"
             {
                 ApplicationArea = all;
                 Caption = 'No Dossier importation';
+                Enabled = rec."Currency Code" <> '';
             }
         }
     }
@@ -63,10 +64,11 @@ pageextension 50167 purchaseinvoiceExt extends "Purchase Invoice"
                                     recITEMCHARGE.GET(recLPurchaselineInv."No.");
                                     IF recITEMCHARGE.Affectable THEN BEGIN ///////////////////////NOOOOOOTTTTT
                                         recLpurchRcpHeader.SetRange("DI No.", Rec."DI No.");
-                                        if recLpurchRcpHeader.FindFirst() then
 
-                                            // A vérifier une seule réception par Dossier import 
-                                            recLpurchRCPLine.SETRANGE(recLpurchRCPLine."Document No.", recLpurchRcpHeader."No.");
+                                        if not recLpurchRcpHeader.FindFirst() then
+                                            Error('Vérifier la récéption liée au dossier d''importation No %1', rec."DI No.");
+                                        // A vérifier une seule réception par Dossier import 
+                                        recLpurchRCPLine.SETRANGE(recLpurchRCPLine."Document No.", recLpurchRcpHeader."No.");
                                         recLpurchRCPLine.SETRANGE(recLpurchRCPLine.Type, recLpurchRCPLine.Type::Item);
                                         IF recLpurchRCPLine.FINDFIRST THEN BEGIN
                                             NumLine := 0;

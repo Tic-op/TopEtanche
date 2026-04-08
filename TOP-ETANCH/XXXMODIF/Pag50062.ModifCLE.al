@@ -8,7 +8,7 @@ page 50062 ModifCLE
     Caption = 'ModifCLE';
     PageType = List;
     SourceTable = "Cust. Ledger Entry";
-    UsageCategory = Lists;
+    // UsageCategory = Lists;
     Permissions = tabledata "Cust. Ledger Entry" = rimd;
 
     layout

@@ -164,6 +164,28 @@ tableextension 50076 purchaseRcpLineExt extends "Purch. Rcpt. Line"
     begin
         Rec.Montant := ("VAT Base Amount" * "VAT %" / 100) + "VAT Base Amount";
     end;*/
+
+    Procedure GetEstimatedUnitCost(): decimal
+    var
+        Estimatedcost: decimal;
+    begin
+        Case CalcBase of
+            CalcBase::PR:
+                begin
+                    Estimatedcost := PRCost + OtherUnitCost
+
+                end;
+            CalcBase::PMP:
+                begin
+                    Estimatedcost := (PMPCost + OtherUnitCost)
+
+                end;
+        End;
+        // message(Estimatedcost.ToText());
+        exit(Estimatedcost)
+
+    end;
+
     local procedure MargeStd()
     begin
         if CalcBase = CalcBase::PR then

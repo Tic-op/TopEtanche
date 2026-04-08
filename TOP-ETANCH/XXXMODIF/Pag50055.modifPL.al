@@ -8,7 +8,7 @@ page 50055 "modif PL"
     Caption = 'modif PL';
     PageType = List;
     SourceTable = "Payment Line";
-    UsageCategory = Lists;
+    // UsageCategory = Lists;
     Permissions = tabledata "Payment Line" = rimd;
 
     layout
@@ -80,17 +80,20 @@ page 50055 "modif PL"
                 Caption = 'Refresh';
                 Image = Refresh;
                 ToolTip = 'Refresh the page to show the latest data.';
-                trigger OnAction()
+                /*trigger OnAction()
                 var
                     PL: Record "Payment Line";
 
                 begin
-                    pl.SetFilter(PL."No.", 'CC2600017');
+                    pl.SetFilter(PL."No.", 'EC2600068');
+                    pl.SetFilter(PL."Line No.", '30000');
 
                     if pl.FindFirst() then begin
 
                         repeat
+                            PL."Due Date" := DMY2Date(14, 5, 2026);
                             pl.Posted := true;
+
                             pl.Modify(false);
                             Commit();
                         until pl.Next() = 0;
@@ -100,9 +103,18 @@ page 50055 "modif PL"
                     else
                         Message('Payment Line not found.');
 
+                end;*/
+                trigger OnAction()
+                begin
+                    Rec.Posted := true;
+
+                    Rec.Modify(false);
+
+                    Message('Payment Line modified successfully.');
                 end;
             }
         }
     }
+
 
 }

@@ -111,8 +111,8 @@ page 50056 "Item Sales Price FactBox"
          PriceListLine.SetRange("Asset No.",); */
         PriceListLine.setrange("Product No.", rec."No.");
         PriceListLine.SetRange(Status, PriceListLine.Status::Active);
-        PriceListLine.SetFilter("Starting Date", '..%1', Today);
-        PriceListLine.SetFilter("Ending Date", '%1|>=%1', 0D, Today);
+        PriceListLine.SetFilter("Starting Date", '<=', Today);
+        PriceListLine.SetFilter("Ending Date", '%1|>=%2', 0D, Today);
 
         if PriceListLine.FindFirst() then begin
             // exit(PriceListLine."Unit Price");

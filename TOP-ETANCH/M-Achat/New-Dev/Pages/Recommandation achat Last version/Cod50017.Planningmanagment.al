@@ -199,7 +199,7 @@ codeunit 50017 "Planning managment"
     var
     begin
         Myitem."VMJ / Période" := CalculVMJ(Myitem, Myitem.datedebut, Myitem.datefin);
-        Myitem."VMJ / Stock" := CalculVMJEffective(Myitem, Myitem.datedebut, Myitem.datefin);//// Lenteur importante !!! 
+        Myitem."VMJ / Stock" := CalculVMJEffectiveFastExact(Myitem, Myitem.datedebut, Myitem.datefin);//// Lenteur importante !!! 
         Myitem.Ecoulement := CalculEcoulement(Myitem, Myitem.datedebut, Myitem.datefin, Myitem."Mode de calcul VMJ");
         Myitem."Qté à commander" := CalcRecommandation(Myitem, Myitem.datedebut, Myitem.datefin, Myitem."Mode de calcul VMJ");
         Myitem.Modify();
@@ -247,6 +247,71 @@ codeunit 50017 "Planning managment"
 
 
     end;
+
+    procedure CalculVMJEffectiveFastExact(Myitem: Record "My Item"; DateDebut: Date; DateFin: Date): Decimal
+    var
+        ILE: Record "Item Ledger Entry";
+        Stock: Decimal;
+        QtySold: Decimal;
+        NbDaysAvailable: Integer;
+        LastDate: Date;
+        CurrDate: Date;
+    begin
+        if DateDebut = 0D then
+            exit(0);
+
+        // 🔹 1. Stock initial AVANT période
+        ILE.Reset();
+        ILE.SetRange("Item No.", Myitem."Item No.");
+        ILE.SetRange("Posting Date", 0D, DateDebut - 1);
+        ILE.CalcSums(Quantity);
+        Stock := ILE.Quantity;
+
+        // 🔹 2. Quantité vendue (fiable)
+        ILE.Reset();
+        ILE.SetRange("Item No.", Myitem."Item No.");
+        ILE.SetRange("Entry Type", ILE."Entry Type"::Sale);
+        ILE.SetRange("Posting Date", DateDebut, DateFin);
+        ILE.CalcSums(Quantity);
+        QtySold := -ILE.Quantity;
+
+        // 🔹 3. Mouvements triés par date
+        ILE.Reset();
+        ILE.SetRange("Item No.", Myitem."Item No.");
+        ILE.SetRange("Posting Date", DateDebut, DateFin);
+        ILE.SetCurrentKey("Posting Date");
+
+        LastDate := DateDebut;
+
+        if ILE.FindSet() then
+            repeat
+                CurrDate := ILE."Posting Date";
+
+                // 🔹 compter les jours entre deux mouvements
+                if CurrDate >= LastDate then begin
+                    if Stock > 0 then
+                        NbDaysAvailable += CurrDate - LastDate + 1;
+
+                    LastDate := CurrDate + 1; // important
+                end;
+
+                // 🔹 appliquer mouvement DU JOUR
+                Stock += ILE.Quantity;
+
+            until ILE.Next() = 0;
+
+        // 🔹 fin de période
+        if LastDate <= DateFin then begin
+            if Stock > 0 then
+                NbDaysAvailable += DateFin - LastDate + 1;
+        end;
+
+        if NbDaysAvailable = 0 then
+            exit(0);
+
+        exit(QtySold / NbDaysAvailable);
+    end;
+
 
 
 }

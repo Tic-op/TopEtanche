@@ -10,6 +10,7 @@ pageextension 50164 pourchaseorderExt extends "Purchase Order"
                 ApplicationArea = all;
                 Importance = Promoted;
                 Caption = 'No Dossier importation';
+                Enabled = rec."Currency Code" <> '';
 
 
 
@@ -107,7 +108,7 @@ pageextension 50164 pourchaseorderExt extends "Purchase Order"
 
                     Rec.TestField("DI No.");
                     CheckNGP(Rec);
-                    if not confirm('Voulez-vous vraiment Valider cette commande? avec un taux de change %1', False, 1 / rec."Currency Factor") then Message('cette commande ne peut pas etre validée');
+                    if not confirm('Voulez-vous vraiment Valider cette commande? avec un taux de change %1', False, Round(1 / rec."Currency Factor", 0.0000001, '=')) then Message('cette commande ne peut pas etre validée');
                 end;
             end;
         }

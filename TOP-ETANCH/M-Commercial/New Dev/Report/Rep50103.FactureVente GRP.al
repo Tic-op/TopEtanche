@@ -158,6 +158,10 @@ report 50109 FactureVenteGRP
                 column(Base; Base) { }
 
             }
+            /*   trigger OnPreDataItem()
+              var begin 
+                  CurrReport.NewPagePerRecord
+              end; */
             trigger OnAfterGetRecord()
             var
                 SalesP: record "Salesperson/Purchaser";

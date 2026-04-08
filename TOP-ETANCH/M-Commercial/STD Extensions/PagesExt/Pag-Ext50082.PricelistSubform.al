@@ -9,6 +9,15 @@ pageextension 50082 "Price list Subform" extends "Price List Lines"
     {
         addafter("Unit Price")
         {
+            /*  field("Estimated Cost"; Rec."Estimated Cost")
+             {
+                 AccessByPermission = tabledata "Sales Price Access" = R;
+                 ApplicationArea = All;
+                 Editable = AmountEditable;
+                 Enabled = PriceMandatory;
+                 Visible = PriceVisible;
+                 //  StyleExpr = PriceStyle;
+             } */
             field("Prix marché"; rec."Prix marché")
             {
                 AccessByPermission = tabledata "Sales Price Access" = R;
@@ -31,5 +40,6 @@ pageextension 50082 "Price list Subform" extends "Price List Lines"
 
             }
         }
+
     }
 }

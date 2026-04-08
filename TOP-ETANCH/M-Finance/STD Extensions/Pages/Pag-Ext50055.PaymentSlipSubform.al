@@ -161,7 +161,7 @@ pageextension 50055 "Payment Slip Subform" extends "Payment Slip Subform"
                 ApplicationArea = all;
                 Image = Change;
                 RunObject = page 50054;
-                RunPageLink = "Document No." = field("Document No."), "Line No." = field("Line No.");
+                RunPageLink = "No." = field("No."), "Line No." = field("Line No.");
 
             }
         }

@@ -6,12 +6,20 @@ pageextension 50075 purchaseorderSubFormExtt extends "Purchase Order Subform"
         {
             Visible = true;
 
+
         }
         addafter(Description)
         {
             field("Tariff No."; Rec."Tariff No.")
             {
                 ApplicationArea = all;
+                  trigger OnDrillDown()
+                 var
+                 begin
+
+                   //  rec.CalcCostWithCharges();
+                 end;
+  
             }
             field("Country region origin code"; Rec."Country region origin code")
             {

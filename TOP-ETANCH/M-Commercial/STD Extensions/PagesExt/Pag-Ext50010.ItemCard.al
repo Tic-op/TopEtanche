@@ -40,6 +40,14 @@ pageextension 50010 "Item Card" extends "Item Card"
 
             }
         }
+        addafter("Unit Cost")
+        {
+            /*  field("estimated cost"; Rec."estimated cost")
+             {
+                 ApplicationArea = all;
+
+             } */
+        }
 
         addlast(InventoryGrp)
         {
