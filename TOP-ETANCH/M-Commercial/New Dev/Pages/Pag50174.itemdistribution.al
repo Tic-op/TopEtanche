@@ -256,12 +256,14 @@ page 50174 "itemdistribution"
             if Rec.FindFirst() then
                 repeat
                     SL."Line No." := SL.GetLastLineNo() + 1000;
+                    SL."Quantity (Base)" := 0; //AM 140426 afin d'ignorer la valeur de Xrec dans la validation suivante
                     SL."Location Code" := Rec."Location Code";
+                    if rec."Bin Code" <> '' then
+                        SL.Validate("Bin Code", Rec."Bin Code"); // new AM 301225
 
                     SL.Validate("Quantity (Base)", Rec."Qty to assign");
                     SL.Validate("Qty. to Ship (Base)", Rec."Qty to assign");
-                    if rec."Bin Code" <> '' then
-                        SL.Validate("Bin Code", Rec."Bin Code"); // new AM 301225
+
                     SL.Validate("Unit Price", SlToDelete."Unit Price");
                     SL.Validate("Line Discount %", SlToDelete."Line Discount %");
                     SL.Insert();

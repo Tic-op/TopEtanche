@@ -299,9 +299,10 @@ page 50022 "Liste lignes commandes cadres"
             exit;
 
         PurchaseLine2.Copy(Rec);
-        PurchaseLine2.MarkedOnly(true);
+        // PurchaseLine2.MarkedOnly(true);
+        PurchaseLine2.Setfilter("A commander", '>%1', 0);
 
-        if PurchaseLine2.FindFirst() then begin
+        if PurchaseLine2.FindSET(TRUE) then begin
             repeat
                 if PurchaseLine2."A commander" > 0 then begin
                     NbrInserted += 1;
@@ -317,7 +318,7 @@ page 50022 "Liste lignes commandes cadres"
 
         if not Confirm('Vous avez sélectionné %1 lignes pour un montant de %2. Voulez-vous continuer ?', true, NbrInserted, TotalAmount) then
             exit;
-        PurchaseLine2.FindFirst();
+        PurchaseLine2.FindSET(TRUE);
         repeat
             if PurchaseLine2."A commander" > 0 then begin
 
@@ -326,8 +327,8 @@ page 50022 "Liste lignes commandes cadres"
                 Exist.SetRange("No.", PurchaseLine2."No.");
                 exist.SetRange("Blanket Order No.", PurchaseLine2."Document No.");
                 Exist.SetRange("Blanket Order Line No.", PurchaseLine2."Line No.");
-                Message('%1  %2', exist.Count, Exist.GetFilters);
-                if Exist.FindFirst() then begin
+                //  Message('%1  %2', exist.Count, Exist.GetFilters);
+                if Exist.FindSet(true) then begin
                     Exist.Validate("Quantity (Base)", Exist."Quantity (Base)" + PurchaseLine2."A commander");
                     Exist."A commander" := 0;
                     Exist.Restant := Exist.Quantity - (Exist."Qty commandée" + Exist."A commander");
@@ -336,16 +337,20 @@ page 50022 "Liste lignes commandes cadres"
                     NewLine.Init();
                     NewLine.Validate("Document Type", NewLine."Document Type"::Order);
                     NewLine.Validate("Document No.", PurchaseHeader."No.");
+                    NewLine."Line No." := GetNextLineNo(PurchaseHeader."No.");
                     NewLine.Validate(Type, PurchaseLine2.Type);
                     NewLine.Validate("No.", PurchaseLine2."No.");
+
                     NewLine.Validate(Quantity, PurchaseLine2."A commander");
                     NewLine.Validate("Direct Unit Cost", PurchaseLine2."Direct Unit Cost");
                     NewLine.Validate("Unit of Measure", PurchaseLine2."Unit of Measure");
                     NewLine.Validate("Buy-from Vendor No.", PurchaseHeader."Buy-from Vendor No.");
                     NewLine.Validate("Blanket Order No.", PurchaseLine2."Document No.");
                     NewLine.Validate("Blanket Order Line No.", PurchaseLine2."Line No.");
-                    NewLine."Line No." := GetNextLineNo(PurchaseHeader."No.");
+
                     NewLine.Insert(true);
+                    NewLine.validate("Location Code", PurchaseHeader."Location Code");
+                    NewLine.Modify(false);
 
                 end;
                 PurchaseLine2."A commander" := 0;
@@ -354,7 +359,7 @@ page 50022 "Liste lignes commandes cadres"
             end;
         until PurchaseLine2.Next() = 0;
 
-        CurrPage.Update();
+        CurrPage.Update(true);
 
 
     end;

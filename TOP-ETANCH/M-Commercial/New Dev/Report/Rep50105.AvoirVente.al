@@ -151,7 +151,10 @@ report 50105 AvoirVente
                             if Vendorref then begin
 
                                 if item.get("Item No.") then
-                                    reference := item."Vendor Item No.";
+                                    if item."Vendor Item No." = '' then
+                                        error('Référence fournisseur manquante pour l''article %1', Item.Description);
+                                reference := item."Vendor Item No.";
+
                             end
                         end
 

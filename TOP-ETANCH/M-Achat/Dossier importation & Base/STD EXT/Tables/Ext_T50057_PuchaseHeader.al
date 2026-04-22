@@ -42,7 +42,7 @@ tableextension 50057 PurchaseHeaderExt extends "Purchase Header"
             trigger OnValidate()
             begin
 
-                if "DI No." <> '' then
+                if ("DI No." <> '') and ("Document Type" = "Document Type"::order) then
                     TestField("Currency Code");
             end;
         }

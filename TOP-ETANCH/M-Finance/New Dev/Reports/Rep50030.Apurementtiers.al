@@ -79,7 +79,9 @@ report 50030 Apurement
                     IF recL21.FINDFIRST THEN BEGIN
                         IF GenJnlBatch."No. Series" <> '' THEN
                             Doc := NoSeriesMgt.GetNextNo(
-                                             GenJnlBatch."No. Series", TODAY, FALSE);
+                                             GenJnlBatch."No. Series", TODAY, FALSE)
+                        else
+                            Doc := 'APPUR Client';
                         repeat
                             IF GenJnlLine.FINDLAST THEN;
                             GenJnlLine.INIT;
@@ -206,7 +208,10 @@ report 50030 Apurement
                         IF recL25.FINDFIRST THEN BEGIN
                             IF GenJnlBatch."No. Series" <> '' THEN
                                 Doc := NoSeriesMgt.GetNextNo(
-                                   GenJnlBatch."No. Series", TODAY, FALSE);
+                                   GenJnlBatch."No. Series", TODAY, FALSE)
+                            else
+                                Doc := 'APPUR Fournisseur';
+
                             REPEAT
                                 IF GenJnlLine.FINDLAST THEN;
                                 GenJnlLine.INIT;

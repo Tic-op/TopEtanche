@@ -11,7 +11,7 @@ pageextension 50167 purchaseinvoiceExt extends "Purchase Invoice"
             {
                 ApplicationArea = all;
                 Caption = 'No Dossier importation';
-                Enabled = rec."Currency Code" <> '';
+                //Enabled = rec."Currency Code" <> '';
             }
         }
     }

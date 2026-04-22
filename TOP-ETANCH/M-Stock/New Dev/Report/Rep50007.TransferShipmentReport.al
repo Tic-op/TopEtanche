@@ -72,7 +72,8 @@ report 50051 "TransferShipReport Complete"
                         item_description := item.Description;
                         item_vat := item."VAT Prod. Posting Group";
                         item_UP := item."Unit Price";
-                        reference := item."Vendor Item No.";
+                        if item."Vendor Item No." <> '' then
+                            reference := item."Vendor Item No.";
 
                     end;
 

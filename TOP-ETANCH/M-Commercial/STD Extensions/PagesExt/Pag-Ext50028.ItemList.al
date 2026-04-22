@@ -1,6 +1,7 @@
 namespace Top.Top;
 
 using Microsoft.Inventory.Item;
+using TopEstimatedPricing.TopEstimatedPricing;
 using Microsoft.Inventory.Item.Attribute;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Sales.Document;
@@ -144,41 +145,50 @@ pageextension 50028 ItemList extends "Item List"
                     Mq: record Marque;
                     IAV: record "Item Attribute Value";
                     IA: record "Item Attribute";
+                    CU: codeunit PricingMNG;
+                    Salesevent: codeunit SalesEvents;
                 begin
 
-                    begin
-                        Countitem := 0;
-                        IA.setrange(Name, 'R-Marque');
-                        IA.findfirst();
-                        IAV.setrange("Attribute ID", IA.ID);
-                        IAV.findset();
-                        repeat
-                            Mq.init();
-                            Mq.Code := IAV.Value;
-                            mq.Description := IAV.Value;
+                    Salesevent.FixUndoShipmentFromShipmentLines();
+                    /*   Item.findset(true);
+                      repeat
+                          Cu.UpdateAllPriceLinesFromItem(Item);
+                      until item.next = 0; */
 
-                            if Mq.insert() then;
-                            IAVM.Reset();
-                            IAVM.setrange("Table ID", 27);
-                            IAVM.SetRange("Item Attribute ID", IAV."Attribute ID");
-                            IAVM.SetRange("Item Attribute Value ID", IAV.ID);
-                            if IAVM.findset() then
-                                repeat
-                                    Item.get(IAVM."No.");
-                                    ITem.validate(marque, mq.Code);
-                                    item.Modify();
-                                    Countitem += 1;
+                    /* 
+                                        begin
+                                            Countitem := 0;
+                                            IA.setrange(Name, 'R-Marque');
+                                            IA.findfirst();
+                                            IAV.setrange("Attribute ID", IA.ID);
+                                            IAV.findset();
+                                            repeat
+                                                Mq.init();
+                                                Mq.Code := IAV.Value;
+                                                mq.Description := IAV.Value;
 
-                                until IAVM.next = 0;
+                                                if Mq.insert() then;
+                                                IAVM.Reset();
+                                                IAVM.setrange("Table ID", 27);
+                                                IAVM.SetRange("Item Attribute ID", IAV."Attribute ID");
+                                                IAVM.SetRange("Item Attribute Value ID", IAV.ID);
+                                                if IAVM.findset() then
+                                                    repeat
+                                                        Item.get(IAVM."No.");
+                                                        ITem.validate(marque, mq.Code);
+                                                        item.Modify();
+                                                        Countitem += 1;
+
+                                                    until IAVM.next = 0;
 
 
-                        until IAV.Next() = 0;
+                                            until IAV.Next() = 0;
 
 
-                        Message(Countitem.ToText() + ' Article modifiés')
+                                            Message(Countitem.ToText() + ' Article modifiés')
 
 
-                    end;
+                                        end; */
 
 
                     /*   begin

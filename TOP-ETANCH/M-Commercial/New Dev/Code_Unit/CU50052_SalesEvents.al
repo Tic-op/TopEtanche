@@ -973,6 +973,62 @@ codeunit 50052 SalesEvents
 
 
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Undo Posting Management", OnUpdateSalesLineOnBeforeSalesLineModify, '', false, false)]
+    local procedure OnAfterUndoShipmentLine(var SalesLine: Record "Sales Line")
+    var
 
+    begin
+        SalesLine.validate("Qty. to Ship", 0);
+        SalesLine.validate("Qty. to Invoice", 0);
+
+
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Correct Posted Sales Invoice", OnAfterUpdateSalesOrderLineInvoicedQuantity, '', false, false)]
+    local procedure OnAfterCreateCorrectiveCrMemoLine(var SalesLine: Record "Sales Line"; CancelledQuantity: Decimal; CancelledQtyBase: Decimal)
+    var
+        fg: page "Posted Sales Invoice";
+        cv: Codeunit "Correct Posted Sales Invoice";
+        shipline: record "Sales Shipment Line";
+    begin
+        SalesLine.validate("Qty. to Invoice", 0);
+        SalesLine.validate("Qty. to Ship", 0);
+        // SAlesLine.modify(false);
+    end;
+
+    procedure FixUndoShipmentFromShipmentLines()
+    var
+        ShipmentLine: Record "Sales Shipment Line";
+        SalesLine: Record "Sales Line";
+    begin
+        // 🔎 uniquement les lignes de correction (Undo Shipment)
+        ShipmentLine.SetRange(Correction, true);
+        ShipmentLine.SetFilter(Quantity, '<%1', 0);
+
+        if ShipmentLine.FindSet() then
+            repeat
+
+                // 🔗 sécurité lien commande
+                if (ShipmentLine."Order No." = '') or (ShipmentLine."Order Line No." = 0) then
+                    continue;
+
+                // 🔎 récupérer la ligne commande
+                if SalesLine.Get(SalesLine."Document Type"::Order,
+                                  ShipmentLine."Order No.",
+                                  ShipmentLine."Order Line No.") then begin
+
+                    // 🧠 recalcul propre ATP
+                    SalesLine."Qty. to Ship" :=
+                        SalesLine.Quantity + ShipmentLine.Quantity;
+
+                    // ⚠ sécurité : jamais négatif
+                    if SalesLine."Qty. to Ship" < 0 then
+                        SalesLine."Qty. to Ship" := 0;
+
+                    SalesLine.Modify(true);
+                end;
+
+            until ShipmentLine.Next() = 0;
+    end;
 
 }

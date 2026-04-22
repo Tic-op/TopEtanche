@@ -182,8 +182,13 @@ report 50006 "facture non validée"
 
                         if Vendorref then begin
 
-                            if item.get("No.") then
+                            if item.get("No.") then begin
+                                if item."Vendor Item No." = '' then
+                                    error('Référence fournisseur manquante pour l''article %1', Item.Description);
                                 reference := item."Vendor Item No.";
+
+                            end;
+
                         end
                     end
                     /*   if OptionReference = OptionReference::Vide then begin

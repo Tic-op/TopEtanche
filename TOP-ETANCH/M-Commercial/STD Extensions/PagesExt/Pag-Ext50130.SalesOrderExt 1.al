@@ -487,6 +487,7 @@ pageextension 50130 ExtSalesOrder extends "Sales Order"
                         Rec."No.",                   // Current sales order No.
                         ExtractLinkedOrderOnly,      // true = only linked blanket order lines
                         InsertInSameOrder);          // true = insert in current order, false = create new order
+
                 end;
 
 

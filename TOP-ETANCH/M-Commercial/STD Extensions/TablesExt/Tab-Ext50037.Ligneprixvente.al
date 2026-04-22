@@ -64,7 +64,12 @@ tableextension 50037 "Ligne prix vente" extends "Price List Line"
     var
         Item: Record Item;
     begin
-        exit("Estimated Cost")
+        if item.get("Product No.") then begin
+            "Estimated Cost" := item.GetBaseCost();
+            exit(item.GetBaseCost())
+        end
+        else
+            exit(0);
     end;
 
     procedure CalcPriceFromMargin()
