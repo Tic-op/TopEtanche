@@ -163,6 +163,13 @@ tableextension 50035 "Payment Line" extends "Payment Line"
 
 
         }
+        Field(50104; "DateEch"; Date)
+
+        {
+            DataClassification = ToBeClassified;
+
+
+        }
     }
     keys
     {

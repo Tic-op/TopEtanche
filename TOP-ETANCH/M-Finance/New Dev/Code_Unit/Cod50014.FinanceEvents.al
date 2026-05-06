@@ -1025,6 +1025,63 @@ codeunit 50014 FinanceEvents
 
     end;
 
+    [eventsubscriber(ObjectType::Codeunit, Codeunit::"Payment-Apply", OnAfterApplyVendor, '', false, false)]
+
+    local procedure OnAfterApply(GenJnlLine: Record "Gen. Journal Line")
+    var
+        VLE: Record 25;
+        PL: Record "Payment Line";
+        id0: Code[20];
+        id1: Code[20];
+
+    begin
+
+        if GenJnlLine."Currency Code" <> '' then
+            exit;
+
+        if GenJnlLine."Applies-to ID" <> '' then begin
+
+            VLE.SetRange("Applies-to ID", GenJnlLine."Applies-to ID");
+            VLE.CalcSums("Amount to Apply");
+
+            ExtractStrings(GenJnlLine."Applies-to ID", id0, id1, '/');
+
+            PL.SetRange("no.", id0);
+            if id1 <> '' then
+                PL.SetRange("Document No.", id1);
+
+            PL.FindFirst();
+            if (PL.Amount = 0) then begin
+                PL.Validate("Amount", -VLE."Amount to Apply");
+                PL.Validate("Applies-to ID", GenJnlLine."Applies-to ID");
+
+                PL.Modify();
+            end;
+
+        end
+
+    end;
+
+    procedure ExtractStrings(S: Text; var S1: Code[20]; var S2: Code[20]; StringDiv: Text)
+    var
+
+        SlashPosition: Integer;
+    begin
+        s1 := '';
+        S2 := '';
+
+        SlashPosition := StrPos(S, StringDiv); // Trouve la position de '/' dans la chaîne
+
+        if SlashPosition > 0 then begin
+            S1 := CopyStr(S, 1, SlashPosition - 1); // Partie avant '/'
+            S2 := CopyStr(S, SlashPosition + 1); // Partie après '/'
+        end else begin
+
+            S1 := S;
+            S2 := '';
+        end;
+
+    end;
 
 }
 

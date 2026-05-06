@@ -117,10 +117,13 @@ codeunit 50101 "ILE UPDATE JOB "
         VE: record "Value Entry";
         salesSetup: Record "Sales & Receivables Setup";
 
+        ILE_Orig: Record "Item Ledger Entry";
+
+
 
     begin
         salesSetup.get;
-        ILE.LockTable();
+        //  ILE.LockTable();
 
         ILE.SETCURRENTKEY("Item No.", "Posting Date");
         ILE.SETFILTER("Item No.", '<>%1', '');
@@ -131,9 +134,11 @@ codeunit 50101 "ILE UPDATE JOB "
 
 
         ILE.SETAUTOCALCFIELDS("Cost Amount (Expected)", "Cost Amount (Actual)", "Sales Amount (Expected)", "Sales Amount (Actual)");
-        if ILE.FindFirst() then begin
+        if ILE.findset(true) then begin
 
             repeat
+                ILE_Orig := ILE; // snapshot CHB
+
                 Item.get(ILE."Item No.");
                 IlE."Operation Cost" := (ILE."Cost Amount (Actual)") + (ILE."Cost Amount (Expected)");
                 //AM Update
@@ -159,15 +164,15 @@ codeunit 50101 "ILE UPDATE JOB "
                     Customer.get(ILE."Source No.");
                     ILE."Nom Origine" := Customer.Name;
 
-
-                    if (ILE."Sales Operation Amount" = 0) and (ILE."Source No." = salesSetup."Client Divers") then // le client divers n'est calculé qu'une seule fois
-                        ILE."Sales Operation Amount" := ILE."Sales Amount (Actual)" + ILE."Sales Amount (Expected)"
-                    else
+                    if not ((ILE."Sales Operation Amount" <> 0) and (ILE."Source No." = salesSetup."Client Divers")) then // le client divers n'est calculé qu'une seule fois CHB
                         ILE."Sales Operation Amount" := ILE."Sales Amount (Actual)" + ILE."Sales Amount (Expected)";
+                    /* 
+                                        if (ILE."Source No." <> salesSetup."Client Divers") then
+                                            ILE."Sales Operation Amount" := ILE."Sales Amount (Actual)" + ILE."Sales Amount (Expected)";
+                     */
 
 
-
-                    ILE."Sales Operation Amount" := ILE."Sales Amount (Actual)" + ILE."Sales Amount (Expected)";
+                    // ILE."Sales Operation Amount" := ILE."Sales Amount (Actual)" + ILE."Sales Amount (Expected)";// useless cette ligne ecrase le traitement conditionnel précédant 
 
                     MontantMarge := ILE."Sales Operation Amount" + IlE."Operation Cost";
 
@@ -200,7 +205,8 @@ codeunit 50101 "ILE UPDATE JOB "
 
                 end;
 
-                ILE.Modify(true);
+                if Format(ILE) <> Format(ILE_Orig) then
+                    ILE.Modify(true);
 
             until ILE.Next() = 0
         end;

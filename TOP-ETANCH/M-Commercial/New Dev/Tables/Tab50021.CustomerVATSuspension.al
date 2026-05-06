@@ -36,6 +36,15 @@ table 50021 "Customer VAT Suspension"
         {
             Caption = 'Description';
         }
+        field(7; Name; Text[100])
+        {
+            Caption = 'Nom';
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = lookup(customer.Name where("No." = field("Customer No.")));
+        }
+
+
 
     }
 

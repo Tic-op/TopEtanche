@@ -458,6 +458,24 @@ codeunit 50113 PurchaseEvents
                     BlanketLine.Modify();
                 end;
     end;
+    //< BEGIN IS 290426  ---- Mise à jour du champ Restant lors de la création d’une commande depuis une commande cadre
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Blanket Purch. Order to Order", OnAfterInsertAllPurchOrderLines, '', false, false)]
+    local procedure OnAfterCreatePurchOrder(BlanketOrderPurchHeader: Record "Purchase Header"; OrderPurchHeader: Record "Purchase Header"; var SkipCommit: Boolean)
+    var
+        PurchLine: Record "Purchase Line";
+    begin
+        PurchLine.SetRange("Document Type", PurchLine."Document Type"::"Blanket Order");
+        PurchLine.SetRange("Document No.", BlanketOrderPurchHeader."No.");
+
+        if PurchLine.FindSet() then
+            repeat
+                PurchLine.MAJ_Qté_Restante();
+                PurchLine.Modify();
+            until PurchLine.Next() = 0;
+    end;
+
+    //> END IS 290426
 
 
     [EventSubscriber(ObjectType::Page, Page::"Document Attachment Factbox", OnBeforeDrillDown, '', false, false)]

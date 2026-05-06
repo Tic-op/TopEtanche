@@ -48,7 +48,7 @@ codeunit 50016 UpdateSuspensionCondition
         if SalesLine.FindSet(true) then
             repeat
 
-                if SalesLine."Quantity Invoiced" <> 0 then
+                if (SalesLine."Quantity Invoiced" <> 0) then
                     Error('Certaines lignes sont déjà facturées');
 
 
@@ -95,10 +95,11 @@ codeunit 50016 UpdateSuspensionCondition
             SalesShipmentHeader.modify(false);
 
             SalesShipmentLine.SetRange("Document No.", SalesShipmentHeader."No.");
+            SalesShipmentLine.SetRange(Correction, false);
 
             if SalesShipmentLine.FindSet(true) then
                 repeat
-                    if SalesShipmentLine."Qty. Invoiced (Base)" <> 0 then
+                    if (SalesShipmentLine."Qty. Invoiced (Base)" <> 0) then
                         Error('Certaines quantités sont déjà facturées dans %1', SalesShipmentHeader."No.");
                     if SalesShipmentLine.Type <> SalesShipmentLine.Type::" " then begin
 

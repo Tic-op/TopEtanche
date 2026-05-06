@@ -37,4 +37,9 @@ pageextension 50085 "Posted Sales Shpt. Subform" extends "Posted Sales Shpt. Sub
             }
         }
     }
+    trigger OnOpenPage()
+    begin
+        Rec.SetCurrentKey("No.");
+        Rec.Ascending(true);
+    end;
 }

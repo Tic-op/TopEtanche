@@ -30,6 +30,7 @@ pageextension 50055 "Payment Slip Subform" extends "Payment Slip Subform"
             begin
                 if Rec."Due Date" < Today then
                     Message('La date d''échéance ne peut pas être antérieure à la date du jour.');
+                rec.DateEch := Rec."Due Date";
             end;
         }
         modify("Debit Amount")
@@ -76,6 +77,59 @@ pageextension 50055 "Payment Slip Subform" extends "Payment Slip Subform"
             {
                 ApplicationArea = All;
                 Caption = 'Référence';
+                /* trigger OnValidate()
+                 var
+                     PaymentLine: Record "Payment Line";
+                     count: Integer;
+                 begin
+                     if Rec."External Document No." = '' then
+                         exit;
+
+                     PaymentLine.Reset();
+                     PaymentLine.SetRange("External Document No.", Rec."External Document No.");
+
+                     PaymentLine.SetFilter("Line No.", '<>%1', Rec."Line No.");
+
+                     if PaymentLine.FindSet() then begin
+                         repeat
+                             count += 1;
+                         until PaymentLine.Next() = 0;
+                     end;
+
+                     if count > 0 then
+                         error('Attention, ce numéro de référence est déjà utilisé dans %1 autre(s) ligne(s) de paiement. %2', count);
+                 end;*/
+                trigger OnValidate()
+                var
+                    PaymentLine: Record "Payment Line";
+                    count: Integer;
+                    BordereauxList: Text;
+                begin
+                    if Rec."External Document No." = '' then
+                        exit;
+
+                    PaymentLine.Reset();
+                    PaymentLine.SetRange("External Document No.", Rec."External Document No.");
+                    //PaymentLine.SetFilter("Line No.", '<>%1', Rec."Line No.");
+
+
+                    count := PaymentLine.Count();
+
+                    if count > 0 then begin
+
+
+                        if PaymentLine.FindSet() then
+                            repeat
+                                if BordereauxList = '' then
+                                    BordereauxList := PaymentLine."No."
+                                else
+                                    if StrPos(BordereauxList, PaymentLine."No.") = 0 then
+                                        BordereauxList += ', ' + PaymentLine."No.";
+                            until PaymentLine.Next() = 0;
+
+                        Error('Ce numéro de référence est déjà utilisé dans %1 ligne(s), bordereau(x) : %2', count, BordereauxList);
+                    end;
+                end;
             }
 
 

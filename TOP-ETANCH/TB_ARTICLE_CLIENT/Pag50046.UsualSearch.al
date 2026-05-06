@@ -19,6 +19,7 @@ page 50046 "Usual Search"
     DeleteAllowed = false;
     // DelayedInsert = true; 
     SourceTableTemporary = true;
+    SourceTableView = sorting(Description);//OD280426
 
     layout
     {
@@ -284,6 +285,11 @@ page 50046 "Usual Search"
 
 
 
+    end;
+
+    trigger OnOpenPage()
+    begin
+        rec.SetCurrentKey(Description);
     end;
 
 
@@ -573,6 +579,7 @@ or
                         Rec.Insert();
 
             until ItemRec.Next() = 0;
+        rec.SetCurrentKey(Description);
         if Rec.FindFirst() then;
         ProgressDlg.Close();
 

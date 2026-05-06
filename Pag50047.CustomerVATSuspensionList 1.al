@@ -20,6 +20,10 @@ page 50047 "Customer VAT Suspension List"
                 {
                     ToolTip = 'Specifies the value of the Client field.', Comment = '%';
                 }
+                field(Name; Rec.Name)
+                {
+                    Style = Favorable;
+                }
                 field("Start Date"; Rec."Start Date")
                 {
                     ToolTip = 'Specifies the value of the Date début field.', Comment = '%';
@@ -155,6 +159,11 @@ page 50047 "Customer VAT Suspension List"
     trigger OnAfterGetRecord()
     begin
         CalculateCounters();
+    end;
+
+    trigger OnOpenPage()
+    begin
+        rec.SetAutoCalcFields(Name);
     end;
 
     local procedure CalculateCounters()
