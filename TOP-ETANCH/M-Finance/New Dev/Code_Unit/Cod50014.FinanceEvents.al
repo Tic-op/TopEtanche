@@ -624,75 +624,77 @@ codeunit 50014 FinanceEvents
         PL.SetFilter("No.", Bord);
         PL.SetRange("Account Type", pl."Account Type"::Customer);
         if PL.FindFirst() then
-            VAT_Amount := pl."TVA RS Pub";
+            repeat
+                VAT_Amount := pl."TVA RS Pub";
 
 
-        Cpti := GLSetup."Compte TVA RS Publique";
+                Cpti := GLSetup."Compte TVA RS Publique";
 
-        GenJnlLine.LOCKTABLE;
-        GenJnlLine.INIT;
-        GenJnlLine."Posting Date" := PH."Posting Date";
-        GenJnlLine."Document Date" := PH."Posting Date";
+                GenJnlLine.LOCKTABLE;
+                GenJnlLine.INIT;
+                GenJnlLine."Posting Date" := PH."Posting Date";
+                GenJnlLine."Document Date" := PH."Posting Date";
 
-        GenJnlLine.Description := 'TVA Retenue publique ';
-        IF Signe = -1 then
-            GenJnlLine.Description := 'Annulation TVA Retenue publique ';
+                GenJnlLine.Description := 'TVA Retenue publique ';
+                IF Signe = -1 then
+                    GenJnlLine.Description := 'Annulation TVA Retenue publique ';
 
-        GenJnlLine."Sell-to/Buy-from No." := CustomerNo;
-        GenJnlLine."Bill-to/Pay-to No." := CustomerNo;
-        GenJnlLine."Source Type" := GenJnlLine."Source Type"::Customer;
-        GenJnlLine."Source No." := CustomerNo;
-        GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
-        GenJnlLine."Account No." := Cpti;
-        GenJnlLine."Document No." := Bord;
-        GenJnlLine.VALIDATE(GenJnlLine.Amount, VAT_Amount * Signe);
-        GenJnlLine."Source Currency Amount" := VAT_Amount * Signe;
-        GenJnlLine."Amount (LCY)" := VAT_Amount * Signe;
-        GenJnlLine."System-Created Entry" := TRUE;
-        GenJnlLine."Allow Application" := TRUE;
-        GenJnlLine."Source Type" := GenJnlLine."Source Type"::Customer;
-        GenJnlLine."Source Code" := 'RS CLT';
-        GenJnlPostLine.RunWithCheck(GenJnlLine);
+                GenJnlLine."Sell-to/Buy-from No." := CustomerNo;
+                GenJnlLine."Bill-to/Pay-to No." := CustomerNo;
+                GenJnlLine."Source Type" := GenJnlLine."Source Type"::Customer;
+                GenJnlLine."Source No." := CustomerNo;
+                GenJnlLine."Account Type" := GenJnlLine."Account Type"::"G/L Account";
+                GenJnlLine."Account No." := Cpti;
+                GenJnlLine."Document No." := Bord;
+                GenJnlLine.VALIDATE(GenJnlLine.Amount, VAT_Amount * Signe);
+                GenJnlLine."Source Currency Amount" := VAT_Amount * Signe;
+                GenJnlLine."Amount (LCY)" := VAT_Amount * Signe;
+                GenJnlLine."System-Created Entry" := TRUE;
+                GenJnlLine."Allow Application" := TRUE;
+                GenJnlLine."Source Type" := GenJnlLine."Source Type"::Customer;
+                GenJnlLine."Source Code" := 'RS CLT';
+                GenJnlPostLine.RunWithCheck(GenJnlLine);
 
-        GenJnlLine.INIT;
-        GenJnlLine."Posting Date" := PH."Posting Date";
-        GenJnlLine."Document Date" := PH."Posting Date";
+                GenJnlLine.INIT;
+                GenJnlLine."Posting Date" := PH."Posting Date";
+                GenJnlLine."Document Date" := PH."Posting Date";
 
-        GenJnlLine.Description := 'Retenue à la source ';
-        IF Signe = -1 then
-            GenJnlLine.Description := 'Annulation Retenue à la source ';
-        GenJnlLine."Sell-to/Buy-from No." := CustomerNo;
-        GenJnlLine."Bill-to/Pay-to No." := CustomerNo;
-        GenJnlLine."Source Type" := GenJnlLine."Source Type"::Customer;
-        GenJnlLine."Source No." := CustomerNo;
-
-
-
-        GenJnlLine."Account Type" := GenJnlLine."Account Type"::Customer;
-        GenJnlLine.validate("Account No.", CustomerNo);
-
-
-        GenJnlLine."Document No." := PH."No.";
-
-
-        GenJnlLine.VALIDATE(GenJnlLine.Amount, -VAT_Amount * Signe);
-        GenJnlLine."Source Currency Amount" := -VAT_Amount * Signe;
-        GenJnlLine."Amount (LCY)" := -VAT_Amount * Signe;
+                GenJnlLine.Description := 'Retenue à la source ';
+                IF Signe = -1 then
+                    GenJnlLine.Description := 'Annulation Retenue à la source ';
+                GenJnlLine."Sell-to/Buy-from No." := CustomerNo;
+                GenJnlLine."Bill-to/Pay-to No." := CustomerNo;
+                GenJnlLine."Source Type" := GenJnlLine."Source Type"::Customer;
+                GenJnlLine."Source No." := CustomerNo;
 
 
 
+                GenJnlLine."Account Type" := GenJnlLine."Account Type"::Customer;
+                GenJnlLine.validate("Account No.", CustomerNo);
 
-        GenJnlLine."System-Created Entry" := TRUE;
-        GenJnlLine."Allow Application" := TRUE;
+
+                GenJnlLine."Document No." := PH."No.";
 
 
-        GenJnlLine."Source Type" := GenJnlLine."Source Type"::Customer;
-        GenJnlLine."Source Code" := 'RS CLT';
+                GenJnlLine.VALIDATE(GenJnlLine.Amount, -VAT_Amount * Signe);
+                GenJnlLine."Source Currency Amount" := -VAT_Amount * Signe;
+                GenJnlLine."Amount (LCY)" := -VAT_Amount * Signe;
 
 
 
 
-        GenJnlPostLine.RunWithCheck(GenJnlLine);
+                GenJnlLine."System-Created Entry" := TRUE;
+                GenJnlLine."Allow Application" := TRUE;
+
+
+                GenJnlLine."Source Type" := GenJnlLine."Source Type"::Customer;
+                GenJnlLine."Source Code" := 'RS CLT';
+
+
+
+
+                GenJnlPostLine.RunWithCheck(GenJnlLine);
+            until PL.next = 0;
 
     end;
     /* local procedure ValiderTVARetenueClientPublique(PaymentHeaderNo: Code[25]; PaymentStep: Record "Payment Step")

@@ -2,11 +2,13 @@ namespace Top.Top;
 
 using Microsoft.Sales.Receivables;
 using Microsoft.Sales.Customer;
+using Microsoft.Finance.GeneralLedger.Ledger;
+using Microsoft.Finance.GeneralLedger.Posting;
 
 report 50038 "Recouvrement Client"
 {
     ApplicationArea = All;
-    Caption = 'Recouvrement Client';
+    Caption = 'Lettrage client';
     UsageCategory = ReportsAndAnalysis;
     DefaultLayout = RDLC;
     RDLCLayout = 'Recouvrement_Client.RDL';
@@ -45,6 +47,9 @@ report 50038 "Recouvrement Client"
             column(RemainingAmount; "Remaining Amount")
             {
             }
+            column(description; Description)
+            {
+            }
             dataitem("Detailed Cust. Ledg. Entry"; "Detailed Cust. Ledg. Entry")
             {
                 DataItemLinkReference = CustLedgerEntry;
@@ -59,17 +64,30 @@ report 50038 "Recouvrement Client"
                 column(DCLEAmount; Amount) { }
                 Column(DCLEDocument_No_; "Detailed Cust. Ledg. Entry"."Document No.")
                 { }
+                column(desdoc; descDOC)
+                { }
+                column(Date; "Posting Date")
+                {
+                }
 
                 trigger OnAfterGetRecord()
                 var
                     CLE: Record "Cust. Ledger Entry";
+                    GLE: record "G/L Entry";
 
                 begin
-                    /*     DCLEDocumentNo := '';
 
-                        if CLE.get("Cust. Ledger Entry No.") then
-                            DCLEDocumentNo := CLE."Document No."; */
+                    descDOC := '';
 
+                    /* GLE.Reset();
+                     GLE.SetCurrentKey("Document No.");
+                     GLE.SetRange("Document No.", "Detailed Cust. Ledg. Entry"."Document No.");
+                     GLE.SetRange("Source No.", CustLedgerEntry."Customer No.");
+
+                     if GLE.FindFirst() then
+                         descDOC := GLE.Description + ' ' + Format(GLE."External Document No.");*/
+                    if cle.get("Applied Cust. Ledger Entry No.") then
+                        descDOC := CLE.Description + ' ' + Format(CLE."External Document No.");
 
                 end;
             }
@@ -114,5 +132,6 @@ report 50038 "Recouvrement Client"
     var
         DCLEDocumentNo: Text;
         CustName: text;
+        descDOC: Text;
 
 }

@@ -171,7 +171,6 @@ pageextension 50029 "Sales Quote" extends "Sales Quote"
                 image = CreateDocuments;
                 Promoted = true;
                 PromotedCategory = Process;
-
                 trigger OnAction()
                 var
                     CVCMAKER: Codeunit SalesBlanketOrderFromQuote;
