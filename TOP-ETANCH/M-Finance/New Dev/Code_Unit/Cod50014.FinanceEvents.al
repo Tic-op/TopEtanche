@@ -583,13 +583,13 @@ codeunit 50014 FinanceEvents
         PL.SetFilter("No.", PaymentHeaderNo);
         PL.SetRange("Account Type", pl."Account Type"::Customer);
         PL.FindFirst();
-        repeat
 
 
-            if PaymentStep."Comptabiliser TVA RS Publique" = PaymentStep."Comptabiliser TVA RS Publique"::Validation then
-                ComptabiliserRS_Client_Publique(PL."Account No.", PL."No.", 1, PL."Line No.", PL."TVA RS Pub"); //InvoiceVAT_Amount
 
-        until PL.next = 0;
+        if PaymentStep."Comptabiliser TVA RS Publique" = PaymentStep."Comptabiliser TVA RS Publique"::Validation then
+            ComptabiliserRS_Client_Publique(PL."Account No.", PL."No.", 1, PL."Line No.", PL."TVA RS Pub"); //InvoiceVAT_Amount
+
+
 
     end;
 
@@ -996,14 +996,23 @@ codeunit 50014 FinanceEvents
         end;
     end;
 
-    [EventSubscriber(ObjectType::Table, Database::"Payment Line", OnBeforeModifyEvent, '', false, false)] //IS200825
+    [EventSubscriber(ObjectType::Table, Database::"Payment Line", OnAfterModifyEvent, '', false, false)]
     local procedure ModifyDueDate(var Rec: Record "Payment Line"; xRec: Record "Payment Line")
     begin
-        if xRec."Due Date" <> Rec."Due Date" then begin
-            Rec."Due Date" := xRec."Due Date";
-            Rec.Validate("Due Date");
+
+        if rec."Status No." <> 0 then
+            exit;
+
+        //    if rec."Applies-to ID" = '' then
+        //      exit;
+
+        if (Rec."Due Date" <> Rec.DateEch) then begin
+            Rec."Due Date" := Rec.DateEch;
+            //Rec.Validate("Due Date");
+            rec.modify(false);
         end;
     end;
+
 
     [EventSubscriber(ObjectType::Codeunit, codeunit::"Payment Management", OnBeforeProcessPaymentStep, '', false, false)]
     local procedure AssignSourceCode(PaymentHeaderNo: Code[25]; PaymentStep: Record "Payment Step")
@@ -1061,6 +1070,42 @@ codeunit 50014 FinanceEvents
             end;
 
         end
+
+    end;
+
+    [eventsubscriber(ObjectType::Codeunit, Codeunit::"Payment-Apply", OnAfterApplyCustomer, '', false, false)]
+    local procedure OnAfterApplyCust(GenJnlLine: Record "Gen. Journal Line")
+    var
+        CLE: Record 21;
+        PL: Record "Payment Line";
+        id0: Code[20];
+        id1: Code[20];
+
+    begin
+
+        if GenJnlLine."Currency Code" <> '' then
+            exit;
+
+        if GenJnlLine."Applies-to ID" <> '' then begin
+
+            CLE.SetRange("Applies-to ID", GenJnlLine."Applies-to ID");
+            CLE.CalcSums("Amount to Apply");
+
+            ExtractStrings(GenJnlLine."Applies-to ID", id0, id1, '/');
+
+            PL.SetRange("no.", id0);
+            if id1 <> '' then
+                PL.SetRange("Document No.", id1);
+
+            PL.FindFirst();
+            if (PL.Amount = 0) then begin
+                PL.Validate("Amount", -CLE."Amount to Apply");
+                PL.Validate("Applies-to ID", GenJnlLine."Applies-to ID");
+
+                PL.Modify();
+            end
+
+        end;
 
     end;
 

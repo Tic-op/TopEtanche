@@ -95,7 +95,7 @@ page 50059 "Import folder card"
         }
         area(Factboxes)
         {
-            part(DocumentsAttach; "Document Attachment Factbox")
+            part(DocumentsAttach; "Doc. Attachment List Factbox")
             {
                 ApplicationArea = All;
                 SubPageLink = "Table ID" = CONST(50119), "No." = FIELD("No.");

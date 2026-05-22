@@ -9,7 +9,6 @@ codeunit 50113 PurchaseEvents
         DD: Record DroitDouaneLedgerEntry;
         PurchaseLine: Record "Purchase Line";
 
-
     begin
         if PurchaseHeader."Currency Code" <> '' then exit;
         if PurchaseHeader."DI No." = '' then exit;
@@ -478,7 +477,7 @@ codeunit 50113 PurchaseEvents
     //> END IS 290426
 
 
-    [EventSubscriber(ObjectType::Page, Page::"Document Attachment Factbox", OnBeforeDrillDown, '', false, false)]
+    [EventSubscriber(ObjectType::Page, Page::"Doc. Attachment List Factbox", OnBeforeDocumentAttachmentDetailsRunModal, '', false, false)]
     local procedure OnBeforeDrillDown(DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef);
     var
 
@@ -702,7 +701,7 @@ codeunit 50113 PurchaseEvents
 
     end;
 
-    procedure UpdateDocInExtractReceipt(Reception: Code[20]; Line: Integer)
+    /*procedure UpdateDocInExtractReceipt(Reception: Code[20]; Line: Integer)
     var
         RecLine: Record "Purch. Rcpt. Line";
         Order: Record "Purchase Header";
@@ -715,10 +714,10 @@ codeunit 50113 PurchaseEvents
         Order.get(Order."Document Type"::Order, RecHeader."Order No.");
 
         RecLine.Order := RecHeader."Order No.";
-        RecLine."Vendor Shipment No." := Order."Vendor Shipment No.";
+        RecLine."Vendor Shipment No" := Order."Vendor Shipment No.";
         RecLine.Modify();
 
-    end;
+    end;*/
 
 
 }

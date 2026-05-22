@@ -8,10 +8,10 @@ pageextension 50090 "Get Receipt Line Ext" extends "Get Receipt Lines"
     {
         addafter("Document No.")
         {
-            field("Vendor Shipment No."; Rec."Vendor Shipment No.")
+            /*field("Vendor Shipment No"; Rec."Vendor Shipment No.")
             {
                 ApplicationArea = all;
-            }
+            }*/
             field(Order; Rec.Order)
             {
                 ApplicationArea = all;
@@ -20,7 +20,7 @@ pageextension 50090 "Get Receipt Line Ext" extends "Get Receipt Lines"
         }
 
     }
-    actions
+    /*actions
     {
         addafter("Show Document")
         {
@@ -39,5 +39,5 @@ pageextension 50090 "Get Receipt Line Ext" extends "Get Receipt Lines"
                 end;
             }
         }
-    }
+    }*/
 }

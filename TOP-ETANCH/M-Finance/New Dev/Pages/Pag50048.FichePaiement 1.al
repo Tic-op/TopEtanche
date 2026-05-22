@@ -96,7 +96,7 @@ page 50048 "Fiche Paiement"
                 trigger OnAction()
                 var
                     recL21: Record "Cust. Ledger Entry";
-                    PL: Record "Payment Line";
+                    PL: record "Payment Line";
 
                 begin
                     MontantPaiement := 0;

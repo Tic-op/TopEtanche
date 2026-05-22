@@ -172,7 +172,7 @@ codeunit 50017 "Planning managment"
         end
         else begin
             if Myitem."VMJ / Stock" <> 0 then
-                Recommandation := Round((((Myitem."Couverture demandée") - Myitem.Ecoulement) * Myitem."VMJ / Stock" - Myitem."Qté sur commande vente"), 1, '>');
+                Recommandation := Round((((Myitem."Couverture demandée") - Myitem.Ecoulement) * Myitem."VMJ / Stock" - Myitem."Qté sur commande achat"), 1, '>');
 
 
             if Recommandation > 0 then begin
@@ -199,7 +199,7 @@ codeunit 50017 "Planning managment"
     var
     begin
         Myitem."VMJ / Période" := CalculVMJ(Myitem, Myitem.datedebut, Myitem.datefin);
-        Myitem."VMJ / Stock" := CalculVMJEffectiveFastExact(Myitem, Myitem.datedebut, Myitem.datefin);//// Lenteur importante !!! 
+        Myitem."VMJ / Stock" := CalculVMJEffectiveFastExact(Myitem, Myitem.datedebut, Myitem.datefin);//// Lenteur importante !!! résolu !!
         Myitem.Ecoulement := CalculEcoulement(Myitem, Myitem.datedebut, Myitem.datefin, Myitem."Mode de calcul VMJ");
         Myitem."Qté à commander" := CalcRecommandation(Myitem, Myitem.datedebut, Myitem.datefin, Myitem."Mode de calcul VMJ");
         Myitem.Modify();

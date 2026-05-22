@@ -136,8 +136,10 @@ page 50054 ModifierDateEcheance
 
     begin
 
-        if NouvelleDate <> PaymentLine."Due Date" then
+        if NouvelleDate <> PaymentLine."Due Date" then begin
             PaymentLine.Validate("Due Date", NouvelleDate);
+            PaymentLine.Validate(DateEch, NouvelleDate);
+        end;
         if NouvelleRéference <> PaymentLine."External Document No." then
             PaymentLine.Validate("External Document No.", NouvelleRéference);
         /*if NouveauCopiedNO <> PaymentLine."Copied To No." then

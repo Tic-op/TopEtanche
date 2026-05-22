@@ -73,32 +73,12 @@ pageextension 50055 "Payment Slip Subform" extends "Payment Slip Subform"
             {
                 ApplicationArea = All;
             }
+
             field("External Document No"; Rec."External Document No.")
             {
                 ApplicationArea = All;
                 Caption = 'Référence';
-                /* trigger OnValidate()
-                 var
-                     PaymentLine: Record "Payment Line";
-                     count: Integer;
-                 begin
-                     if Rec."External Document No." = '' then
-                         exit;
 
-                     PaymentLine.Reset();
-                     PaymentLine.SetRange("External Document No.", Rec."External Document No.");
-
-                     PaymentLine.SetFilter("Line No.", '<>%1', Rec."Line No.");
-
-                     if PaymentLine.FindSet() then begin
-                         repeat
-                             count += 1;
-                         until PaymentLine.Next() = 0;
-                     end;
-
-                     if count > 0 then
-                         error('Attention, ce numéro de référence est déjà utilisé dans %1 autre(s) ligne(s) de paiement. %2', count);
-                 end;*/
                 trigger OnValidate()
                 var
                     PaymentLine: Record "Payment Line";
@@ -108,27 +88,29 @@ pageextension 50055 "Payment Slip Subform" extends "Payment Slip Subform"
                     if Rec."External Document No." = '' then
                         exit;
 
+
+                    if (StrPos(UpperCase(Rec."Payment Class"), 'EFFET') = 0) and
+                       (StrPos(UpperCase(Rec."Payment Class"), 'CHEQUE') = 0) then
+                        exit;
+
                     PaymentLine.Reset();
                     PaymentLine.SetRange("External Document No.", Rec."External Document No.");
-                    //PaymentLine.SetFilter("Line No.", '<>%1', Rec."Line No.");
+                    // PaymentLine.SetFilter("Line No.", '<>%1', Rec."Line No.");
 
+                    if PaymentLine.FindSet() then begin
+                        repeat
+                            count += 1;
 
-                    count := PaymentLine.Count();
-
-                    if count > 0 then begin
-
-
-                        if PaymentLine.FindSet() then
-                            repeat
-                                if BordereauxList = '' then
-                                    BordereauxList := PaymentLine."No."
-                                else
-                                    if StrPos(BordereauxList, PaymentLine."No.") = 0 then
-                                        BordereauxList += ', ' + PaymentLine."No.";
-                            until PaymentLine.Next() = 0;
-
-                        Error('Ce numéro de référence est déjà utilisé dans %1 ligne(s), bordereau(x) : %2', count, BordereauxList);
+                            if BordereauxList = '' then
+                                BordereauxList := PaymentLine."No."
+                            else
+                                if StrPos(BordereauxList, PaymentLine."No.") = 0 then
+                                    BordereauxList += ', ' + PaymentLine."No.";
+                        until PaymentLine.Next() = 0;
                     end;
+
+                    if count > 0 then
+                        Error('Ce numéro de référence est déjà utilisé dans %1 ligne(s), bordereau(x) : %2', count, BordereauxList);
                 end;
             }
 

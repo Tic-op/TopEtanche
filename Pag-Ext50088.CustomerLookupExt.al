@@ -9,7 +9,7 @@ pageextension 50088 "Customer Lookup Ext" extends "Customer Lookup"
         modify("Responsibility Center") { Visible = false; }
         modify("Location Code") { Visible = false; }
 
-        addafter(Name)
+        /*addafter(Name)
         {
             field("VAT Registration No."; Rec."VAT Registration No.")
             {
@@ -17,6 +17,6 @@ pageextension 50088 "Customer Lookup Ext" extends "Customer Lookup"
                 ApplicationArea = all;
 
             }
-        }
+        }*/
     }
 }
