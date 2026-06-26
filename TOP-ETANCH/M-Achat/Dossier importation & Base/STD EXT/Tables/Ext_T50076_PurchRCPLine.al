@@ -153,6 +153,12 @@ tableextension 50076 purchaseRcpLineExt extends "Purch. Rcpt. Line"
             DataClassification = ToBeClassified;
             Caption = 'Montant';
         }
+        field(50106; Sélectionner; Boolean)
+        {
+            DataClassification = ToBeClassified;
+
+
+        }
         /*   Field(50301; "Vendor Shipment No."; Code[35])
           {
               Caption = 'No BL fournisseur';

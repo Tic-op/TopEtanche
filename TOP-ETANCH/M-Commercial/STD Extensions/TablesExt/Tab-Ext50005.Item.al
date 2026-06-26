@@ -13,6 +13,7 @@ using Microsoft.Inventory.Ledger;
 using Microsoft.Purchases.Vendor;
 using Microsoft.Purchases.Document;
 using Microsoft.Foundation.Company;
+using Microsoft.Purchases.Archive;
 using Microsoft.Inventory.Location;
 using Microsoft.CRM.Team;
 using Microsoft.Warehouse.Ledger;
@@ -591,8 +592,68 @@ tableextension 50005 Itemext extends Item
 
     end;
 
+    Procedure "Demandes prix confirmées"(): Decimal
+    var
+        Demandes: record "Purchase Line";
+    begin
+        Demandes.Reset();
+        Demandes.setrange("Document Type", "Purchase Document Type"::Quote);
+        Demandes.setrange(Type, "Purchase Line Type"::Item);
+        Demandes.setrange("No.", "No.");
+        Demandes.setrange("Confirmé par fournisseur", true);
+
+        Demandes.CalcSums("Quantity (Base)");
+
+        exit(Demandes."Quantity (Base)");
+
+    end;
+
+    Procedure "Dernière consultation"(): Date
+
+    var
+        Demandes: record "Purchase Line";
+        ArchivesDemandes: Record "Purchase Line Archive";
+        DDateconsultation: Date;
+        PurchHeader: record "Purchase Header";
+        ArchivePurchHeader: Record "Purchase Header Archive";
+    begin
+        DDateconsultation := 0D;
+        Demandes.Reset();
+        Demandes.setrange("Document Type", "Purchase Document Type"::Quote);
+        Demandes.setrange(Type, "Purchase Line Type"::Item);
+        Demandes.setrange("No.", "No.");
+        if Demandes.FindSet() then
+            repeat
+
+                if PurchHeader.Get(Demandes."Document Type", Demandes."Document No.")
+                then
+                    if PurchHeader."Document Date" > DDateconsultation then
+                        DDateconsultation := PurchHeader."Document Date";
+
+            until Demandes.Next() = 0;
+        //   Message(DDateconsultation.ToText());
+
+        ArchivesDemandes.Reset();
+        ArchivesDemandes.setrange("Document Type", "Purchase Document Type"::Quote);
+        ArchivesDemandes.setrange(Type, "Purchase Line Type"::Item);
+        ArchivesDemandes.setrange("No.", "No.");
+        if ArchivesDemandes.FindSet() then
+            repeat
+
+                if ArchivePurchHeader.Get(ArchivesDemandes."Document Type", ArchivesDemandes."Document No.", ArchivesDemandes."Doc. No. Occurrence", ArchivesDemandes."Version No.")
+                 then
+                    if ArchivePurchHeader."Document Date" > DDateconsultation then
+                        DDateconsultation := ArchivePurchHeader."Document Date";
+
+            until ArchivesDemandes.Next() = 0;
+        //    Message(DDateconsultation.ToText());
+
+        Exit(DDateconsultation);
 
 
+
+
+    end;
 
 
 

@@ -29,6 +29,22 @@ page 50065 "xxxxG/L Entry"
                 {
                     ToolTip = 'Specifies the date on the invoice document.';
                 }
+                field(Amount; Rec.Amount)
+                {
+                    ToolTip = 'Specifies the amount of the G/L Entry.';
+                }
+                field("Debit Amount"; Rec."Debit Amount")
+                {
+                    ToolTip = 'Specifies the debit amount of the G/L Entry.';
+                }
+                field("Credit Amount"; Rec."Credit Amount")
+                {
+                    ToolTip = 'Specifies the credit amount of the G/L Entry.';
+                }
+                field("Source Currency Amount"; Rec."Source Currency Amount")
+                {
+                    ToolTip = 'Specifies the source currency amount of the G/L Entry.';
+                }
                 field("G/L Account No."; Rec."G/L Account No.")
                 {
                     editable = true;

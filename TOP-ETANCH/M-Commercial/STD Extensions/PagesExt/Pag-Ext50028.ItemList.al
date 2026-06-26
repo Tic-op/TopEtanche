@@ -148,8 +148,18 @@ pageextension 50028 ItemList extends "Item List"
                     CU: codeunit PricingMNG;
                     Salesevent: codeunit SalesEvents;
                 begin
+                    /*   item.findset(true);
+                      repeat
 
-                    Salesevent.FixUndoShipmentFromShipmentLines();
+                          if Round(item."Unit Price", 0.001, '=') <> Item."Unit Price" then begin
+                              item."Unit Price" := round(item."Unit Price", 0.001, '=');
+                              item.Modify(false);
+                          end
+
+                      until item.next = 0; */
+
+
+                    //  Salesevent.FixUndoShipmentFromShipmentLines();
                     /*   Item.findset(true);
                       repeat
                           Cu.UpdateAllPriceLinesFromItem(Item);

@@ -20,7 +20,7 @@ codeunit 50021 PricingMNG
         PriceLine."Estimated Cost" := Cost;
         // 🔹 2. Recalcul prix standard (selon marge de la ligne)
         PriceLine."Prix standard" :=
-            ROUND(Cost * (1 + PriceLine.MrgStd / 100), 0.001);
+            ROUND(Cost * (1 + PriceLine.MrgStd / 100), 0.001, '=');
 
         // 🔹 3. Recalcul marge marché (si prix marché existe)
         if PriceLine."Prix marché" <> 0 then
@@ -29,9 +29,9 @@ codeunit 50021 PricingMNG
 
         // 🔹 4. Prix final
         if PriceLine."Prix marché" > PriceLine."Prix standard" then
-            PriceLine."Unit Price" := PriceLine."Prix marché"
+            PriceLine."Unit Price" := Round(PriceLine."Prix marché", 0.001, '=')
         else
-            PriceLine."Unit Price" := PriceLine."Prix standard";
+            PriceLine."Unit Price" := Round(PriceLine."Prix standard", 0.001, '=');
     end;
 
     procedure UpdateAllPriceLinesFromItem(var Item: Record Item)

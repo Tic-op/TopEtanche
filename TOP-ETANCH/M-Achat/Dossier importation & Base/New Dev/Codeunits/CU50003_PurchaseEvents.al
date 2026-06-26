@@ -497,6 +497,26 @@ codeunit 50113 PurchaseEvents
         end;
     end;
 
+    [EventSubscriber(ObjectType::Page, Page::"Doc. Attachment List Factbox", OnAfterGetRecRefFail, '', false, false)]
+    local procedure OnBeforeDrillDown1(DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef);
+    var
+
+        ImportFolder: Record "Import Folder";
+
+    begin
+        case DocumentAttachment."Table ID" of
+
+            Database::"Import Folder":
+                begin
+                    RecRef.Open(DATABASE::"Import Folder");
+                    if ImportFolder.Get(DocumentAttachment."No.") then
+                        RecRef.GetTable(ImportFolder);
+                end;
+
+
+        end;
+    end;
+
     [EventSubscriber(ObjectType::Page, Page::"Document Attachment Details", OnAfterOpenForRecRef, '', false, false)]
     local procedure OnAfterOpenForRecRef(var DocumentAttachment: Record "Document Attachment"; var RecRef: RecordRef);
     var
@@ -701,7 +721,22 @@ codeunit 50113 PurchaseEvents
 
     end;
 
-    /*procedure UpdateDocInExtractReceipt(Reception: Code[20]; Line: Integer)
+
+    procedure SelectReceiptToInvoice(Reception: Code[20]; Line: Integer)
+    var
+        RecLine: Record "Purch. Rcpt. Line";
+
+    begin
+        RecLine.get(Reception, Line);
+        RecLine.Sélectionner := Not RecLine.Sélectionner;
+        RecLine.Modify();
+
+    end;
+
+
+
+
+    procedure UpdateDocInExtractReceipt(Reception: Code[20]; Line: Integer)
     var
         RecLine: Record "Purch. Rcpt. Line";
         Order: Record "Purchase Header";
@@ -714,10 +749,10 @@ codeunit 50113 PurchaseEvents
         Order.get(Order."Document Type"::Order, RecHeader."Order No.");
 
         RecLine.Order := RecHeader."Order No.";
-        RecLine."Vendor Shipment No" := Order."Vendor Shipment No.";
+        RecLine."Vendor Shipment No." := Order."Vendor Shipment No.";
         RecLine.Modify();
 
-    end;*/
+    end;
 
 
 }

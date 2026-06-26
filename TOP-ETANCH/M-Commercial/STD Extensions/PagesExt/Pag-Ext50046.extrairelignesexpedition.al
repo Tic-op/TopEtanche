@@ -9,7 +9,12 @@ pageextension 50046 "extraire lignes expedition " extends "Get Shipment Lines"
 
         addafter("Document No.")
         {
+            field("Posting Date"; Rec."Posting Date")
+            {
 
+                Visible = true;
+                ApplicationArea = all;
+            }
             field("Blanket Order No."; Rec."Blanket Order No.")
             {
 
@@ -22,9 +27,8 @@ pageextension 50046 "extraire lignes expedition " extends "Get Shipment Lines"
     var
         SalesShipL: record "Sales Shipment Line";
     begin
-        ///// à faire 
-
-
+        if not Confirm('Voulez-vous vraiment quitter cette page ?', false) then
+            Error('Continuez votre sélection...');
 
     end;
 }

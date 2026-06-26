@@ -150,6 +150,7 @@ report 50006 "facture non validée"
                 var
                     Cust: record Customer;
                     item: Record Item;
+
                 begin
                     if "Sales Line"."No." = '' then
                         CurrReport.Skip();

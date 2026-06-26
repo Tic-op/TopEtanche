@@ -61,6 +61,26 @@ page 50090 XXXDTCLEModif
                     editable = true;
                     ToolTip = 'Specifies the value of the Amount (LCY) field.', Comment = '%';
                 }
+                field("Debit Amount"; Rec."Debit Amount")
+                {
+                    editable = true;
+                    ToolTip = 'Specifies the value of the Debit Amount field.', Comment = '%';
+                }
+                field("Credit Amount"; Rec."Credit Amount")
+                {
+                    editable = true;
+                    ToolTip = 'Specifies the value of the Credit Amount field.', Comment = '%';
+                }
+                field("Debit Amount (LCY)"; Rec."Debit Amount (LCY)")
+                {
+                    editable = true;
+                    ToolTip = 'Specifies the value of the Debit Amount (LCY) field.', Comment = '%';
+                }
+                field("Credit Amount (LCY)"; Rec."Credit Amount (LCY)")
+                {
+                    editable = true;
+                    ToolTip = 'Specifies the value of the Credit Amount (LCY) field.', Comment = '%';
+                }
                 field("Customer No."; Rec."Customer No.")
                 {
                     editable = true;
@@ -96,26 +116,7 @@ page 50090 XXXDTCLEModif
                     editable = true;
                     ToolTip = 'Specifies the value of the Reason Code field.', Comment = '%';
                 }
-                field("Debit Amount"; Rec."Debit Amount")
-                {
-                    editable = true;
-                    ToolTip = 'Specifies the value of the Debit Amount field.', Comment = '%';
-                }
-                field("Credit Amount"; Rec."Credit Amount")
-                {
-                    editable = true;
-                    ToolTip = 'Specifies the value of the Credit Amount field.', Comment = '%';
-                }
-                field("Debit Amount (LCY)"; Rec."Debit Amount (LCY)")
-                {
-                    editable = true;
-                    ToolTip = 'Specifies the value of the Debit Amount (LCY) field.', Comment = '%';
-                }
-                field("Credit Amount (LCY)"; Rec."Credit Amount (LCY)")
-                {
-                    editable = true;
-                    ToolTip = 'Specifies the value of the Credit Amount (LCY) field.', Comment = '%';
-                }
+
                 field("Initial Entry Due Date"; Rec."Initial Entry Due Date")
                 {
                     editable = true;

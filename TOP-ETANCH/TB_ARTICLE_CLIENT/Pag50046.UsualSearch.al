@@ -189,6 +189,36 @@ page 50046 "Usual Search"
                     end;
 
                 }
+                field("Demande offre de prix"; rec."Demandes prix confirmées"())
+                {
+                    ApplicationArea = all;
+                    editable = false;
+                    DecimalPlaces = 0 : 3;
+                    trigger OnDrillDown()
+                    var
+                        Demandes: record "Purchase Line";
+                    begin
+                        Demandes.setrange("Document Type", "Purchase Document Type"::quote);
+                        Demandes.setrange(type, "purchase Line Type"::Item);
+                        Demandes.setrange("No.", rec."No.");
+                        Demandes.setrange("Confirmé par fournisseur", true); //AM ???
+
+                        if Not Demandes.FindSet() then
+                            exit
+                        else
+                            Page.Run(page::"Purchase Lines", Demandes)
+
+                    end;
+
+                }
+                Field("Dernière consultation"; rec."Dernière consultation"())
+                {
+                    ApplicationArea = all;
+                    editable = false;
+
+
+                }
+
 
 
                 field("Unit Price"; Rec."Unit Price")
@@ -214,6 +244,7 @@ page 50046 "Usual Search"
                     Caption = 'Coût';
                     Editable = true;
                     trigger OnDrillDown()
+                    var
                     begin
                         ShowReceiption();
                     end;

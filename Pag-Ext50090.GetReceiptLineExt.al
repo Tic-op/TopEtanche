@@ -6,6 +6,14 @@ pageextension 50090 "Get Receipt Line Ext" extends "Get Receipt Lines"
 {
     layout
     {
+        addbefore("Document No.")
+        {
+            field(Sélectionné; Rec.Sélectionner)
+            {
+                ApplicationArea = all;
+
+            }
+        }
         addafter("Document No.")
         {
             /*field("Vendor Shipment No"; Rec."Vendor Shipment No.")
@@ -20,7 +28,7 @@ pageextension 50090 "Get Receipt Line Ext" extends "Get Receipt Lines"
         }
 
     }
-    /*actions
+    actions
     {
         addafter("Show Document")
         {
@@ -38,6 +46,28 @@ pageextension 50090 "Get Receipt Line Ext" extends "Get Receipt Lines"
                     until Rec.Next() = 0;
                 end;
             }
+
+            action("Séléctionner la ligne")
+            {
+                ApplicationArea = All;
+                Image = SelectMore;
+                ShortcutKey = F9;
+                trigger OnAction()
+                var
+                    CU: Codeunit PurchaseEvents;
+                begin
+                    CU.SelectReceiptToInvoice(rec."Document No.", Rec."Line No.");
+                end;
+            }
         }
-    }*/
+    }
+    trigger OnQueryClosePage(CloseAction: Action): Boolean
+    var
+        CU: Codeunit PurchaseEvents;
+
+    begin
+        if not Confirm('Voulez-vous vraiment quitter cette page ?', false) then
+            Error('Continuez votre sélection...');
+
+    end;
 }

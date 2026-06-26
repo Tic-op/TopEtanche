@@ -102,7 +102,7 @@ tableextension 50039 ITEMEXTPricing extends Item
     begin
         Cost := GetBaseCost();
 
-        "Prix standard" := ROUND(Cost * (1 + MrgStd / 100), 0.001);
+        "Prix standard" := ROUND(Cost * (1 + MrgStd / 100), 0.001, '=');
         //  "Prix marché" := ROUND(Cost * (1 + MrgMarché / 100), 0.001);
     end;
 
@@ -124,8 +124,8 @@ tableextension 50039 ITEMEXTPricing extends Item
     procedure ApplyPrice()
     begin
         if "Prix marché" > "Prix standard" then
-            "Unit Price" := "Prix marché"
+            "Unit Price" := Round("Prix marché", 0.001, '=')
         else
-            "Unit Price" := "Prix standard";
+            "Unit Price" := Round("Prix standard", 0.001, '=');
     end;
 }

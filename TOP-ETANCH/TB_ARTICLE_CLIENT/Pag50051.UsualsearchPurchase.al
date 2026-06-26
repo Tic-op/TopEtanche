@@ -143,6 +143,66 @@ page 50051 "Usual search Purchase"
                  } */
 
                 // field("TTC"; ROUND(Rec."Unit Price" * 1.19, 0.001, '=')) { Editable = false; DecimalPlaces = 3 : 3; Style = StandardAccent; }
+                field("Qty Confirmed in Blanket Order"; Rec."Qty Confirmed in Blanket Order")
+                {
+                    Caption = 'Achat cadre';
+                    ApplicationArea = all;
+                    DecimalPlaces = 0 : 3;
+                    editable = false;
+                }
+                Field("Qté libre sur commande cadre Achat"; rec."Qté libre sur commande cadre Achat"())
+                {
+                    ApplicationArea = all;
+                    DecimalPlaces = 0 : 3;
+                    editable = false;
+                    trigger OnDrillDown()
+                    var
+                        BlanketPurchaseline: record "Purchase Line";
+                    begin
+                        BlanketPurchaseline.setrange("Document Type", "Purchase Document Type"::"Blanket Order");
+                        BlanketPurchaseline.setrange(type, "purchase Line Type"::Item);
+                        BlanketPurchaseline.setrange("No.", rec."No.");
+                        BlanketPurchaseline.setfilter(Restant, '>%1', 0);
+                        BlanketPurchaseline.setrange("Confirmé par fournisseur", true);
+
+                        if Not BlanketPurchaseline.FindSet() then
+                            exit
+                        else
+                            Page.Run(page::"Purchase Lines", BlanketPurchaseline)
+
+
+
+
+                    end;
+
+                }
+                field("Demande offre de prix"; rec."Demandes prix confirmées"())
+                {
+                    ApplicationArea = all;
+                    editable = false;
+                    DecimalPlaces = 0 : 3;
+                    trigger OnDrillDown()
+                    var
+                        Demandes: record "Purchase Line";
+                    begin
+                        Demandes.setrange("Document Type", "Purchase Document Type"::quote);
+                        Demandes.setrange(type, "purchase Line Type"::Item);
+                        Demandes.setrange("No.", rec."No.");
+                        Demandes.setrange("Confirmé par fournisseur", true); //AM ???
+
+                        if Not Demandes.FindSet() then
+                            exit
+                        else
+                            Page.Run(page::"Purchase Lines", Demandes)
+
+                    end;
+
+                }
+                Field("Dernière consultation"; rec."Dernière consultation"())
+                {
+                    ApplicationArea = all;
+                    editable = false;
+                }
 
                 field(Vendu; CountShipmentsByCustomerItem())
                 {
